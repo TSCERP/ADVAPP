@@ -1,46 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import HeadMenu from "./layouts/HeadMenu.jsx";
-import SideMenu from "./layouts/sidemenu.jsx";
+import SideMenu from "./layouts/SideMenu.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
-import Login from "./pages/(auth)/login.jsx";
-import {
-    Link,
-    Routes,
-    Route,
-    useLocation,
-    useNavigate,
-} from "react-router-dom";
-import {
-    LuCheckCircle,
-    LuTruck,
-    LuUsers2,
-    LuContact2,
-    LuSettings,
-    LuOrbit,
-    LuKeyRound,
-    LuUserCircle2,
-    LuArchive,
-    LuList,
-    LuFileSignature,
-    LuPlusCircle,
-    LuBriefcase,
-    LuGanttChartSquare,
-    LuClipboardList,
-    LuChevronRight,
-    LuChevronLeft,
-} from "react-icons/lu";
-import PeContract from "../src/utils/icons/PeContract.jsx";
-import PeApproval from "../src/utils/icons/PeApproval.jsx";
-import PeDocument from "../src/utils/icons/PeDocument.jsx";
-import PeSQ from "../src/utils/icons/PeSQ.jsx";
-import PePO from "../src/utils/icons/PePO.jsx";
-import PeVH from "../src/utils/icons/PeVH.jsx";
-import PeCH from "../src/utils/icons/PeCH.jsx";
-import PePR from "../src/utils/icons/PePR.jsx";
-import { Menu } from "antd";
-import IconLogo from "../src/assets/images/icon-logo.svg";
-import XLLogo from "../src/assets/images/XLlogo.svg";
 import "../src/assets/styles/index.css";
 import { Layout } from "antd";
 import AppRoutes from "../src/routes/index.jsx";

@@ -1,11 +1,8 @@
 import React from "react";
-import Layout from "../../../layouts/layout";
 
 function ApprovalSGList() {
     return (
-        <Layout>
-            <div>ApprovalSGList</div>
-        </Layout>
+        <div>ApprovalSGList</div>
     );
 }
 

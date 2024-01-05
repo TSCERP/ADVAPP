@@ -1,11 +1,8 @@
 import React from "react";
-import Layout from "../../../layouts/layout";
 
 function ContractList() {
     return (
-        <Layout>
-            <div>ContractList</div>
-        </Layout>
+        <div>ContractList</div>
     );
 }
 

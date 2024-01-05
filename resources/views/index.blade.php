@@ -3,8 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aeon Delight VietNam</title>
-    <icon>@vite('resources/images/logo.png')</icon>
+    <title>Aeon Delight Vietnam</title>
   </head>
   <body>
     <div id="root"></div>

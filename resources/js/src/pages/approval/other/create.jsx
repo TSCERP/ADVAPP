@@ -2,9 +2,7 @@ import React from "react";
 
 function ApprovalOtherCreate() {
     return (
-        <Layout>
-            <div>ApprovalOtherCreate</div>
-        </Layout>
+        <div>ApprovalOtherCreate</div>
     );
 }
 

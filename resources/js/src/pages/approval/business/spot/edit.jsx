@@ -1,11 +1,10 @@
 import React from 'react'
-import Layout from '../../../../layouts/layout'
 
 function ApprovalBusinessSpotEdit() {
   return (
     <Layout>
       <div>
-
+        ApprovalBusinessSpotEdit
       </div>
     </Layout>
 

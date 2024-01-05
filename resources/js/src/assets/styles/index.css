@@ -2,6 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+:root {
+  overflow-y: hidden;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
   font-family: 'Inter Variable', sans-serif;
+  font-size: 14px;
+  background-color: #F1F1F1;
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+      /* overflow:visible;
+      width: 5px;
+      background:transparent; */
+  }
+  /* .no-scrollbar::-webkit-scrollbar *{
+    background:transparent;
+  }
+  .no-scrollbar::-webkit-scrollbar-thumb {
+    background: #B69400 !important;
+    border-radius: 6px;
+  } */
+ /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+      -ms-overflow-style: none;  
+      scrollbar-width: none;  
+  }
+}
+
+.ant-menu-title-content {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  /* margin-left: 15px !important; */
+}
+
+/* .ant-menu-item-icon::after{
+  position: absolute  !important;
+  -left: 16px !important;
+} */
+
+:where(.css-dev-only-do-not-override-17i7o6m).ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-17i7o6m).ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
+  color: #FFEA7A;
+  background-color: #0D0D0D ;
+}
+
+:where(.css-dev-only-do-not-override-17i7o6m).ant-menu-inline-collapsed >.ant-menu-item, :where(.css-dev-only-do-not-override-17i7o6m).ant-menu-inline-collapsed >.ant-menu-item-group>.ant-menu-item-group-list>.ant-menu-item, :where(.css-dev-only-do-not-override-17i7o6m).ant-menu-inline-collapsed >.ant-menu-item-group>.ant-menu-item-group-list>.ant-menu-submenu>.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-17i7o6m).ant-menu-inline-collapsed >.ant-menu-submenu>.ant-menu-submenu-title {
+  inset-inline-start: 0;
+  /* padding-inline: calc(50% - 8px - 4px); */
+  text-overflow: clip;
+  padding: 3px 16px 0px 27px !important;
 }

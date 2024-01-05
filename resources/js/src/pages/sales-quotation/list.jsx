@@ -1,12 +1,23 @@
 import React from "react";
-import Layout from "../../layouts/layout";
-import SalesQuotationCreate from "./create";
 
 function SalesQuotationList() {
     return (
-        <Layout>
-            <div>SalesQuotationList</div>
-        </Layout>
+        <div className="">
+            <div className="text-6xl">SalesQuotationList</div>
+
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div>
+            <div className="text-6xl">SalesQuotationList</div> 
+            <div className="text-6xl">SalesQuotationList</div>  
+        </div>
     );
 }
 

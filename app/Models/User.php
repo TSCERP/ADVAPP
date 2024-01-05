@@ -54,5 +54,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_supperadm'=>'boolean',
+        'is_permitter'=>'boolean',
+        'is_nego'=>'boolean',
+        'is_final'=>'boolean',
+        'is_active'=>'boolean',
     ];
+
 }

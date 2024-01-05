@@ -46,9 +46,9 @@ function Login() {
                           >
                               Sign In
                           </button>
-                          <a href="#" className="text-[15px] pt-4 text-center hover:text-[#] cursor-pointer">
+                          {/* <a href="#" className="text-[15px] pt-4 text-center hover:text-[#] cursor-pointer">
                               Forgot your password?
-                          </a>
+                          </a> */}
                         </form>
                         
                     </div>

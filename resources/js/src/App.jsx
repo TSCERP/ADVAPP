@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import HeadMenu from "../src/layouts/headmenu.jsx";
+import HeadMenu from "./layouts/HeadMenu.jsx";
 import SideMenu from "./layouts/sidemenu.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
 import Login from "./pages/(auth)/login.jsx";

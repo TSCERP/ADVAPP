@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('title')->nullable();
             $table->text('avatar')->nullable();
             $table->string('email')->unique();
-            $table->string('phone')->unique()->nullable();
+            $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_supperadm')->default(false);
@@ -26,10 +26,12 @@ return new class extends Migration
             $table->boolean('is_nego')->default(false);
             $table->boolean('is_final')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_deleted')->default(false);
             $table->string('integrationKey')->default("1");
             $table->string('branch')->nullable();
             $table->string('location')->nullable();
             $table->string('employeeCode')->nullable();
+            $table->integer('objType')->default(10);
             $table->rememberToken();
             $table->timestamps();
         });

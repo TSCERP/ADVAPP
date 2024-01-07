@@ -8,8 +8,10 @@ const usersApi = {
           password,
       });
   },
-  signOut: () => {
+  logout: () => {
     const url = `/logout`;
     return axiosClient().get(url);
   }
 }
+
+export default usersApi;

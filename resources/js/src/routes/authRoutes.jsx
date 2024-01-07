@@ -13,16 +13,9 @@ import Home from "../pages/home";
 import Login from "../pages/(auth)/login";
 import NotFound from "../pages/errors/notfound";
 
-function AuthRoutes() {
-    // const { user, isAuthenticated } = useAppContext();
-    // const Wrapper = ({ children }) => {
-    //     const location = useLocation();
-    //     useLayoutEffect(() => {
-    //         document.documentElement.scrollTo(0, 0);
-    //     }, [location.pathname]);
-    //     return children;
-    // };
+import ProtectedRoute from "./ProtectedRoutes";
 
+function AuthRoutes() {
     const location = useLocation();
 
     useLayoutEffect(() => {
@@ -35,9 +28,23 @@ function AuthRoutes() {
         <Routes>
             {/* General */}
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Home />} />
 
-            <Route path="*" element={<NotFound />} />
+            <Route path="/" 
+                element={
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                } 
+            />
+
+            <Route path="*" 
+                element={
+                    <ProtectedRoute>
+                        <NotFound />
+                    </ProtectedRoute>
+                } 
+            />
+
         </Routes>
     );
 }

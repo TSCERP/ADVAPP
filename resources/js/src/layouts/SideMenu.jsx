@@ -107,8 +107,15 @@ const SideMenu = React.memo((props) => {
                                                         ),
                                                     },
                                                     {
-                                                        label: "FMS Comfirm",
+                                                        label: "FMS",
                                                         key: "/approval/business/fms",
+                                                        icon: (
+                                                            <LuGanttChartSquare />
+                                                        ),
+                                                    },
+                                                    {
+                                                        label: "FMS Comfirm",
+                                                        key: "/approval/business/fms/confirm",
                                                         icon: (
                                                             <LuGanttChartSquare />
                                                         ),

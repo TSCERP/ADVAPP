@@ -129,7 +129,7 @@ function AppRoutes() {
     return (
         <Routes>
             {/* General */}
-            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/login" element={<Login />} />
 
             <Route path="/" element={<Home />} />
 

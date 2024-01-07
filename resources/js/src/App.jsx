@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import HeadMenu from "./layouts/HeadMenu.jsx";
+import HeadMenu from "./layouts/headmenu.jsx";
 import SideMenu from "./layouts/SideMenu.jsx";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Navigate } from "react-router-dom";
 import "../src/assets/styles/index.css";
 import { Layout } from "antd";
-import AppRoutes from "../src/routes/index.jsx";
+import AppRoutes from "./routes/AppRoutes.jsx";
 import AuthRoutes from "./routes/authRoutes.jsx";
 import useAppContext from "./store/AppContext.jsx";
-
+import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
+import Cookies from "js-cookie";
 
 const { Sider, Content, Header } = Layout;
 
 function App() {
     const [collapsed, setCollapsed] = useState(false);
-    const { isAuthenticated, setIsAuthenticated } = useAppContext();
+    const { isAuthenticated } = useAppContext();
+    const localStorageUser = localStorage.getItem("userInfo");
+    const accessToken = localStorageUser ? JSON.parse(localStorageUser)?.access_token : null;
 
     return (
         <Router>
-            {!isAuthenticated ? (
-                <AuthRoutes />
+            {!isAuthenticated && !accessToken ? (
+                <AuthRoutes />       
             ) : (
                 <Layout
                     style={{
@@ -43,7 +46,6 @@ function App() {
                             handleCollapse={() => setCollapsed(!collapsed)}
                         />
                     </Sider>
-
                     <Content
                         style={{
                             maxHeight: "100vh",

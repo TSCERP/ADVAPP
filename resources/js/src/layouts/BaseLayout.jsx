@@ -18,8 +18,6 @@
 // export default BaseLayout;
 
 import React, { useEffect, useState } from "react";
-import HeadMenu from "./HeadMenu.jsx";
-import SideMenu from "./SideMenu.jsx";
 import {
     Link,
     Routes,

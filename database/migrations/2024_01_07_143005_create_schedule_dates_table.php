@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('schedule_dates', function (Blueprint $table) {
             $table->id();
+            $table->string('Type');
+            $table->integer('Timmer');
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('his_stastus', function (Blueprint $table) {
             $table->id();
+            $table->string('Status');
+            $table->integer('BaseID');
+            $table->integer('BaseType');
+            $table->integer('UserID');
             $table->timestamps();
         });
     }

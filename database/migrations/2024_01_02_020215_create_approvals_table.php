@@ -34,14 +34,14 @@ return new class extends Migration
             $table->boolean('Cancelled')->nullable()->default(false);
             $table->string('CancelledBy', 254)->nullable();
             $table->string('CancelledDate', 254)->nullable();
-            $table->boolean('deleted')->nullable()->default(false);
-            $table->string('deletedBy', 254)->nullable();
-            $table->string('deletedDate', 254)->nullable();
+            $table->boolean('Deleted')->nullable()->default(false);
+            $table->string('DeletedBy', 254)->nullable();
+            $table->string('DeletedDate', 254)->nullable();
             $table->integer('ObjType')->default(11);
             $table->boolean('is_close')->nullable()->default(false);
             $table->string('BaseRef', 254)->nullable();
             $table->boolean('Allocate')->nullable()->default(false);
-            $table->integer('createBy', 254);
+            $table->integer('CreateBy', 254);
             $table->string('UpdateBy', 254)->nullable();
             $table->timestamps();
         });

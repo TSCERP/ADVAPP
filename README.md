@@ -69,3 +69,68 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+<!--
+@Object Type
+10 Users
+11 Approvals
+12 Sales
+13 Cost
+14 Purchase orders
+15 Sales quotation
+16 VHO
+17 CHO
+18 Nego
+19 Permitter
+20 Final
+21 Project
+22 Contract
+23 Payment Request
+----------
+
+@Type Approval
+Y Sales & Cost
+S Spot
+F FMS
+O No sales & No Cost
+B Budget
+N SG&A Cost
+CF FMS Confirms
+----------
+
+Status approval
+0 pending
+1 approval with conditions
+2 approval
+3 Reject
+-----------
+
+@ Status Document
+0 Draft
+1 New
+2 Waitting for Approval
+3 Canclled
+4 Close
+------------
+
+@ Status revised
+0 No
+1 Yes
+------------
+
+@ Status contract
+quên rồi không có nhớ
+------------
+
+@Status refer in line
+O Open
+L Close
+-----------
+
+@Status payment
+0 Not paid
+1 Partial Paid
+2 Paid
+-->
+

@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         // this is table for approval descriptions
-        Schema::create('appr1', function (Blueprint $table) {
+        Schema::create('Appr1', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ApprID');
-            $table->foreign('ApprID')->references('id')->on('approval');
+            $table->foreign('ApprID')->references('id')->on('approvals');
             $table->timestamp('StartDate')->nullable();
             $table->timestamp('EndDate')->nullable();
             $table->text('location')->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appr1');
+        Schema::dropIfExists('Appr1');
     }
 };

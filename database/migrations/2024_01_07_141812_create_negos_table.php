@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('negos', function (Blueprint $table) {
+        Schema::create('Negos', function (Blueprint $table) {
             $table->id();
+            $table->string('ApprID')->nullable();
+            $table->integer('userID')->nullable();
+            $table->integer('Status')->nullable();
+            $table->integer('oldUserID')->nullable();
+            $table->integer('ObjType')->default(18);
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('negos');
+        Schema::dropIfExists('Negos');
     }
 };

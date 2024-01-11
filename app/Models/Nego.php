@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Nego extends Model
 {
     use HasFactory;
+    protected $table = 'negos';
+    protected $fillable = [
+        'ApprID','userID','Status','oldUserID','ObjType'
+    ];
 }

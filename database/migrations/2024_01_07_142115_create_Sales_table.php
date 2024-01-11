@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('Sales', function (Blueprint $table) {
             $table->id();
+            $table->integer('ApprID');
+            $table->date('StartDate');
+            $table->date('EndDate');
+            $table->text('Summary')->nullable();
+            $table->text('Note')->nullable();
+            $table->decimal('VATAmt', 18, 2)->nullable();
+            $table->decimal('Total', 18, 2)->nullable();
+            $table->decimal('GrandTotal', 18, 2)->nullable();
+            $table->integer('ObjType')->default(12);
             $table->timestamps();
         });
     }

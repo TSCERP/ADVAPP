@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Comments extends Model
 {
     use HasFactory;
+    protected $table = 'comments';
+    protected $fillable = [
+        'ApprID', 'context', 'file',
+        'Parent_id', 'BaseID', 'BaseType',
+        'is_delete','UserID'
+    ];
 }

@@ -18,23 +18,27 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'firstName',
+        'FirstName',
         'LastName',
-        'title',
-        'avatar',
-        'email',
-        'phone',
-        'email_verified_at',
-        'password',
+        'Title',
+        'Avatar',
+        'Email',
+        'Phone',
+        'Email_verified_at',
+        'Password',
         'is_supperadm',
         'is_permitter',
         'is_nego',
         'is_final',
         'is_active',
-        'integrationKey',
-        'branch',
-        'location',
-        'employeeCode'
+        'IntegrationKey',
+        'Division',
+        'Department',
+        'Section',
+        'Team',
+        'Branch',
+        'Location',
+        'EmployeeCode'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -42,7 +46,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'Password',
         'remember_token',
     ];
 
@@ -52,8 +56,8 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'Email_verified_at' => 'datetime',
+        'Password' => 'hashed',
         'is_supperadm'=>'boolean',
         'is_permitter'=>'boolean',
         'is_nego'=>'boolean',

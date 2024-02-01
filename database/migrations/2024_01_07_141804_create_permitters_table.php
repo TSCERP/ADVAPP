@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('Status')->nullable();
             $table->integer('oldUserID')->nullable();
             $table->integer('ObjType')->default(19);
+            $table->string('decision')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

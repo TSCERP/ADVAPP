@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('DocNum', 254)->unique();
             $table->string('DocType', 50);
+            $table->date('StartDate')->nullable();
+            $table->date('EndDate')->nullable();
             $table->boolean('NewTrading')->nullable()->default(false);
             $table->string('CategoryCode', 254)->nullable();
             $table->string('CategoryName', 254)->nullable();

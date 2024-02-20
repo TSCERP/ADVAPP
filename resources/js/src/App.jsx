@@ -35,7 +35,7 @@ function App() {
                         collapsedWidth={80}
                         style={{
                             background: "#0D0D0D",
-                            
+                            fontSize: "15px",
                         }}
                         collapsed={collapsed}
                         collapsible
@@ -49,7 +49,9 @@ function App() {
                     <Content
                         style={{
                             maxHeight: "100vh",
+                            minHeight: "100vh",
                             overflowY: "auto",
+                            fontSize: "15px",
                         }}
                     >
                         <HeadMenu />

@@ -6,8 +6,7 @@ import { ConfigProvider, Switch, Typography } from "antd";
 import { AppProvider } from "../src/store/AppContext";
 import "./assets/styles/index.css";
 import "@fontsource-variable/inter";
-import "@fontsource-variable/lexend-deca";
-import RootLayout from "./layouts/RootLayout.jsx";
+import '@fontsource-variable/hanken-grotesk';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -15,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ConfigProvider
                 theme={{
                     token: {
-                        fontFamily: "Inter Variable",
+                        fontFamily: "Hanken Grotesk Variable",
                     },
                     components: {
                         Menu: {
@@ -24,7 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                             itemBg: "#0D0D0D",
                             itemHeight: 40,
                             groupTitleColor: "#A9A9A9",
-                            groupTitleFontSize: 12,
+                            groupTitleFontSize: 13,
                             // itemColor: "#A9A9A9",
                             itemColor: "#6C6C6C",
                             itemHoverBg: "#17181C",

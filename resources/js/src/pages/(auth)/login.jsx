@@ -51,7 +51,7 @@ function Login() {
     };
 
     return isAuthenticated ? <Navigate to="/" /> : (
-        <section className="flex justify-between h-screen bg-[#F6F5F5]">
+        <section className=" flex justify-between h-screen bg-[#F6F5F5]">
             <div className="m-auto flex justify-center bg-transparent">
                 <div className="bg-transparent max-w-md min-w-[380px] text-center">
                     <div className="flex">
@@ -69,14 +69,14 @@ function Login() {
                     {/* <h1 className="text-gray-800 font-bold text-3xl mb-1">
                         Welcome back!
                     </h1> */}
-                    <p className="font-medium text-lg text-gray-500 mb-7">
+                    <p className=" login-page inter-font font-medium text-lg text-gray-500 mb-7">
                         Please login to your account.
                     </p>
 
                     <div className="">
                         <label
                             htmlFor="email"
-                            className="text-sm text-left font-medium text-gray-900 block mb-2"
+                            className="text-[15px] text-left font-medium text-gray-900 block mb-2"
                         >
                             Email
                         </label>
@@ -84,7 +84,7 @@ function Login() {
                             type="email"
                             name="email"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 "
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 "
                             placeholder="name@company.com"
                             onChange={(e) => setEmail(e.target.value.trim())}
                         />
@@ -92,7 +92,7 @@ function Login() {
                     <div className="mt-4">
                         <label
                             htmlFor="password"
-                            className="text-sm font-medium text-gray-900 block mb-2 text-left"
+                            className="text-[15px] font-medium text-gray-900 block mb-2 text-left"
                         >
                             Password
                         </label>
@@ -101,7 +101,7 @@ function Login() {
                             name="password"
                             id="password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
                             onChange={(e) => setPassword(e.target.value.trim())}
                         />
                     </div>
@@ -112,7 +112,7 @@ function Login() {
                     >
                         Sign In
                     </button>
-                    <p className="font-normal text-xs text-gray-500 mt-24">
+                    <p className="font-normal text-sm text-gray-500 mt-24">
                     © 2023-2024 Grant Thornton Vietnam.
                     </p>
                     {/* <a href="#" className="text-[15px] pt-4 text-center hover:text-[#] cursor-pointer">

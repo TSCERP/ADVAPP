@@ -1,19 +1,31 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { 
-    LuPenSquare, 
-    LuPlus, 
-    LuRefreshCcw, 
-    LuFilter, 
-    LuExternalLink, 
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
+import {
+    LuPenSquare,
+    LuPlus,
+    LuRefreshCcw,
+    LuFilter,
+    LuExternalLink,
     LuCircle,
     LuCheck,
-    LuX, 
+    LuX,
+    LuChevronDown,
+    LuChevronUp,
+    LuRotateCcw,
 } from "react-icons/lu";
+import { FiChevronDown } from "react-icons/fi";
+import { IoFilter } from "react-icons/io5";
+import { GrPowerReset } from "react-icons/gr";
 // import "react-data-grid/lib/styles.css";
 
 // import DataGrid from "react-data-grid";
 import { AgGridReact } from "ag-grid-react";
-import 'ag-grid-enterprise';
+import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 import { Link } from "react-router-dom";
@@ -21,6 +33,7 @@ import StatusRenderer from "./StatusRenderer";
 import ControllerBtnRenderer from "./ControllerBtnRenderer";
 import ViewRenderer from "./ViewRenderer";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 import "../../../../assets/styles/index.css";
 
@@ -29,137 +42,136 @@ import { Select, Checkbox, Badge } from "antd";
 const { RangePicker } = DatePicker;
 
 function ApprovalBusinessSpotList() {
-
     // AG-Grid Attributes
     const paginationPageSizeSelector = useMemo(() => {
         return [10, 50, 100, 200];
     }, []);
 
-    // Table Data 
+    // Table Data
     const [rowData, setRowData] = useState([
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 1,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 2,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 8,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 4,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 6,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 7,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 5,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: "Waiting For Permitter",
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 3,
         },
         {
-            approvalNo: "1903005-001" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-001",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 3,
         },
         {
-            approvalNo: "1903005-012" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-012",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 1,
         },
         {
-            approvalNo: "1903005-008" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-008",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 2,
         },
         {
-            approvalNo: "1903005-005" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-005",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 1,
         },
         {
-            approvalNo: "1903005-004" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-004",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 1,
         },
         {
-            approvalNo: "1903005-003" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-003",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
             status: 3,
         },
         {
-            approvalNo: "1903005-002" ,
-            approvalDate: "21/05/2020" ,
+            approvalNo: "1903005-002",
+            approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
             createdBy: "Tran Hanh Nguyen",
             updatedBy: "Nguyen Thanh Son",
@@ -169,41 +181,41 @@ function ApprovalBusinessSpotList() {
 
     // Column Definitions: Defines & controls grid columns.
     const [colDefs, setColDefs] = useState([
-        { 
+        {
             field: "approvalNo",
             maxWidth: 150,
-            filter: 'agNumberColumnFilter',
+            filter: "agTextColumnFilter",
             cellRenderer: ViewRenderer,
         },
-        { 
+        {
             field: "approvalDate",
-            width: 150,
+            maxWidth: 150,
             filterParams: {
                 applyMiniFilterWhileTyping: true,
             },
-            filter: 'agDateColumnFilter',
+            filter: "agTextColumnFilter",
         },
-        { 
+        {
             field: "subject",
             minWidth: 360,
-            filter: 'agTextColumnFilter',
+            filter: "agTextColumnFilter",
         },
-        { 
+        {
             field: "createdBy",
-            filter: 'agTextColumnFilter',
+            filter: "agTextColumnFilter",
         },
-        { 
+        {
             field: "updatedBy",
-            filter: 'agTextColumnFilter',
+            filter: "agTextColumnFilter",
         },
-        { 
+        {
             field: "status",
             minWidth: 200,
             cellRenderer: StatusRenderer,
         },
-        { 
+        {
             field: "action",
-            pinned: 'right',
+            pinned: "right",
             maxWidth: 120,
             cellRenderer: ControllerBtnRenderer,
         },
@@ -211,11 +223,11 @@ function ApprovalBusinessSpotList() {
 
     const defaultColDef = useMemo(() => {
         return {
-          flex: 1,
-          minWidth: 190,
-          floatingFilter: true,
+            flex: 1,
+            minWidth: 190,
+            floatingFilter: true,
         };
-      }, []);
+    }, []);
 
     // All States
     const [expanded, setExpanded] = useState(false);
@@ -224,6 +236,7 @@ function ApprovalBusinessSpotList() {
 
     const [enableClearFilter, setEnableClearFilter] = useState(true);
 
+    const [selectedDateRange, setSelectedDateRange] = useState([]);
     const [selectedFromDate, setSelectedFromDate] = useState("");
     const [selectedToDate, setSelectedToDate] = useState("");
     const [selectedApprovalNo, setSelectedApprovalNo] = useState("");
@@ -242,86 +255,100 @@ function ApprovalBusinessSpotList() {
 
     console.log("New Trading Checked: ", newTradingChecked);
 
-    
-
-    // Selection
+    // Filter Selection
     const addToFilters = (key, value) => {
-        const existingFilterIndex = filters.findIndex(filter => filter[key] !== undefined);
-    
+        const existingFilterIndex = filters.findIndex(
+            (filter) => filter[key] !== undefined
+        );
+
         if (existingFilterIndex !== -1) {
-          const updatedFilters = [...filters];
-          updatedFilters[existingFilterIndex] = { [key]: value };
-          setFilters(updatedFilters);
+            const updatedFilters = [...filters];
+            updatedFilters[existingFilterIndex] = { [key]: value };
+            setFilters(updatedFilters);
         } else {
-          setFilters(prevFilters => [...prevFilters, { [key]: value }]);
+            setFilters((prevFilters) => [...prevFilters, { [key]: value }]);
         }
-      };
+    };
+
+    const removeFromFilters = (key) => {
+        setFilters((prevFilters) =>
+            prevFilters.filter((filter) => !(key in filter))
+        );
+    };
 
     // Export Excel
     const onBtExport = useCallback(() => {
         gridRef.current.api.exportDataAsExcel();
         toast.success("Export successfully.");
-      }, []);
+    }, []);
 
+    // New Trading Checked
     const handleNewTradingCheck = () => {
         setNewTradingChecked(!newTradingChecked);
     };
 
-    // Filter
+    // Filter Button
     const handleFilter = () => {
-        scrollRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const selectRef = useRef();
     // Clear Filter
     const handleClearFilters = () => {
         setFilters([]);
         setNewTradingChecked(false);
+        setSelectedDateRange(null);
         setSelectedApprovalNo(null);
-        setSelectedFromDate("");
-        setSelectedToDate("");
-        setSelectedStatus("");
-        setSelectedDivision("");
-        setSelectedDepartment("");
-        setSelectedSection("");
-
-    }
+        setSelectedFromDate(null);
+        setSelectedToDate(null);
+        setSelectedStatus(null);
+        setSelectedDivision(null);
+        setSelectedDepartment(null);
+        setSelectedSection(null);
+    };
 
     // Reload
     const onReload = () => {
-        toast("This (Reload) module is under develpoping.");
-    }
+        toast("This module is under development.");
+    };
 
     // #f4f7f4
     // from-[#f2f2f2] to-[#fbfbfb]
 
     return (
         <div className="min-h-[calc(100vh-60px)] bg-gradient-to-b transition-max-height duration-300 ease-in-out from-[#f5f4f4] to-[#fbfbfb] ">
-            <div className="p-4 pb-6 px-5 space-y-4">
+            <div className="p-3.5 pb-4 px-5 space-y-4">
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
-                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D0D0D] to-[#3a6e42] text-[1.7rem] font-bold">
+                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D0D0D] to-[#3a6e42] text-[1.65rem] font-bold">
                         Approval Spot
                     </div>
-                    <div className="flex gap-x-3">
-                        <div className="flex items-center gap-x-2 text-[15px] bg-[#fff] border-2 border-gray-300 text-gray-800 px-4 py-2 rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all hover:bg-gray-100 cursor-pointer" onClick={onBtExport}>
+                    <div className="flex gap-x-2">
+                        <div
+                            className="flex items-center gap-x-2 text-[15px] bg-[#fff] border-2 border-gray-300 text-gray-800 px-4 py-1.5 rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all hover:bg-gray-100 cursor-pointer"
+                            onClick={onBtExport}
+                        >
                             <LuExternalLink className="flex items-center w-4 h-4 " />
                             Export
                         </div>
-                        <div className="flex items-center gap-x-2 text-[15px] bg-[#fff] border-2 border-gray-300 text-gray-800 px-4 py-2 rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all hover:bg-gray-100 cursor-pointer" onClick={onReload}>
+                        <div
+                            className="flex items-center gap-x-2 text-[15px] bg-[#fff] border-2 border-gray-300 text-gray-800 px-4 py-1.5 rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all hover:bg-gray-100 cursor-pointer"
+                            onClick={onReload}
+                        >
                             <LuRefreshCcw className="flex items-center w-4 h-4 " />
                             Reload
                         </div>
                         <Link to={"/approval/business/spot/create"}>
-                            <div className="flex items-center gap-x-2 text-[15px] bg-[#3a6f41] hover:bg-[#216721] text-white px-4 py-2 rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all ">
+                            <div className="flex items-center gap-x-2 text-[15px] bg-[#3a6f41] hover:bg-[#216721] text-white px-4 py-[7px] rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all ">
                                 <LuPlus className="flex items-center w-4 h-4 text-white" />
-                                Create Approval
+                                Create New
                             </div>
                         </Link>
                     </div>
                 </div>
 
                 {/* Search & Filter Section */}
-                <div className="flex flex-col items-center p-4 px-4 rounded-xl bg-white border border-[#DDDDDD] shadow-[0_8px_40px_rgb(0,0,0,0.06)] space-y-4 w-full h-full ">
+                <div className="flex flex-col items-center p-3.5 px-4 rounded-xl bg-white border border-[#DDDDDD] shadow-[0_8px_40px_rgb(0,0,0,0.10)] space-y-4 w-full h-full ">
                     {/* Basic Filter */}
                     <div className="flex w-full gap-x-4">
                         {/* Search */}
@@ -361,26 +388,51 @@ function ApprovalBusinessSpotList() {
                         <div className="flex justify-between gap-x-1 items-end h-full w-3/4">
                             <div className="w-[80%] flex gap-x-3">
                                 <div className="flex flex-col w-fit">
-                                    <label className="text-[15px] font-semibold mb-1">
+                                    <label className="text-[14px] font-semibold mb-1">
                                         Date Range:
                                     </label>
                                     <Space direction="vertical" size={10}>
-                                        <RangePicker
-                                            style={{
-                                                width: 240,
-                                                fontFamily: "Inter, sans-serif",
-                                                paddingTop: "7px",
-                                                paddingBottom: "7px",
-                                            }}
-                                        />
+                                            <RangePicker
+                                                style={{
+                                                    width: 240,
+                                                    fontFamily: "Inter, sans-serif",
+                                                    paddingTop: "7px",
+                                                    paddingBottom: "7px",
+                                                }}
+                                                showNow={true}
+                                                onChange={(date, dateString) => {
+                                                    // setSelectedDateRange(
+                                                    //     dateString
+                                                    // );
+                                                    // setSelectedFromDate(
+                                                    //     dateString[0]
+                                                    // );
+                                                    // setSelectedToDate(
+                                                    //     dateString[1]
+                                                    // );
+                                                    // addToFilters(
+                                                    //     "selectedDateRange",
+                                                    //     dateString
+                                                    // );
+                                                    if (dateString[0] !== "" && dateString[1] !== "" ) {
+                                                        setSelectedDateRange(dateString);
+                                                        setSelectedFromDate(dateString[0]);
+                                                        setSelectedToDate(dateString[1]);
+                                                        addToFilters("selectedDateRange", dateString);
+                                                    } else {
+                                                        removeFromFilters("selectedDateRange");
+                                                    }
+                                                }}
+                                            />
                                     </Space>
                                 </div>
                                 <div className="flex flex-col w-full">
-                                    <label className="text-[15px] font-semibold mb-1">
+                                    <label className="text-[14px] font-semibold mb-1">
                                         Approval.No:
                                     </label>
                                     <Select
                                         showSearch
+                                        allowClear
                                         style={{
                                             width: "100%",
                                             height: "100%",
@@ -395,42 +447,50 @@ function ApprovalBusinessSpotList() {
                                         options={[
                                             {
                                                 value: "1",
-                                                label: "Not Identified",
+                                                label: "1903005-001",
                                             },
                                             {
                                                 value: "2",
-                                                label: "Closed",
+                                                label: "1903005-002",
                                             },
                                             {
                                                 value: "3",
-                                                label: "Communicated",
+                                                label: "1903005-003",
                                             },
                                             {
                                                 value: "4",
-                                                label: "Identified",
+                                                label: "1903005-004",
                                             },
                                             {
                                                 value: "5",
-                                                label: "Resolved",
+                                                label: "1903005-005",
                                             },
                                             {
                                                 value: "6",
-                                                label: "Cancelled",
+                                                label: "1903005-006",
                                             },
                                         ]}
                                         onSelect={(value) => {
                                             setSelectedApprovalNo(value);
-                                            addToFilters("selectedApprovalNo", value);
+                                            addToFilters(
+                                                "selectedApprovalNo",
+                                                value
+                                            );
                                         }}
-                                        onClear={handleClearFilters}
+                                        onClear={() =>
+                                            removeFromFilters(
+                                                "selectedApprovalNo"
+                                            )
+                                        }
                                     />
                                 </div>
                                 <div className="flex flex-col w-full">
-                                    <label className="text-[15px] font-semibold mb-1">
+                                    <label className="text-[14px] font-semibold mb-1">
                                         Approval Status:
                                     </label>
                                     <Select
                                         showSearch
+                                        allowClear
                                         style={{
                                             width: "100%",
                                             height: "100%",
@@ -445,9 +505,20 @@ function ApprovalBusinessSpotList() {
                                         }
                                         onSelect={(value) => {
                                             setSelectedStatus(value);
-                                            console.log("Selected Approval Status: ", filters);
-                                            addToFilters("selectedStatus", value);
+                                            console.log(
+                                                "Selected Approval Status: ",
+                                                filters
+                                            );
+                                            addToFilters(
+                                                "selectedStatus",
+                                                value
+                                            );
                                         }}
+                                        onClear={() =>
+                                            removeFromFilters(
+                                                "selectedStatus"
+                                            )
+                                        }
                                         options={[
                                             {
                                                 value: "1",
@@ -484,17 +555,43 @@ function ApprovalBusinessSpotList() {
 
                             {/* Controller */}
                             <div className="w-full max-w-[20%] pl-2 flex justify-end gap-x-3 font-medium h-full">
-                                <Badge size="default" count={filters.length} className="relative">
+                                <Badge
+                                    size="default"
+                                    count={filters.length}
+                                    className="relative"
+                                >
                                     <div
-                                        className={`flex justify-center items-center w-fit p-2 px-2.5 rounded-lg  text-gray-600 cursor-pointer active:scale-[.94] active:duration-75 transition-all ${expanded? "border-2 border-[#A1C4A6] bg-gray-100" : "border-2 border-gray-300 bg-gray-100"}`}
-                                        onClick={toggleExpand}
+                                        className={`flex justify-center items-center w-fit p-2 px-2.5 rounded-lg  text-gray-600 cursor-pointer active:scale-[.94] active:duration-75 transition-all ${
+                                            filters.length > 0
+                                                ? "border-2 border-[#A1C4A6] bg-gray-100"
+                                                : "border-2 border-gray-300 bg-gray-100"
+                                        }`}
+                                        onClick={handleClearFilters}
                                     >
-                                        <LuFilter className="w-5 h-5" />
+                                        {filters.length > 0 ? (
+                                            <LuRotateCcw className="w-5 h-5" />
+                                        ) : (
+                                            <IoFilter className="w-5 h-5" />
+                                        )}
+                                        {/* <div className="text-[15px]">Filter</div> */}
                                     </div>
                                 </Badge>
-                                <button className="flex justify-center w-2/3 max-w-lg: p-2 px-3 rounded-lg bg-[#3a6f41] hover:bg-[#216721] text-white cursor-pointer active:scale-[.94] active:duration-75 transition-all" onClick={handleFilter}>
-                                    Filter
+                                <button className="flex justify-center items-center space-x-2 w-full max-w-lg: p-[9px] px-3 rounded-lg bg-[#3a6f41] hover:bg-[#216721] text-white cursor-pointer active:scale-[.94] active:duration-75 transition-all" onClick={toggleExpand}>
+                                    {expanded ? (
+                                        <>
+                                        {/* <div>Filter</div> */}
+                                        <LuChevronUp className="w-5 h-5" />
+                                       </> 
+                                        
+                                    ) : (
+                                       <>
+                                        {/* <div>Filter</div> */}
+                                        <LuChevronDown className="w-5 h-5" />
+                                       </> 
+                                    )}
+                                    
                                 </button>
+                                
                             </div>
                         </div>
                     </div>
@@ -508,17 +605,28 @@ function ApprovalBusinessSpotList() {
                         >
                             {/* New Trading */}
                             <div className="w-1/5">
-                                <label className="text-[15px] font-semibold mb-1">
+                                <label className="text-[14px] font-semibold mb-1">
                                     New Trading:
                                 </label>
-                                <div className={`flex  items-center font-medium justify-center cursor-pointer  p-1 h-[36px] rounded-full  mt-1 active:scale-[.94] active:duration-75 transition-all select-none ${newTradingChecked? "bg-[#ECF7ED] border-2 border-[#4F9352] text-[#49844C]" : "bg-gray-50 border-2 border-gray-300 text-gray-400"}`} onClick={handleNewTradingCheck}>
+                                <div
+                                    className={`flex  items-center font-medium justify-center cursor-pointer  p-1 h-[36px] rounded-full  mt-1 active:scale-[.94] active:duration-75 transition-all select-none ${
+                                        newTradingChecked
+                                            ? "bg-[#ECF7ED] border-2 border-[#4F9352] text-[#49844C]"
+                                            : "bg-gray-50 border-2 border-gray-300 text-gray-400"
+                                    }`}
+                                    onClick={handleNewTradingCheck}
+                                >
                                     {newTradingChecked ? (
                                         <div className="flex gap-x-2 items-center">
-                                            <span className="">Only New Trading</span>
-                                            <LuCheck className="w-5 h-5"/> 
+                                            <span className="">
+                                                Only New Trading
+                                            </span>
+                                            <LuCheck className="w-5 h-5" />
                                         </div>
                                     ) : (
-                                        <span className="">Only New Trading</span>
+                                        <span className="">
+                                            Only New Trading
+                                        </span>
                                     )}
                                 </div>
                             </div>
@@ -527,11 +635,12 @@ function ApprovalBusinessSpotList() {
                             <div className="flex justify-between items-end h-full w-full">
                                 <div className="grid grid-cols-3 w-full gap-x-3">
                                     <div className="flex flex-col w-full">
-                                        <label className="text-[15px] font-semibold mb-1">
+                                        <label className="text-[14px] font-semibold mb-1">
                                             Division:
                                         </label>
                                         <Select
                                             showSearch
+                                            allowClear
                                             style={{
                                                 width: "100%",
                                                 height: "37px",
@@ -546,42 +655,51 @@ function ApprovalBusinessSpotList() {
                                             }
                                             onSelect={(value) => {
                                                 setSelectedDivision(value);
-                                                addToFilters("selectedDivision", value);
+                                                addToFilters(
+                                                    "selectedDivision",
+                                                    value
+                                                );
                                             }}
+                                            onClear={() =>
+                                                removeFromFilters(
+                                                    "selectedDivision"
+                                                )
+                                            }
                                             options={[
                                                 {
                                                     value: "1",
-                                                    label: "Not Identified",
+                                                    label: "Japan",
                                                 },
                                                 {
                                                     value: "2",
-                                                    label: "Closed",
+                                                    label: "United Kingdom",
                                                 },
                                                 {
                                                     value: "3",
-                                                    label: "Communicated",
+                                                    label: "Vietnam",
                                                 },
                                                 {
                                                     value: "4",
-                                                    label: "Identified",
+                                                    label: "Hong Kong",
                                                 },
                                                 {
                                                     value: "5",
-                                                    label: "Resolved",
+                                                    label: "Singapore",
                                                 },
                                                 {
                                                     value: "6",
-                                                    label: "Cancelled",
+                                                    label: "Malaysia",
                                                 },
                                             ]}
                                         />
                                     </div>
                                     <div className="flex flex-col w-full">
-                                        <label className="text-[15px] font-semibold mb-1">
+                                        <label className="text-[14px] font-semibold mb-1">
                                             Department:
                                         </label>
                                         <Select
                                             showSearch
+                                            allowClear
                                             style={{
                                                 width: "100%",
                                                 height: "37px",
@@ -596,42 +714,39 @@ function ApprovalBusinessSpotList() {
                                             }
                                             onSelect={(value) => {
                                                 setSelectedDepartment(value);
-                                                addToFilters("selectedDepartment", value);
+                                                addToFilters(
+                                                    "selectedDepartment",
+                                                    value
+                                                );
                                             }}
+                                            onClear={() =>
+                                                removeFromFilters(
+                                                    "selectedDepartment"
+                                                )
+                                            }
                                             options={[
                                                 {
                                                     value: "1",
-                                                    label: "Not Identified",
+                                                    label: "Binh Tan",
                                                 },
                                                 {
                                                     value: "2",
-                                                    label: "Closed",
+                                                    label: "Canary",
                                                 },
                                                 {
                                                     value: "3",
-                                                    label: "Communicated",
-                                                },
-                                                {
-                                                    value: "4",
-                                                    label: "Identified",
-                                                },
-                                                {
-                                                    value: "5",
-                                                    label: "Resolved",
-                                                },
-                                                {
-                                                    value: "6",
-                                                    label: "Cancelled",
+                                                    label: "Headquater",
                                                 },
                                             ]}
                                         />
                                     </div>
                                     <div className="flex flex-col w-full">
-                                        <label className="text-[15px] font-semibold mb-1">
+                                        <label className="text-[14px] font-semibold mb-1">
                                             Section:
                                         </label>
                                         <Select
                                             showSearch
+                                            allowClear
                                             style={{
                                                 width: "100%",
                                                 height: "37px",
@@ -648,34 +763,31 @@ function ApprovalBusinessSpotList() {
                                                 setSelectedSection(value);
                                                 addToFilters("selectedSection", value);
                                             }}
+                                            onClear={() =>
+                                                removeFromFilters(
+                                                    "selectedSection"
+                                                )
+                                            }
                                             options={[
                                                 {
                                                     value: "1",
-                                                    label: "Draft",
+                                                    label: "Tan Phu",
                                                 },
                                                 {
                                                     value: "2",
-                                                    label: "New",
+                                                    label: "Binh Chanh",
                                                 },
                                                 {
                                                     value: "3",
-                                                    label: "Waiting For Negotiator",
+                                                    label: "Binh Thanh",
                                                 },
                                                 {
                                                     value: "4",
-                                                    label: "Waiting For Permitter",
+                                                    label: "Tan Binh",
                                                 },
                                                 {
                                                     value: "5",
-                                                    label: "Waiting For Approver",
-                                                },
-                                                {
-                                                    value: "6",
-                                                    label: "Closed",
-                                                },
-                                                {
-                                                    value: "7",
-                                                    label: "Revised",
+                                                    label: "Go Vap",
                                                 },
                                             ]}
                                         />
@@ -688,11 +800,10 @@ function ApprovalBusinessSpotList() {
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Clear all filter */}
-                    {filters.length > 0 && (
+                    {/* {filters.length > 0 && (
                         <div className="flex w-full justify-between items-center font-semibold  ">
-                            {/* Hiển thị mảng filters để kiểm tra */}
                             <div>
                                 <p>Filters: {JSON.stringify(filters)}</p>
                             </div>
@@ -702,32 +813,33 @@ function ApprovalBusinessSpotList() {
                                 <span>Clear all filter </span>
                             </div>
                         </div>
-                    )}    
+                    )}     */}
                 </div>
 
                 {/* Data Table */}
-                <div  className="my-2  rounded-lg h-[calc(100vh-220px)]">
-                        <div
-                            className="ag-theme-quartz h-full max-h-full"
-                            style={{
-                                fontFamily: "Inter, sans-serif",
-                                height: "100%",
-                            }}
-                        >
-                            <AgGridReact
-                                ref={gridRef}
-                                rowData={rowData}
-                                columnDefs={colDefs}
-                                defaultColDef={defaultColDef}
-                                style={{ width: '100%', height: '100%' }}
-                                pagination={true}
-                                paginationPageSizeSelector={paginationPageSizeSelector}
-                                
-                            />
-                        </div>
+                <div className="my-2  rounded-lg h-[calc(100vh-250px)]">
+                    <div
+                        className="ag-theme-quartz h-full max-h-full"
+                        style={{
+                            fontFamily: "Inter, sans-serif",
+                            height: "100%",
+                        }}
+                    >
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={rowData}
+                            columnDefs={colDefs}
+                            defaultColDef={defaultColDef}
+                            style={{ width: "100%", height: "100%" }}
+                            pagination={true}
+                            paginationPageSizeSelector={
+                                paginationPageSizeSelector
+                            }
+                        />
+                    </div>
                 </div>
             </div>
-            <div ref={scrollRef} ></div>
+            <div ref={scrollRef}></div>
         </div>
     );
 }

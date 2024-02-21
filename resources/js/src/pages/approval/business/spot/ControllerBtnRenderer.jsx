@@ -10,12 +10,12 @@ import toast from 'react-hot-toast';
 const ControllerBtnRenderer = () => {
   const onPrintClick = useCallback(() => {
     toast(
-      "This (Edit) module in under development.",
+      "This (Edit) module is under development.",
     );
   }, []);
   const onDeleteClick = useCallback(() => {
     toast(
-      "This (Delete) module in under development.",
+      "This (Delete) module is under development.",
     );
   }, []);
 

@@ -19,6 +19,7 @@ import {
     PiNotepadDuotone, PiNotepadBold, PiClipboardTextDuotone, PiClipboardTextFill,
     PiNoteBold, PiNoteDuotone, PiClipboardTextBold 
 } from "react-icons/pi";
+import { CgSpinnerTwo } from "react-icons/cg";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Button, Modal, Popover } from "antd";
 const { confirm } = Modal;
@@ -28,10 +29,12 @@ function HeadMenu() {
     const { user, setUser, isAuthenticated, setIsAuthenticated } =
         useAppContext();
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
 
     const handleSignOut = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const response = await userApi.logout();
             console.log("Kết quả trả về từ API:", response);
@@ -42,10 +45,12 @@ function HeadMenu() {
             setUser(null);
             setIsAuthenticated(false);
             setOpen(false);
+            setIsLoading(false);
             navigate("/login");
         } catch (error) {
             console.log("Lỗi đăng xuất:", error);
             toast.error("Couldn't sign out. Let's try again.");
+            setIsLoading(false);
         }
     };
 
@@ -68,17 +73,25 @@ function HeadMenu() {
     const items = [
         {
             label: (
-                <a className="font-medium text-[15px]" href="/profile">
-                    Profile
-                </a>
+                <Link
+                    to="/profile"
+                    className="font-medium text-[15px]"
+                > 
+
+                    <div className="font-medium w-full">Profile</div>
+                </Link>
             ),
             key: "0",
         },
         {
             label: (
-                <a className="font-medium text-[15px]" href="/settings">
-                    Setting
-                </a>
+                <Link
+                    to="/settings"
+                    className="font-medium text-[15px]"
+                > 
+            
+                    <div className="font-medium w-full">Setting</div>
+                </Link>
             ),
             key: "1",
         },
@@ -273,7 +286,7 @@ function HeadMenu() {
     );
 
     return (
-        <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[55px] min-h-[55px] px-6 border-b border-gray-200 shadow-[0_5px_20px_rgb(0,0,0,0.0.2)] top-0 z-40 bg-white">
+        <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[55px] min-h-[55px] px-6 border-b-2 border-gray-200 shadow-[0_5px_20px_rgb(0,0,0,0.08)] top-0 z-40 bg-white">
             {/* Left Controller */}
             <Popover
                 placement="bottomLeft"
@@ -283,8 +296,8 @@ function HeadMenu() {
                 title=""
                 trigger="click"
             >
-                <button className="flex items-center text-[15px] ml-4 p-1.5 bg-gray-50 hover:bg-gray-200 border-2 border-gray-200 text-gray-800 rounded-full  px-3 font-medium gap-x-2">
-                    <LuPlus className="flex items-center w-4 h-4 text-gray-500" />
+                <button className="flex items-center text-[15px] ml-4 p-1.5 text-white bg-[#1C1C1C] hover:bg-[#272727] rounded-full px-3 font-medium gap-x-2">
+                    <LuPlus className="flex items-center w-4 h-4 text-white" />
                     <div className="font-semibold ">New Document</div>
                 </button>
             </Popover>
@@ -301,18 +314,28 @@ function HeadMenu() {
                 maskClosable={false}
                 onCancel={handleCancel}
                 footer={[
-                    <button
-                        className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
-                        onClick={handleCancel}
-                    >
-                        Cancel
-                    </button>,
-                    <button
-                        className="p-2 px-8 ml-4 font-medium text-[15px] bg-[#228b22] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
-                        onClick={handleSignOut}
-                    >
-                        OK
-                    </button>,
+                    <div className="flex items-center justify-end">
+                        <button
+                            className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
+                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            onClick={handleCancel}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="p-2 px-8 ml-4 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
+                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            onClick={handleSignOut}
+                        >
+                            {isLoading ? (
+                                    <div className="flex items-center justify-center space-x-3">
+                                        <CgSpinnerTwo className="w-5 h-5 animate-spin"/>
+                                        <div>Singing Out...</div>
+                                    </div>
+                                ) : "OK" }
+                        </button>
+                    </div>
+
                 ]}
             >
                 <p className="text-base mb-8">Are you sure you want to sign out?</p>

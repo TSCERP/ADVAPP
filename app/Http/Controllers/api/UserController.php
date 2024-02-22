@@ -50,7 +50,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            $user->is_block = $user->is_block == 1 ? 0 : 1;
+            $user->is_active = $user->is_active == 1 ? 0 : 1;
             $user->save();
 
             return response()->json(['message' => 'block successfully'], 200);
@@ -68,10 +68,8 @@ class UserController extends Controller
             'title' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required',
-            'email_verified_at' => 'required|date',
+            'phone' => 'required|unique:users,phone',
             'password' => 'required',
-            'integrationKey' => 'required',
             'branch' => 'required',
             'location' => 'required',
             'employeeCode' => 'required|unique:users,employeeCode',
@@ -105,10 +103,8 @@ class UserController extends Controller
             'title' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'required',
-            'email_verified_at' => 'required|date',
+            'phone' => 'required|unique:users,phone,' . $id,
             'password' => 'nullable',
-            'integrationKey' => 'required',
             'branch' => 'required',
             'location' => 'required',
             'employeeCode' => 'required|unique:users,employeeCode,' . $id,

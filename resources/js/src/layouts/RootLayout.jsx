@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import HeadMenu from "./headmenu.jsx";
-import SideMenu from "./sidemenu.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     LuCheckCircle,
@@ -34,7 +32,7 @@ import IconLogo from "../assets/images/icon-logo.svg";
 import XLLogo from "../assets/images/XLlogo.svg";
 import "../assets/styles/index.css";
 import { Layout } from "antd";
-import AppRoutes from "../routes/index.jsx";
+import AppRoutes from "../routes/AppRoutes.jsx";
 
 const { Sider, Content } = Layout;
 

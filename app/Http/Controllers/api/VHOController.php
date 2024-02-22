@@ -7,5 +7,11 @@ use Illuminate\Http\Request;
 
 class VHOController extends Controller
 {
-    //
+    function index()
+    {
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Welcome to VHO API',
+        ], 200);
+    }
 }

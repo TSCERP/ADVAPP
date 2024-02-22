@@ -19,6 +19,7 @@ import {
     PiNotepadDuotone, PiNotepadBold, PiClipboardTextDuotone, PiClipboardTextFill,
     PiNoteBold, PiNoteDuotone, PiClipboardTextBold 
 } from "react-icons/pi";
+import { CgSpinnerTwo } from "react-icons/cg";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Button, Modal, Popover } from "antd";
 const { confirm } = Modal;
@@ -28,10 +29,12 @@ function HeadMenu() {
     const { user, setUser, isAuthenticated, setIsAuthenticated } =
         useAppContext();
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
 
     const handleSignOut = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const response = await userApi.logout();
             console.log("Kết quả trả về từ API:", response);
@@ -42,10 +45,12 @@ function HeadMenu() {
             setUser(null);
             setIsAuthenticated(false);
             setOpen(false);
+            setIsLoading(false);
             navigate("/login");
         } catch (error) {
             console.log("Lỗi đăng xuất:", error);
             toast.error("Couldn't sign out. Let's try again.");
+            setIsLoading(false);
         }
     };
 
@@ -68,17 +73,25 @@ function HeadMenu() {
     const items = [
         {
             label: (
-                <a className="text-[14px]" href="/profile">
-                    Profile
-                </a>
+                <Link
+                    to="/profile"
+                    className="font-medium text-[15px]"
+                > 
+
+                    <div className="font-medium w-full">Profile</div>
+                </Link>
             ),
             key: "0",
         },
         {
             label: (
-                <a className="text-[14px]" href="/settings">
-                    Setting
-                </a>
+                <Link
+                    to="/settings"
+                    className="font-medium text-[15px]"
+                > 
+            
+                    <div className="font-medium w-full">Setting</div>
+                </Link>
             ),
             key: "1",
         },
@@ -87,37 +100,37 @@ function HeadMenu() {
         },
         {
             label: (
-                <a className="text-[14px]" onClick={showModal}>
+                <a className="font-medium text-[15px]" onClick={showModal}>
                     Sign Out
                 </a>
             ),
-            key: "3",
+            key: "2",
         },
     ];
 
     const create = (
-        <div className="grid grid-cols-3 gap-4 p-2">
+        <div className="grid grid-cols-3 gap-3 p-2">
             <div className="w-[200px]">
-                <p className="uppercase text-xs font-semibold text-[#228b22]">
+                <p className="uppercase text-sm font-semibold text-[#228b22]">
                     Approvals
                 </p>
                 {/* <div className="border-b-2 border-[#d5e7d5] mt-2"></div> */}
-                <ul className="mt-2">
+                <ul className="mt-2 !text-[15px]">
                     <li className=" gap-x-3 w-full ">
                         <Link
                             to="/approval/business/spot/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
-                            <div className="text-[15px] font-medium w-full">Spot</div>
+                            <div className=" font-medium w-full">Spot</div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
                         <Link
                             to="/approval/business/fms/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">FMS</div>
@@ -127,7 +140,7 @@ function HeadMenu() {
                         <Link
                             to="/approval/business/yearly/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Yearly</div>
@@ -137,7 +150,7 @@ function HeadMenu() {
                         <Link
                             to="/approval/budget/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Budget</div>
@@ -147,7 +160,7 @@ function HeadMenu() {
                         <Link
                             to="/approval/sg&a/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">SG&A</div>
@@ -157,7 +170,7 @@ function HeadMenu() {
                         <Link
                             to="/approval/other/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         >   
                             <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full ">Other</div>
@@ -166,15 +179,15 @@ function HeadMenu() {
                 </ul>
             </div>
             <div className="">
-                <p className="uppercase text-xs font-semibold text-[#228b22]">
+                <p className="uppercase text-sm font-semibold text-[#228b22]">
                     Contracts
                 </p>
-                <ul className=" mt-2">
+                <ul className=" !text-[15px] mt-2">
                     <li className=" gap-x-3 w-full ">
                         <Link
                             to="/contract-management/contracts/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Contract</div>
@@ -184,7 +197,7 @@ function HeadMenu() {
                         <Link
                             to="/contract-management/contract-appendix/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Contract Appendix</div>
@@ -194,7 +207,7 @@ function HeadMenu() {
                         <Link
                             to="/contract-management/revised-appendix/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Revised Appendix</div>
@@ -204,7 +217,7 @@ function HeadMenu() {
                         <Link
                             to="/contract-management/liquidation/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Liquidation</div>
@@ -213,17 +226,17 @@ function HeadMenu() {
                 </ul>
             </div>
             <div className="w-[200px] ">
-                <p className="uppercase text-xs font-semibold text-[#228b22]">
+                <p className="uppercase text-sm font-semibold text-[#228b22]">
                     Others
                 </p>
-                <ul className=" mt-2">
+                <ul className="!text-[15px] mt-2">
                     <li className=" gap-x-3 w-full ">
                         <Link
                             to="/sales-quotation/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
-                            <PeSQ className="w-5 h-5 text-gray-400 group-hover:text-[#228b22] "/>
+                            <PeSQ className="w-6 h-6 text-gray-400 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Sales Quotation</div>
                         </Link>
                     </li>
@@ -231,9 +244,9 @@ function HeadMenu() {
                         <Link
                             to="/customer-handover/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
-                            <PeCH className="w-5 h-5 text-gray-500 group-hover:text-[#228b22] "/>
+                            <PeCH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Customer Handover</div>
                         </Link>
                     </li>
@@ -241,7 +254,7 @@ function HeadMenu() {
                         <Link
                             to="/purchase-order/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PePO className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Purchase Order</div>
@@ -251,7 +264,7 @@ function HeadMenu() {
                         <Link
                             to="/vendor-handover/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PeVH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Vendor Handover</div>
@@ -261,7 +274,7 @@ function HeadMenu() {
                         <Link
                             to="/payment-request/create"
                             onClick={hide}
-                            className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#effeef]"
+                            className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
                         > 
                             <PePR className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
                             <div className="font-medium w-full">Payment Request</div>
@@ -273,7 +286,7 @@ function HeadMenu() {
     );
 
     return (
-        <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[60px] min-h-[60px] px-6 border-b-2 border-gray-200  top-0 z-40 bg-white">
+        <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[55px] min-h-[55px] px-6 border-b-2 border-gray-200 shadow-[0_5px_20px_rgb(0,0,0,0.08)] top-0 z-40 bg-white">
             {/* Left Controller */}
             <Popover
                 placement="bottomLeft"
@@ -283,17 +296,16 @@ function HeadMenu() {
                 title=""
                 trigger="click"
             >
-                <button className="flex items-center text-[14px] ml-2 p-1.5 bg-gray-50 hover:bg-gray-200 border-2 border-gray-200 text-gray-800 rounded-full  px-3 font-medium gap-x-2">
-                    <LuPlus className="flex items-center w-4 h-4 text-gray-500" />
-                    <div className="font-semibold ">Create</div>
-                    {/* <LuPenSquare className="w-5 h-5"/> */}
+                <button className="flex items-center text-[15px] ml-4 p-1.5 text-white bg-[#1C1C1C] hover:bg-[#272727] rounded-full px-3 font-medium gap-x-2">
+                    <LuPlus className="flex items-center w-4 h-4 text-white" />
+                    <div className="font-semibold ">New Document</div>
                 </button>
             </Popover>
 
             <Modal
                 open={open}
                 style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "Hanken Grotesk Variable, sans-serif",
                 }}
                 width={350}
                 title="You're about to leave this page"
@@ -302,21 +314,31 @@ function HeadMenu() {
                 maskClosable={false}
                 onCancel={handleCancel}
                 footer={[
-                    <button
-                        className="p-2 px-4 font-medium bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
-                        onClick={handleCancel}
-                    >
-                        Cancel
-                    </button>,
-                    <button
-                        className="p-2 px-8 ml-4 font-medium bg-[#228b22] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
-                        onClick={handleSignOut}
-                    >
-                        OK
-                    </button>,
+                    <div className="flex items-center justify-end">
+                        <button
+                            className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
+                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            onClick={handleCancel}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="p-2 px-8 ml-4 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
+                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            onClick={handleSignOut}
+                        >
+                            {isLoading ? (
+                                    <div className="flex items-center justify-center space-x-3">
+                                        <CgSpinnerTwo className="w-5 h-5 animate-spin"/>
+                                        <div>Singing Out...</div>
+                                    </div>
+                                ) : "OK" }
+                        </button>
+                    </div>
+
                 ]}
             >
-                <p className="mb-8">Are you sure you want to sign out?</p>
+                <p className="text-base mb-8">Are you sure you want to sign out?</p>
             </Modal>
 
             {/* User Info*/}
@@ -327,7 +349,7 @@ function HeadMenu() {
                 paddingBlock={5}
             >
                 <button
-                    className="p-1  bg-gray-100 rounded-full flex items-center space-x-2 text-[14px]"
+                    className="p-1  bg-gray-100 rounded-full flex items-center space-x-2 text-[15px]"
                     onClick={(e) => e.preventDefault()}
                 >
                     <Space>
@@ -347,7 +369,7 @@ function HeadMenu() {
                                 textSizeRatio={2}
                             />
                         )}
-                        <div className="flex  items-center mx-1 font-medium text-[14px]">
+                        <div className="flex  items-center mx-1 font-medium text-[15px]">
                             <p>
                                 {(user?.firstName
                                     ? user?.firstName + " "

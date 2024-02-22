@@ -60,7 +60,7 @@ const SideMenu = React.memo((props) => {
 
         return (
             <div className="">
-                <div className="flex justify-start  mx-6 min-h-[60px] max-h-[60px] items-center space-x-2 border-b-2 border-b-[#232529] ">
+                <div className="flex justify-start  mx-6 min-h-[55px] max-h-[55px] items-center space-x-2 border-b-2 border-b-[#232529] ">
                     <img src={IconLogo} className="w-8 h-8" />
                     <img src={XLLogo} className="h-7" />
                 </div>
@@ -84,7 +84,7 @@ const SideMenu = React.memo((props) => {
                             {
                                 label: (
                                     <>
-                                        {!collapsed ? <div className="text-xs mt-2 font-semibold text-[#868686] uppercase">Transactions</div> : <div className="h-[8px]"></div>}
+                                        {!collapsed ? <div className="text-[13px] mt-2 font-semibold text-[#868686] uppercase">Transactions</div> : <div className="h-[6px]"></div>}
                                     </>
                                 ),
                                 key: "transaction",
@@ -204,7 +204,7 @@ const SideMenu = React.memo((props) => {
                             {
                                 label: (
                                     <>
-                                        {!collapsed ? <div className="text-xs mt-2 font-semibold text-[#868686] uppercase">Master Data</div> : <div className="h-[8px] border-b-2 border-[#232529] mx-3"></div>}
+                                        {!collapsed ? <div className="text-[13px] mt-2 font-semibold text-[#868686] uppercase">Master Data</div> : <div className="h-[8px] border-b-2 border-[#232529] mx-3"></div>}
                                     </>                                    
                                 ),
                                 key: "masterData",
@@ -235,7 +235,7 @@ const SideMenu = React.memo((props) => {
                             {
                                 label: (
                                     <>
-                                    {!collapsed ? <div className="text-xs mt-2 font-semibold text-[#868686] uppercase">Administration</div> : <div className="h-[8px] border-b-2 border-[#232529] mx-3"></div>}
+                                    {!collapsed ? <div className="text-[13px] mt-2 font-semibold text-[#868686] uppercase">Administration</div> : <div className="h-[8px] border-b-2 border-[#232529] mx-3"></div>}
                                     </>                                      
                                 ),
                                 key: "administration",

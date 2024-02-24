@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Qut2 extends Model
+class QUT2 extends Model
 {
     use HasFactory;
-    protected $table = 'qut2';
+    protected $table = 'QUT2';
     protected $fillable = [
         'RefID', 'CardCode', 'CardName',
         'Site', 'SubItem', 'Descrpt',
         'Descrpt2', 'Unit', 'UnitPrice',
-        'Lcurrency', 'Currency', 'Exchange',
+        'LCurrency', 'Currency', 'Exchange',
         'FPrice', 'LineNum', 'LineStatus'
     ];
 }

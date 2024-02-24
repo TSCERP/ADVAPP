@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-    protected $table = 'projects';
+    protected $table = 'Projects';
     protected $fillable = [
-       'Code','Name','ObjType','Active'
+        'Code', 'Name', 'ObjType',
+        'Active', 'IsDeleted', 'CreatedBy',
+        'UpdatedBy', 'DeletedBy', 'DeletedAt'
     ];
 }

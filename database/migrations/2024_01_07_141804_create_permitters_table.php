@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('Permitters', function (Blueprint $table) {
             $table->id();
             $table->string('ApprID')->nullable();
-            $table->integer('userID')->nullable();
+            $table->integer('UserID')->nullable();
             $table->integer('Status')->nullable();
-            $table->integer('oldUserID')->nullable();
+            $table->integer('OldUserID')->nullable();
             $table->integer('ObjType')->default(19);
-            $table->string('decision')->nullable();
-            $table->text('note')->nullable();
+            $table->string('Decision')->nullable();
+            $table->text('Note')->nullable();
             $table->timestamps();
         });
     }

@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Appr2', function (Blueprint $table) {
+        Schema::create('APPR2', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('ApprID');
+            $table->foreign('ApprID')->references('id')->on('Approvals');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appr2');
+        Schema::dropIfExists('APPR2');
     }
 };

@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Cost1 extends Model
 {
     use HasFactory;
-    protected $table = 'cost1';
+    protected $table = 'COST1';
     protected $fillable = [
         'RefID', 'LineNum', 'CardCode',
         'CardName', 'Site', 'SubItem',
-        'Descrpt', 'Descrpt2', 'term',
+        'Descrpt', 'Descrpt2', 'Term',
         'Unit', 'Quantity', 'UnitPrice',
-        'Lcurrency', 'currency', 'exchange',
+        'LCurrency', 'Currency', 'Exchange',
         'FPrice', 'VATGroup', 'VATRate',
         'BeforeVAT', 'FBeforeVAT', 'VATAmt',
         'FVATAmt', 'AfterVAT', 'FAfterVAT',
         'BeforeVAT2', 'VATAmt2', 'AfterVAT2',
-        'Allocation', 'LineStatus'];
+        'Allocation', 'LineStatus'
+    ];
 }

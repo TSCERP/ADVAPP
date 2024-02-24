@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sales extends Model
+class SALES extends Model
 {
     use HasFactory;
-    protected $table = 'Sales';
+    protected $table = 'SALES';
     protected $fillable = [
-        'ApprID','StartDate','EndDate','Summary','Note','VATAmt',
-        'Total','GrandTotal','ObjType'
+        'ApprID', 'StartDate', 'EndDate', 'Summary', 'Note', 'VATAmt',
+        'Total', 'GrandTotal', 'ObjType'
     ];
 }

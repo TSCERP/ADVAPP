@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('por1', function (Blueprint $table) {
+        Schema::create('POR1', function (Blueprint $table) {
             $table->id();
             $table->integer('RefID');
             $table->integer('LineNum');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->float('Quantity');
             $table->float('OpenQty');
             $table->decimal('UnitPrice', 18, 2);
-            $table->string('Lcurrency')->nullable();
+            $table->string('LCurrency')->nullable();
             $table->string('Currency')->default('VND');
             $table->float('Exchange')->default(1);
             $table->decimal('FPrice', 18, 2);
@@ -52,6 +52,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('por1');
+        Schema::dropIfExists('POR1');
     }
 };

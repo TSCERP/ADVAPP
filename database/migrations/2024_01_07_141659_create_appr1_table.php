@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         // this is table for approval descriptions
-        Schema::create('Appr1', function (Blueprint $table) {
+        Schema::create('APPR1', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ApprID');
-            $table->foreign('ApprID')->references('id')->on('approvals');
+            $table->foreign('ApprID')->references('id')->on('Approvals');
             $table->timestamp('StartDate')->nullable();
             $table->timestamp('EndDate')->nullable();
-            $table->text('location')->nullable();
-            $table->text('content')->nullable();
+            $table->text('Location')->nullable();
+            $table->text('Content')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Appr1');
+        Schema::dropIfExists('APPR1');
     }
 };

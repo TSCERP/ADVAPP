@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-class Opor extends Model
+
+class OPOR extends Model
 {
     use HasFactory;
-    protected $table = 'opor';
+    protected $table = 'OPOR';
     protected $fillable = [
-        'RefID','BaseID','BaseType',
-        'CardCode','CardName','StartDate',
-        'EndDate','Summary','Note','VATAmt',
-        'Total','GrandTotal','ObjType'
+        'RefID', 'BaseID', 'BaseType',
+        'CardCode', 'CardName', 'StartDate',
+        'EndDate', 'Summary', 'Note', 'VATAmt',
+        'Total', 'GrandTotal', 'ObjType'
     ];
     protected static function boot()
     {

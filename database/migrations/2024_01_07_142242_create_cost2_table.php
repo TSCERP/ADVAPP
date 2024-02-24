@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cost2', function (Blueprint $table) {
+        Schema::create('COST2', function (Blueprint $table) {
             $table->id();
             $table->integer('RefID');
             $table->string('CardCode');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('Descrpt2')->nullable();
             $table->string('Unit');
             $table->decimal('UnitPrice', 18, 2);
-            $table->string('Lcurrency');
+            $table->string('LCurrency');
             $table->string('Currency')->default('VND');
             $table->float('Exchange');
             $table->decimal('FPrice', 18, 2);
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cost2');
+        Schema::dropIfExists('COST2');
     }
 };

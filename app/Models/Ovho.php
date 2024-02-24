@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-class Ovho extends Model
+
+class OVHO extends Model
 {
     use HasFactory;
-    protected $table = 'ovho';
+    protected $table = 'OVHO';
     protected $fillable = [
-        'RefID','BaseID','BaseType',
-        'CardCode','CardName','StartDate',
-        'EndDate','Summary','Note','VATAmt',
-        'Total','GrandTotal','ObjType'
+        'RefID', 'BaseID', 'BaseType',
+        'CardCode', 'CardName', 'StartDate',
+        'EndDate', 'Summary', 'Note', 'VATAmt',
+        'Total', 'GrandTotal', 'ObjType'
     ];
     protected static function boot()
     {

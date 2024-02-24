@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cost1', function (Blueprint $table) {
+        Schema::create('COST1', function (Blueprint $table) {
             $table->id();
             $table->integer('RefID');
             $table->integer('LineNum');
@@ -25,9 +25,9 @@ return new class extends Migration
             $table->string('Unit');
             $table->float('Quantity');
             $table->decimal('UnitPrice', 18, 2);
-            $table->string('Lcurrency')->nullable();
-            $table->string('currency')->default('VND');
-            $table->float('exchange')->default(1);
+            $table->string('LCurrency')->nullable();
+            $table->string('Currency')->default('VND');
+            $table->float('Exchange')->default(1);
             $table->decimal('FPrice', 18, 2);
             $table->string('VATGroup');
             $table->float('VATRate')->default(0);
@@ -51,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cost1');
+        Schema::dropIfExists('COST1');
     }
 };

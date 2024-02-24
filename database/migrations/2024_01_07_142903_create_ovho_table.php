@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ovho', function (Blueprint $table) {
+        Schema::create('OVHO', function (Blueprint $table) {
             $table->id();
             $table->integer('RefID');
             $table->integer('BaseID')->nullable();
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ovho');
+        Schema::dropIfExists('OVHO');
     }
 };

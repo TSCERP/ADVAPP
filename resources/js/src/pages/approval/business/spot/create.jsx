@@ -1179,7 +1179,8 @@ function ApprovalBusinessSpotCreate() {
                                                                                 <thead className="text-[16px] rounded-t-lg">
                                                                                     <tr className="border-b-2 border-gray-300">
                                                                                         <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center border-r-2 border-gray-300 py-2">
-                                                                                            Permitter Name
+                                                                                            Permitter
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1188,7 +1189,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
-                                                                                            Reason, opinions or conditions for approval
+                                                                                            Reason,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1255,7 +1261,8 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Action
                                                                                         </th>
                                                                                         <th className=" w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                                            Negotator Name
+                                                                                            Negotator
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1264,7 +1271,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2">
-                                                                                        Reasons, opinions or conditions for approval
+                                                                                            Reasons,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1305,10 +1317,10 @@ function ApprovalBusinessSpotCreate() {
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr className="">
-                                                                                    <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
-                                                                                        <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                            <LuTrash2 className="] w-5 h-5" />
-                                                                                        </button>
+                                                                                        <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
+                                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                <LuTrash2 className="] w-5 h-5" />
+                                                                                            </button>
                                                                                         </td>
                                                                                         <td className="px-3 py-2 border-r-2 border-gray-300">
                                                                                             <Input
@@ -1369,7 +1381,9 @@ function ApprovalBusinessSpotCreate() {
                                                                                 <thead className="text-[17px] rounded-t-lg">
                                                                                     <tr className="border-b-2 border-gray-300">
                                                                                         <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center border-r-2 border-gray-300 py-2">
-                                                                                            Final Approver Name
+                                                                                            Final
+                                                                                            Approver
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1378,7 +1392,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
-                                                                                            Reasons, opinions or conditions for approval
+                                                                                            Reasons,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>

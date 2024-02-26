@@ -1,0 +1,26 @@
+name: Merge dev and backend to demo
+
+on:
+  push:
+    branches:
+      - dev
+      - backend
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Merge dev into demo
+        run: |
+          git checkout demo
+          git merge dev --no-ff --no-edit
+          git push origin demo
+
+      - name: Merge backend into demo
+        run: |
+          git checkout demo
+          git merge backend --no-ff --no-edit
+          git push origin demo

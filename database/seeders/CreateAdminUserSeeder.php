@@ -18,18 +18,18 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'firstName' => 'Admin',
+            'FirstName' => 'Admin',
             'LastName' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('admin@123'),
-            'employeeCode' => '01',
-            'branch' =>'hcm',
-            'location' => 'hcm',
-            'is_supperadm' => true,
-            'is_permitter' => true,
-            'is_nego' => true,
-            'is_final' => true,
-           // 'role' => 'admin'
+            'Email' => 'admin@admin.com',
+            'Password' => Hash::make('admin@123'),
+            'EmployeeCode' => '01',
+            'Branch' => 'hcm',
+            'Location' => 'hcm',
+            'IsSupperadm' => true,
+            'IsPermitter' => true,
+            'IsNego' => true,
+            'IsFinal' => true,
+            // 'role' => 'admin'
         ]);
 
         // $role = Role::create(['name' => 'admin']);
@@ -38,6 +38,6 @@ class CreateAdminUserSeeder extends Seeder
 
         // $role->syncPermissions($permissions);
 
-       $user->assignRole(["admin"]);
+        $user->assignRole(["admin"]);
     }
 }

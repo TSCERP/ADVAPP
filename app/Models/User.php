@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
@@ -18,23 +19,27 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'firstName',
+        'FirstName',
         'LastName',
-        'title',
-        'avatar',
-        'email',
-        'phone',
-        'email_verified_at',
-        'password',
-        'is_supperadm',
-        'is_permitter',
-        'is_nego',
-        'is_final',
-        'is_active',
-        'integrationKey',
-        'branch',
-        'location',
-        'employeeCode'
+        'Title',
+        'Avatar',
+        'Email',
+        'Phone',
+        'EmailVerifiedAt',
+        'Password',
+        'IsSupperadm',
+        'IsPermitter',
+        'IsNego',
+        'IsFinal',
+        'IsActive',
+        'IntegrationKey',
+        'Division',
+        'Department',
+        'Section',
+        'Team',
+        'Branch',
+        'Location',
+        'EmployeeCode'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -42,7 +47,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'Password',
         'remember_token',
     ];
 
@@ -52,13 +57,12 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'is_supperadm'=>'boolean',
-        'is_permitter'=>'boolean',
-        'is_nego'=>'boolean',
-        'is_final'=>'boolean',
-        'is_active'=>'boolean',
+        'Email_verified_at' => 'datetime',
+        'Password' => 'hashed',
+        'is_supperadm' => 'boolean',
+        'is_permitter' => 'boolean',
+        'is_nego' => 'boolean',
+        'is_final' => 'boolean',
+        'is_active' => 'boolean',
     ];
-
 }

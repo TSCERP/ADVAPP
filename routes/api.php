@@ -54,5 +54,12 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::patch('/disable/{UserId}', [UserController::class, 'blockUser']);
         Route::delete('/delete/{UserId}', [UserController::class, 'delete']);
     });
-
+    //Route for Approvals
+    Route::group(['prefix' => 'approvals'], function () {
+        Route::get('/', [App\Http\Controllers\api\ApprovalController::class, 'list'])->name('danh-sach-approvals');
+        Route::get('/{id}', [App\Http\Controllers\api\ApprovalController::class, 'show'])->name('chi-tiet-approvals');
+        Route::post('/create', [App\Http\Controllers\api\ApprovalController::class, 'create'])->name('tao-approvals');
+        Route::patch('/update/{id}', [App\Http\Controllers\api\ApprovalController::class, 'update'])->name('cap-nhat-approvals');
+        Route::delete('/delete/{id}', [App\Http\Controllers\api\ApprovalController::class, 'delete'])->name('xoa-approvals');
+    });
 });

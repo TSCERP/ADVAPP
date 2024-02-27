@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import "../../../../assets/styles/index.css";
-import { LuSave, LuLink2 } from "react-icons/lu";
 import { MdOutlineLink } from "react-icons/md";
 import { Input, Modal, Select, message, Upload, Button } from "antd";
 import { Checkbox, Tabs, DatePicker, Space } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import toast from "react-hot-toast";
-import "../../../../assets/styles/index.css";
-
+import { IoReload, IoCopyOutline } from "react-icons/io5";
 import { IoIosListBox } from "react-icons/io";
-import { LuTrash2, LuPlus } from "react-icons/lu";
+import { LuTrash2, LuPlus, LuSave, LuLink2, LuPenSquare } from "react-icons/lu";
 import { FaArrowUp, FaCheck, FaInfo, FaRedoAlt, FaLink } from "react-icons/fa";
 import { TbSquareRoundedLetterC, TbSquareRoundedLetterS } from "react-icons/tb";
-// import { FaArrowUp } from "react-icons/fa6";
+import { FaCircleDollarToSlot } from "react-icons/fa6";
 
 const { TextArea } = Input;
+const oldTitle = document.title;
+const newTitle = "Edit Approval Spot - Aeon Delight Vietnam";
 
 const props = {
     action: "//jsonplaceholder.typicode.com/posts/",
@@ -119,6 +118,16 @@ function ApprovalBusinessSpotEdit() {
         toast("This module is under development.");
     };
 
+    /**
+     *  All effected here
+     */
+    useEffect(() => {
+        document.title = newTitle;
+        return () => {
+            document.title = oldTitle;
+        };
+    }, []);
+
     return (
         <>
             <div className="page m-7 my-7 border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.13)] bg-white rounded-xl">
@@ -130,7 +139,7 @@ function ApprovalBusinessSpotEdit() {
                     {/* Header */}
                     <div className="flex justify-between">
                         <div className="text-[27px] font-bold">
-                            Approval Spot
+                            Edit Approval Spot
                         </div>
                         <button
                             className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
@@ -383,6 +392,23 @@ function ApprovalBusinessSpotEdit() {
                                 />
                             </div>
                         </div>
+
+                        <div className="mt-4">
+                            <div className="col-span-1">
+                                <label
+                                    htmlFor="email"
+                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                >
+                                    Related Approval
+                                </label>
+                                <Input
+                                    type="text"
+                                    id="approval_type"
+                                    placeholder="Enter Related Approval URL Link"
+                                    className="font-semibold"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Tabs */}
@@ -530,6 +556,7 @@ function ApprovalBusinessSpotEdit() {
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -567,9 +594,17 @@ function ApprovalBusinessSpotEdit() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -629,7 +664,7 @@ function ApprovalBusinessSpotEdit() {
                                                     </div>
 
                                                     {/* Checkout */}
-                                                    <div className="flex flex-col items-end pr-2 space-y-3">
+                                                    <div className="flex flex-col items-end space-y-3">
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
                                                                 <label
@@ -640,7 +675,7 @@ function ApprovalBusinessSpotEdit() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     readOnly
                                                                     value="0000000.00"
                                                                 />
@@ -656,7 +691,7 @@ function ApprovalBusinessSpotEdit() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -672,7 +707,7 @@ function ApprovalBusinessSpotEdit() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -711,6 +746,7 @@ function ApprovalBusinessSpotEdit() {
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -731,9 +767,17 @@ function ApprovalBusinessSpotEdit() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -889,9 +933,11 @@ function ApprovalBusinessSpotEdit() {
                                                                             Name
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Customer
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -929,9 +975,17 @@ function ApprovalBusinessSpotEdit() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -991,18 +1045,18 @@ function ApprovalBusinessSpotEdit() {
                                                     </div>
 
                                                     {/* Checkout */}
-                                                    <div className="flex flex-col items-end pr-2 space-y-3">
+                                                    <div className="flex flex-col items-end space-y-3">
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
                                                                 <label
                                                                     htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
+                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900 "
                                                                 >
                                                                     Total
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     readOnly
                                                                     value="0000000.00"
                                                                 />
@@ -1018,7 +1072,7 @@ function ApprovalBusinessSpotEdit() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -1034,7 +1088,7 @@ function ApprovalBusinessSpotEdit() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -1070,9 +1124,11 @@ function ApprovalBusinessSpotEdit() {
                                                                             Name
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Customer
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -1093,9 +1149,17 @@ function ApprovalBusinessSpotEdit() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -1244,7 +1308,7 @@ function ApprovalBusinessSpotEdit() {
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     viewBox="0 0 24 24"
                                                                     fill="currentColor"
-                                                                    className="absolute top-0 z-10 -ml-3.5 h-7 w-7 rounded-full text-[#3A6F41]"
+                                                                    className="absolute top-1 z-10 -ml-3.5 h-7 w-7 rounded-full text-[#3A6F41]"
                                                                 >
                                                                     <path
                                                                         fillRule="evenodd"
@@ -1253,10 +1317,28 @@ function ApprovalBusinessSpotEdit() {
                                                                     />
                                                                 </svg>
                                                                 <div className="ml-6">
-                                                                    <h4 className="text-[18px] font-bold text-[#3A6F41]">
-                                                                        Negotiators
-                                                                    </h4>
-                                                                    <div className="mt-2 mb-2  border-2 border-gray-300 ">
+                                                                    <div className="flex gap-4 items-center">
+                                                                        <h4 className="text-[18px] font-bold text-[#3A6F41]">
+                                                                            Negotiators
+                                                                        </h4>
+                                                                        <div className="flex space-x-2">
+                                                                            <button
+                                                                                className="flex items-center space-x-2 p-1.5 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                // onClick={
+                                                                                //     handleOpenAllocateModal
+                                                                                // }
+                                                                            >
+                                                                                <div className="text-[15px] flex items-center gap-1">
+                                                                                    <IoReload />
+                                                                                    <span>
+                                                                                        Load
+                                                                                        default
+                                                                                    </span>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="mt-2 border-2 border-gray-300 ">
                                                                         <div className="overflow-x-auto">
                                                                             <table className=" w-full bg-white border-collapse text-[15px]">
                                                                                 <thead className="text-[16px] rounded-t-lg">
@@ -1359,6 +1441,15 @@ function ApprovalBusinessSpotEdit() {
                                                                             </table>
                                                                         </div>
                                                                     </div>
+                                                                    <div className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold">
+                                                                        <LuPlus />
+                                                                        <div>
+                                                                            Add
+                                                                            a
+                                                                            new
+                                                                            negotiator
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div className="relative w-full">
@@ -1439,6 +1530,152 @@ function ApprovalBusinessSpotEdit() {
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-6 border-dashed border-b-2 border-gray-300"></div>
+
+                                            {/* Budget */}
+                                            <div className="mt-6 shadow-sm rounded-lg border-2 bg-[#fbfdff] border-gray-300">
+                                                <div className="rounded-t-lg flex items-center space-x-3 bg-gray-100 border-b-2 border-gray-300 p-2.5 px-4 text-[17px] text-[#37763F] font-bold uppercase ">
+                                                    <div className=" bg-gray-700 text-white p-1.5 rounded-[50px]">
+                                                        <FaCircleDollarToSlot className="w-4 h-4" />
+                                                    </div>
+                                                    <div>Budget</div>
+                                                </div>
+                                                <div className="px-4 py-4 ">
+                                                    {/* Form */}
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Budget (Item)
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Budget Item"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Item 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Item 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Item 3",
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Budget (Amount)
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Budget Amount"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Amount 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Amount 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Amount 3",
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor=""
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Account Title
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Account Title"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Title 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Title 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Title 3",
+                                                                    },
+                                                                ]}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1761,7 +1998,7 @@ function ApprovalBusinessSpotEdit() {
                             {currentAction === "sales" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -1856,9 +2093,70 @@ function ApprovalBusinessSpotEdit() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term
+                                                </label>
+                                                <Select
+                                                    showSearch
+                                                    allowClear
+                                                    style={{
+                                                        width: "100%",
+                                                        fontSize: "15px",
+                                                    }}
+                                                    placeholder="Select Payment Term"
+                                                    filterOption={(
+                                                        input,
+                                                        option
+                                                    ) =>
+                                                        (
+                                                            option?.label ?? ""
+                                                        ).includes(input)
+                                                    }
+                                                    options={[
+                                                        {
+                                                            value: "1",
+                                                            label: "Test 1",
+                                                        },
+                                                        {
+                                                            value: "2",
+                                                            label: "Test 2",
+                                                        },
+                                                        {
+                                                            value: "3",
+                                                            label: "Test 3",
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term and Condition
+                                                </label>
+                                                <Input
+                                                    type="text"
+                                                    id="approval_type"
+                                                    // placeholder="Enter Payment Term and Condition"
+                                                    className="font-semibold"
+                                                    disabled
+                                                    value="Test 1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Currency
@@ -2224,10 +2522,10 @@ function ApprovalBusinessSpotEdit() {
                             ) : currentAction === "additionalSales" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Customer
@@ -2266,7 +2564,7 @@ function ApprovalBusinessSpotEdit() {
                                             </div>
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Tax
@@ -2319,6 +2617,9 @@ function ApprovalBusinessSpotEdit() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -2630,7 +2931,7 @@ function ApprovalBusinessSpotEdit() {
                             ) : currentAction === "cost" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -2725,6 +3026,67 @@ function ApprovalBusinessSpotEdit() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term
+                                                </label>
+                                                <Select
+                                                    showSearch
+                                                    allowClear
+                                                    style={{
+                                                        width: "100%",
+                                                        fontSize: "15px",
+                                                    }}
+                                                    placeholder="Select Payment Term"
+                                                    filterOption={(
+                                                        input,
+                                                        option
+                                                    ) =>
+                                                        (
+                                                            option?.label ?? ""
+                                                        ).includes(input)
+                                                    }
+                                                    options={[
+                                                        {
+                                                            value: "1",
+                                                            label: "Test 1",
+                                                        },
+                                                        {
+                                                            value: "2",
+                                                            label: "Test 2",
+                                                        },
+                                                        {
+                                                            value: "3",
+                                                            label: "Test 3",
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term and Condition
+                                                </label>
+                                                <Input
+                                                    type="text"
+                                                    id="approval_type"
+                                                    // placeholder="Enter Payment Term and Condition"
+                                                    className="font-semibold"
+                                                    disabled
+                                                    value="Test 1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -3093,7 +3455,7 @@ function ApprovalBusinessSpotEdit() {
                             ) : currentAction === "additionalCost" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -3188,6 +3550,9 @@ function ApprovalBusinessSpotEdit() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"

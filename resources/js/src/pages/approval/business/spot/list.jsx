@@ -26,20 +26,21 @@ import { GrPowerReset } from "react-icons/gr";
 // import DataGrid from "react-data-grid";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-enterprise";
-import "ag-grid-community/styles/ag-grid.css"; // Core CSS
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+// import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+// import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 import { Link } from "react-router-dom";
-import StatusRenderer from "./StatusRenderer";
-import ControllerBtnRenderer from "./ControllerBtnRenderer";
-import ViewRenderer from "./ViewRenderer";
+import StatusRenderer from "../../../../components/approval/business/StatusRenderer";
+import ControllerBtnRenderer from "../../../../components/approval/business/ControllerBtnRenderer";
+import ViewRenderer from "../../../../components/approval/business/ViewRenderer";
 import toast from "react-hot-toast";
 import moment from "moment";
 
-import "../../../../assets/styles/index.css";
-
 import { DatePicker, Space } from "antd";
 import { Select, Checkbox, Badge } from "antd";
+
 const { RangePicker } = DatePicker;
+const oldTitle = document.title;
+const newTitle = "Approval FMS List - Aeon Delight Vietnam";
 
 function ApprovalBusinessSpotList() {
     // AG-Grid Attributes
@@ -50,6 +51,8 @@ function ApprovalBusinessSpotList() {
     // Table Data
     const [rowData, setRowData] = useState([
         {
+            id: 1,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -58,6 +61,8 @@ function ApprovalBusinessSpotList() {
             status: 1,
         },
         {
+            id: 2,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -66,6 +71,8 @@ function ApprovalBusinessSpotList() {
             status: 2,
         },
         {
+            id: 3,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -74,6 +81,8 @@ function ApprovalBusinessSpotList() {
             status: 8,
         },
         {
+            id: 4,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -82,6 +91,8 @@ function ApprovalBusinessSpotList() {
             status: 4,
         },
         {
+            id: 5,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -90,6 +101,8 @@ function ApprovalBusinessSpotList() {
             status: 6,
         },
         {
+            id: 6,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -98,6 +111,8 @@ function ApprovalBusinessSpotList() {
             status: 7,
         },
         {
+            id: 7,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -106,6 +121,8 @@ function ApprovalBusinessSpotList() {
             status: 5,
         },
         {
+            id: 8,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -114,6 +131,8 @@ function ApprovalBusinessSpotList() {
             status: "Waiting For Permitter",
         },
         {
+            id: 9,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -122,6 +141,8 @@ function ApprovalBusinessSpotList() {
             status: 3,
         },
         {
+            id: 10,
+            path: '/approval/business/spot',
             approvalNo: "1903005-001",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -130,6 +151,8 @@ function ApprovalBusinessSpotList() {
             status: 3,
         },
         {
+            id: 11,
+            path: '/approval/business/spot',
             approvalNo: "1903005-012",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -138,6 +161,8 @@ function ApprovalBusinessSpotList() {
             status: 1,
         },
         {
+            id: 12,
+            path: '/approval/business/spot',
             approvalNo: "1903005-008",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -146,6 +171,8 @@ function ApprovalBusinessSpotList() {
             status: 2,
         },
         {
+            id: 13,
+            path: '/approval/business/spot',
             approvalNo: "1903005-005",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -154,6 +181,8 @@ function ApprovalBusinessSpotList() {
             status: 1,
         },
         {
+            id: 14,
+            path: '/approval/business/spot',
             approvalNo: "1903005-004",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -162,6 +191,8 @@ function ApprovalBusinessSpotList() {
             status: 1,
         },
         {
+            id: 15,
+            path: '/approval/business/spot',
             approvalNo: "1903005-003",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -170,6 +201,8 @@ function ApprovalBusinessSpotList() {
             status: 3,
         },
         {
+            id: 16,
+            path: '/approval/business/spot',
             approvalNo: "1903005-002",
             approvalDate: "21/05/2020",
             subject: "Cung cấp dịch vụ vệ sinh hằng ngày tại AEON MALL",
@@ -312,6 +345,17 @@ function ApprovalBusinessSpotList() {
         toast("This module is under development.");
     };
 
+    /**
+     *  All effects here
+     */
+    // Change document title
+    useEffect(() => {
+        document.title = newTitle;
+        return () => {
+            document.title = oldTitle;
+        };
+    }, []);
+
     // #f4f7f4
     // from-[#f2f2f2] to-[#fbfbfb]
 
@@ -392,38 +436,52 @@ function ApprovalBusinessSpotList() {
                                         Date Range:
                                     </label>
                                     <Space direction="vertical" size={10}>
-                                            <RangePicker
-                                                style={{
-                                                    width: 240,
-                                                    fontFamily: "Inter, sans-serif",
-                                                    paddingTop: "7px",
-                                                    paddingBottom: "7px",
-                                                }}
-                                                showNow={true}
-                                                onChange={(date, dateString) => {
-                                                    // setSelectedDateRange(
-                                                    //     dateString
-                                                    // );
-                                                    // setSelectedFromDate(
-                                                    //     dateString[0]
-                                                    // );
-                                                    // setSelectedToDate(
-                                                    //     dateString[1]
-                                                    // );
-                                                    // addToFilters(
-                                                    //     "selectedDateRange",
-                                                    //     dateString
-                                                    // );
-                                                    if (dateString[0] !== "" && dateString[1] !== "" ) {
-                                                        setSelectedDateRange(dateString);
-                                                        setSelectedFromDate(dateString[0]);
-                                                        setSelectedToDate(dateString[1]);
-                                                        addToFilters("selectedDateRange", dateString);
-                                                    } else {
-                                                        removeFromFilters("selectedDateRange");
-                                                    }
-                                                }}
-                                            />
+                                        <RangePicker
+                                            style={{
+                                                width: 240,
+                                                fontFamily: "Inter, sans-serif",
+                                                paddingTop: "7px",
+                                                paddingBottom: "7px",
+                                            }}
+                                            showNow={true}
+                                            onChange={(date, dateString) => {
+                                                // setSelectedDateRange(
+                                                //     dateString
+                                                // );
+                                                // setSelectedFromDate(
+                                                //     dateString[0]
+                                                // );
+                                                // setSelectedToDate(
+                                                //     dateString[1]
+                                                // );
+                                                // addToFilters(
+                                                //     "selectedDateRange",
+                                                //     dateString
+                                                // );
+                                                if (
+                                                    dateString[0] !== "" &&
+                                                    dateString[1] !== ""
+                                                ) {
+                                                    setSelectedDateRange(
+                                                        dateString
+                                                    );
+                                                    setSelectedFromDate(
+                                                        dateString[0]
+                                                    );
+                                                    setSelectedToDate(
+                                                        dateString[1]
+                                                    );
+                                                    addToFilters(
+                                                        "selectedDateRange",
+                                                        dateString
+                                                    );
+                                                } else {
+                                                    removeFromFilters(
+                                                        "selectedDateRange"
+                                                    );
+                                                }
+                                            }}
+                                        />
                                     </Space>
                                 </div>
                                 <div className="flex flex-col w-full">
@@ -515,9 +573,7 @@ function ApprovalBusinessSpotList() {
                                             );
                                         }}
                                         onClear={() =>
-                                            removeFromFilters(
-                                                "selectedStatus"
-                                            )
+                                            removeFromFilters("selectedStatus")
                                         }
                                         options={[
                                             {
@@ -576,22 +632,22 @@ function ApprovalBusinessSpotList() {
                                         {/* <div className="text-[15px]">Filter</div> */}
                                     </div>
                                 </Badge>
-                                <button className="flex justify-center items-center space-x-2 w-full max-w-lg: p-[9px] px-3 rounded-lg bg-[#3a6f41] hover:bg-[#216721] text-white cursor-pointer active:scale-[.94] active:duration-75 transition-all" onClick={toggleExpand}>
+                                <button
+                                    className="flex justify-center items-center space-x-2 w-full max-w-lg: p-[9px] px-3 rounded-lg bg-[#3a6f41] hover:bg-[#216721] text-white cursor-pointer active:scale-[.94] active:duration-75 transition-all"
+                                    onClick={toggleExpand}
+                                >
                                     {expanded ? (
                                         <>
-                                        {/* <div>Filter</div> */}
-                                        <LuChevronUp className="w-5 h-5" />
-                                       </> 
-                                        
+                                            {/* <div>Filter</div> */}
+                                            <LuChevronUp className="w-5 h-5" />
+                                        </>
                                     ) : (
-                                       <>
-                                        {/* <div>Filter</div> */}
-                                        <LuChevronDown className="w-5 h-5" />
-                                       </> 
+                                        <>
+                                            {/* <div>Filter</div> */}
+                                            <LuChevronDown className="w-5 h-5" />
+                                        </>
                                     )}
-                                    
                                 </button>
-                                
                             </div>
                         </div>
                     </div>
@@ -761,7 +817,10 @@ function ApprovalBusinessSpotList() {
                                             }
                                             onSelect={(value) => {
                                                 setSelectedSection(value);
-                                                addToFilters("selectedSection", value);
+                                                addToFilters(
+                                                    "selectedSection",
+                                                    value
+                                                );
                                             }}
                                             onClear={() =>
                                                 removeFromFilters(

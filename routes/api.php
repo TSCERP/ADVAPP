@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::get('/', [RolesController::class, 'index'])->name('danh-sach-role');
         Route::post('/create', [RolesController::class, 'create'])->name('tao-role');
         Route::patch('/update/{roleId}', [RolesController::class, 'update'])->name('cap-nhat-roles');
+        Route::get('/detail/{roleId}', [RolesController::class, 'show'])->name('chi-tiet-roles');
     });
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index']);

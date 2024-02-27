@@ -13,7 +13,87 @@ class ApprovalController extends Controller
     // Danh sách tất cả các bản ghi approvals
     function index(Request $request)
     {
+        $fromDate = $request->fromDate;
+        $toDate = $request->toDate;
+        $Division = $request->Division;
+        $newTranding = $request->newTrading;
+        $Department = $request->Department;
+        $Selection = $request->Selection;
+        $Status = $request->Status;
+
+        $query = Approvals::query();
+
+        $query->when($fromDate, function ($q) use ($fromDate) {
+            return $q->where('createDate', $fromDate);
+        });
+
+        $query->when($toDate, function ($q) use ($toDate) {
+            return $q->where('createDate', $toDate);
+        });
+
+        $query->when($Division, function ($q) use ($Division) {
+            return $q->where('division', $Division);
+        });
+
+        $query->when($newTranding, function ($q) use ($newTranding) {
+            return $q->where('new_trading', $newTranding);
+        });
+
+        $query->when($Department, function ($q) use ($Department) {
+            return $q->where('department', $Department);
+        });
+
+        $query->when($Selection, function ($q) use ($Selection) {
+            return $q->where('selection', $Selection);
+        });
+
+        $query->when($Status, function ($q) use ($Status) {
+            return $q->where('status', $Status);
+        });
+
+        $data = $query->get();
+
+        return response()->json($data, 200);
         $data = Approvals::all();
         return response()->json($data, 200);
+    }
+    function add(Request $request)
+    {
+        $data = null;
+        switch ($request->DocType) {
+            case ('SPOT'):
+                $data = $this->storeSpot($request);
+                break;
+            case ('FMS'):
+                $data = $this->storeFMS($request);
+                break;
+            case ('YEARLY'):
+                $data = $this->storeYearly($request);
+                break;
+            case ('OTHER'):
+                $data = $this->storeOther($request);
+                break;
+            default:
+                break;
+        }
+        return response()->json(
+            [
+                'message' => 'add success',
+                'data' => $data
+            ],
+            200
+        );
+    }
+    function storeSpot($data)
+    {
+    }
+    function storeFMS($data)
+    {
+    }
+    function storeYearly($data)
+    {
+    }
+    function storeOther($data)
+    {
     }
 }

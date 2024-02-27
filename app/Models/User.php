@@ -23,10 +23,10 @@ class User extends Authenticatable
         'LastName',
         'Title',
         'Avatar',
-        'Email',
+        'email',
         'Phone',
         'EmailVerifiedAt',
-        'Password',
+        'password',
         'IsSupperadm',
         'IsPermitter',
         'IsNego',
@@ -47,7 +47,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'Password',
+        'password',
         'remember_token',
     ];
 
@@ -57,12 +57,12 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'Email_verified_at' => 'datetime',
-        'Password' => 'hashed',
-        'is_supperadm' => 'boolean',
-        'is_permitter' => 'boolean',
-        'is_nego' => 'boolean',
-        'is_final' => 'boolean',
-        'is_active' => 'boolean',
+        'EmailVerifiedAt' => 'datetime',
+        'password' => 'hashed',
+        'IsSupperadm' => 'boolean',
+        'IsPermitter' => 'boolean',
+        'IsNego' => 'boolean',
+        'IsFinal' => 'boolean',
+        'IsActive' => 'boolean',
     ];
 }

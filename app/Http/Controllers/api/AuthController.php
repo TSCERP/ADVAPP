@@ -28,12 +28,11 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return response()->json(['error' => implode(' ', $validator->errors()->all())], 422); // Return validation errors with a 422 Unprocessable Entity status code
             }
-          //  $loginField = filter_var($request->input('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'email';
+            //  $loginField = filter_var($request->input('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'email';
             $credentials = [
                 'email' => $request->input('email'),
                 'password' => $request->input('password'),
             ];
-
             if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'error' => true,
@@ -75,16 +74,16 @@ class AuthController extends Controller
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
                 'id' => $user->id,
-                'firstName' => $user->firstName,
+                'FirstName' => $user->FirstName,
                 'LastName' => $user->LastName,
-                'email' => $user->email,
-                'phone' => $user->phone,
-                'avatar' => $user->avatar,
-                'title' => $user->title,
-                'employeeCode' => $user->employeeCode,
-                'branch' => $user->branch,
-                'location' => $user->location,
-                'permissions' => $permissions
+                'email' => $user->Email,
+                'Phone' => $user->Phone,
+                'Avatar' => $user->Avatar,
+                'Title' => $user->Title,
+                'EmployeeCode' => $user->EmployeeCode,
+                'Branch' => $user->Branch,
+                'Location' => $user->Location,
+                'Permissions' => $permissions
 
             ])->withCookie($cookie);
         } catch (\Exception $error) {

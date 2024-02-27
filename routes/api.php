@@ -6,6 +6,8 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\RolesController;
 use App\Http\Controllers\api\PermissionsController;
+use App\Http\Controllers\api\Approval\ApprovalController;
+use App\Http\Controllers\api\Project\ProjectController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -56,10 +58,19 @@ Route::middleware(['auth:sanctum',])->group(function () {
     });
     //Route for Approvals
     Route::group(['prefix' => 'approvals'], function () {
-        Route::get('/', [App\Http\Controllers\api\ApprovalController::class, 'list'])->name('danh-sach-approvals');
-        Route::get('/{id}', [App\Http\Controllers\api\ApprovalController::class, 'show'])->name('chi-tiet-approvals');
-        Route::post('/create', [App\Http\Controllers\api\ApprovalController::class, 'create'])->name('tao-approvals');
-        Route::patch('/update/{id}', [App\Http\Controllers\api\ApprovalController::class, 'update'])->name('cap-nhat-approvals');
-        Route::delete('/delete/{id}', [App\Http\Controllers\api\ApprovalController::class, 'delete'])->name('xoa-approvals');
+        Route::get('/', [ApprovalController::class, 'list'])->name('danh-sach-approvals');
+        Route::get('/{id}', [ApprovalController::class, 'show'])->name('chi-tiet-approvals');
+        Route::post('/create', [ApprovalController::class, 'create'])->name('tao-approvals');
+        Route::patch('/update/{id}', [ApprovalController::class, 'update'])->name('cap-nhat-approvals');
+        Route::delete('/delete/{id}', [ApprovalController::class, 'delete'])->name('xoa-approvals');
+    });
+    //Project
+    Route::group(['prefix' => 'projects'], function () {
+        Route::get('/', [ProjectController::class, 'index'])->name('danh-sach-projects');
+        Route::get('/list', [ProjectController::class, 'list'])->name('danh-sach-projects-active');
+        Route::get('/{id}', [ProjectController::class, 'show'])->name('chi-tiet-projects');
+        Route::post('/create', [ProjectController::class, 'create'])->name('tao-projects');
+        Route::post('/update/{id}', [ProjectController::class, 'update'])->name('cap-nhat-projects');
+        Route::delete('/delete/{id}', [ProjectController::class, 'delete'])->name('xoa-projects');
     });
 });

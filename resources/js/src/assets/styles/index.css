@@ -350,3 +350,21 @@ main {
   display: none !important;
 }
 
+/* Focus effect textarea */
+.focus-textarea {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+
+.antd-textarea {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+
+/* CSS styles cho div con đầu tiên của .comment-footer */
+.comment-footer > div:first-child {
+  display: block;
+  width: 100%;
+}

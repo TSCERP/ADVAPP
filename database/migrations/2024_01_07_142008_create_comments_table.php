@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->integer('ApprID');
-            $table->text('context')->nullable();
-            $table->string('file')->nullable();
-            $table->integer('Parent_id')->unsigned()->nullable();
+            $table->text('Context')->nullable();
+            $table->string('File')->nullable();
+            $table->integer('ParentId')->unsigned()->nullable();
             $table->integer('BaseID');
             $table->integer('BaseType');
-            $table->boolean('is_delete')->default(false);
+            $table->boolean('IsDeleted')->default(false);
             $table->integer('UserID');
         });
     }

@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('ApprID')->nullable();
             $table->integer('userID')->nullable();
             $table->integer('Status')->nullable();
-            $table->integer('oldUserID')->nullable();
+            $table->integer('OldUserID')->nullable();
             $table->integer('ObjType')->default(18);
+            $table->string('Decision')->nullable();
+            $table->text('Note')->nullable();
             $table->timestamps();
         });
     }

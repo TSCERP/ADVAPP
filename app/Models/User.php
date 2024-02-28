@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
@@ -24,13 +25,13 @@ class User extends Authenticatable
         'Avatar',
         'Email',
         'Phone',
-        'Email_verified_at',
+        'EmailVerifiedAt',
         'Password',
-        'is_supperadm',
-        'is_permitter',
-        'is_nego',
-        'is_final',
-        'is_active',
+        'IsSupperadm',
+        'IsPermitter',
+        'IsNego',
+        'IsFinal',
+        'IsActive',
         'IntegrationKey',
         'Division',
         'Department',
@@ -58,11 +59,10 @@ class User extends Authenticatable
     protected $casts = [
         'Email_verified_at' => 'datetime',
         'Password' => 'hashed',
-        'is_supperadm'=>'boolean',
-        'is_permitter'=>'boolean',
-        'is_nego'=>'boolean',
-        'is_final'=>'boolean',
-        'is_active'=>'boolean',
+        'is_supperadm' => 'boolean',
+        'is_permitter' => 'boolean',
+        'is_nego' => 'boolean',
+        'is_final' => 'boolean',
+        'is_active' => 'boolean',
     ];
-
 }

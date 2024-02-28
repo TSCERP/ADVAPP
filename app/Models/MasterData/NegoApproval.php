@@ -5,7 +5,8 @@ namespace App\Models\MasterData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Final extends Model
+class NegoApproval extends Model
 {
     use HasFactory;
+    protected $table = 'service_ns_negotiator';
 }

@@ -42,25 +42,39 @@ class CreateRoutePermissionsCommand extends Command
     {
         $permissionsToCreate =
             [
-                'users', 'approval',
+                'Users', 'approval',
                 'VHO', 'CHO',
                 'SO', 'PO',
-                'SQ', 'PQ',
-                'Contract',
-                'Report'
+                'SQ', 'Contract',
+                'Report',
+                'ConfirmVHO', 'ConfirmCHO',
+                'ConfirmSO', 'ConfirmPO',
+                'ConfirmSQ', 'ConfirmContract',
+                'RejectVHO', 'RejectCHO',
+                'RejectSO', 'RejectPO',
+
             ];
 
         $messageMapping = [
             'VHO' => 'VHO',
             'CHO' => 'CHO',
-            'SO' => 'SO',
-            'PO' => 'PO',
-            'SQ' => 'SQ',
-            'PQ' => 'PQ',
+            'SO' => 'Sales Order',
+            'PO' => 'Purchase Order',
+            'SQ' => 'Sales Quotation',
             'Report' => 'báo cáo',
             'Contract' => 'hợp đồng',
             'users' => 'quản lý user',
             'approval' => 'approval',
+            'ConfirmVHO' => 'Xác nhận VHO',
+            'ConfirmCHO' => 'Xác nhận CHO',
+            'ConfirmSO' => 'Xác nhận Sales Order',
+            'ConfirmPO' => 'Xác nhận Purchase Order',
+            'ConfirmSQ' => 'Xác nhận Sales Quotation',
+            'ConfirmContract' => 'Xác nhận hợp đồng',
+            'RejectVHO' => 'Từ chối VHO',
+            'RejectCHO' => 'Từ chối CHO',
+            'RejectSO' => 'Từ chối Sales Order',
+            'RejectPO' => 'Từ chối Purchase Order',
 
         ];
 
@@ -101,12 +115,14 @@ class CreateRoutePermissionsCommand extends Command
         $adminRole->givePermissionTo(Permission::all());
 
         // Gán quyền cho role client (chỉ quyền cụ thể)
-        $clientPermissions = Permission::whereIn('name', ['approval',
-        'VHO', 'CHO',
-        'SO', 'PO',
-        'SQ', 'PQ',
-        'Contract',
-        'Report'])->get();
+        $clientPermissions = Permission::whereIn('name', [
+            'approval',
+            'VHO', 'CHO',
+            'SO', 'PO',
+            'SQ', 'PQ',
+            'Contract',
+            'Report'
+        ])->get();
         $clientRole->givePermissionTo($clientPermissions);
 
         $this->info('Permissions assigned to roles successfully.');

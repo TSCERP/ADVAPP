@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+
 class Costs extends Model
 {
     use HasFactory;
-    protected $table = 'costs';
-    protected $fillable = ['ApprID','StartDate','EndDate','Summary','Note','VATAmt','Total','GrandTotal','ObjType'];
+    protected $table = 'COSTS';
+    protected $fillable = [
+        'ApprID', 'StartDate', 'EndDate',
+        'Summary', 'Note', 'VATAmt',
+        'Total', 'GrandTotal', 'ObjType'
+    ];
     protected static function boot()
     {
         parent::boot();

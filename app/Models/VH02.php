@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vho2 extends Model
+class VH02 extends Model
 {
     use HasFactory;
-    protected $table = 'vho2';
+    protected $table = 'VH02';
     protected $fillable = [
         'RefID', 'CardCode', 'CardName',
         'Site', 'SubItem', 'Descrpt',

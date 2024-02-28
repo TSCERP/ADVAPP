@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Approvals extends Model
 {
     use HasFactory;
-    protected $table = 'approvals';
+    protected $table = 'Approvals';
     protected $fillable = [
         'DocNum',
         'DocType',
@@ -38,7 +38,7 @@ class Approvals extends Model
         'CreateBy',
         'UpdateBy',
         'UpdateDate',
-        'is_close',
+        'IsClose',
         'BaseRef',
     ];
     protected $casts = [
@@ -67,7 +67,7 @@ class Approvals extends Model
         'DeletedDate' => 'datetime:Y-m-d H:i:s',
         'UpdateBy' => 'string',
         'UpdateDate' => 'datetime:Y-m-d H:i:s',
-        'is_close' => 'boolean',
+        'IsClose' => 'boolean',
         'BaseRef' => 'string',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',

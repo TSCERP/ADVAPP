@@ -12,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('approvals', function (Blueprint $table) {
-            $table->id();
+        Schema::create('Approvals', function (Blueprint $table) {
+            $table->id()->autoIncrement()->unique();
             $table->string('DocNum', 254)->unique();
             $table->string('DocType', 50);
+            $table->date('StartDate')->nullable();
+            $table->date('EndDate')->nullable();
             $table->boolean('NewTrading')->nullable()->default(false);
             $table->string('CategoryCode', 254)->nullable();
             $table->string('CategoryName', 254)->nullable();
@@ -28,7 +30,7 @@ return new class extends Migration
             $table->string('Department', 254)->nullable();
             $table->string('Section', 254)->nullable();
             $table->string('DocStatus', 254)->nullable();
-            $table->boolean('Revised ')->nullable()->default(false);
+            $table->boolean('Revised')->nullable()->default(false);
             $table->string('RevisedBy', 254)->nullable();
             $table->datetime('RevisedDate')->nullable();
             $table->boolean('Cancelled')->nullable()->default(false);
@@ -38,11 +40,11 @@ return new class extends Migration
             $table->string('DeletedBy', 254)->nullable();
             $table->string('DeletedDate', 254)->nullable();
             $table->integer('ObjType')->default(11);
-            $table->boolean('is_close')->nullable()->default(false);
+            $table->boolean('IsClose')->nullable()->default(false);
             $table->string('BaseRef', 254)->nullable();
             $table->boolean('Allocate')->nullable()->default(false);
-            $table->integer('CreateBy', 254);
-            $table->string('UpdateBy', 254)->nullable();
+            $table->integer('CreateBy');
+            $table->integer('UpdateBy')->nullable();
             $table->timestamps();
         });
     }
@@ -52,6 +54,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('approvals');
+        Schema::dropIfExists('Approvals');
     }
 };

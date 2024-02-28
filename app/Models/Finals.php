@@ -10,5 +10,5 @@ class Finals extends Model
 {
     use HasFactory;
     protected $table = 'Finals';
-    protected $fillable = ['ApprID', 'userID', 'Status', 'oldUserID', 'ObjType'];
+    protected $fillable = ['ApprID', 'UserID', 'Status', 'OldUserID', 'ObjType'];
 }

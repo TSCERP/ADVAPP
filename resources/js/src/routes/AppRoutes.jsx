@@ -36,10 +36,10 @@ import ApprovalBudgetList from "../pages/approval/budget/list";
 import ApprovalBudgetEdit from "../pages/approval/budget/edit";
 import ApprovalBudgetView from "../pages/approval/budget/view";
 
-import ApprovalSGView from "../pages/approval/sg&a-cost/view";
-import ApprovalSGList from "../pages/approval/sg&a-cost/list";
-import ApprovalSGCreate from "../pages/approval/sg&a-cost/create";
-import ApprovalSGEdit from "../pages/approval/sg&a-cost/edit";
+import ApprovalSGAView from "../pages/approval/sg&a-cost/view";
+import ApprovalSGAList from "../pages/approval/sg&a-cost/list";
+import ApprovalSGACreate from "../pages/approval/sg&a-cost/create";
+import ApprovalSGAEdit from "../pages/approval/sg&a-cost/edit";
 import ApprovalOtherCreate from "../pages/approval/other/create";
 import ApprovalOtherList from "../pages/approval/other/list";
 import ApprovalOtherEdit from "../pages/approval/other/edit";
@@ -204,13 +204,13 @@ function AppRoutes() {
                 element={<ApprovalBudgetView />}
             />
             {/* Approval SG&A Cost */}
-            <Route path="/approval/sg&a" element={<ApprovalSGList />} />
+            <Route path="/approval/sg&a" element={<ApprovalSGAList />} />
             <Route
                 path="/approval/sg&a/create"
-                element={<ApprovalSGCreate />}
+                element={<ApprovalSGACreate />}
             />
-            <Route path="/approval/sg&a/edit" element={<ApprovalSGEdit />} />
-            <Route path="/approval/sg&a/view" element={<ApprovalSGView />} />
+            <Route path="/approval/sg&a/edit" element={<ApprovalSGAEdit />} />
+            <Route path="/approval/sg&a/view" element={<ApprovalSGAView />} />
             {/* Approval Other */}
             <Route path="/approval/other" element={<ApprovalOtherList />} />
             <Route

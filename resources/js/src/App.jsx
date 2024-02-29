@@ -4,6 +4,8 @@ import HeadMenu from "./layouts/headmenu.jsx";
 import SideMenu from "./layouts/SideMenu.jsx";
 import { BrowserRouter as Router, Navigate } from "react-router-dom";
 import "../src/assets/styles/index.css";
+import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Layout } from "antd";
 import AppRoutes from "./routes/AppRoutes.jsx";
 import AuthRoutes from "./routes/authRoutes.jsx";

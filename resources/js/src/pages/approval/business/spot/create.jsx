@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import "../../../../assets/styles/index.css";
-import { LuSave, LuLink2 } from "react-icons/lu";
 import { MdOutlineLink } from "react-icons/md";
 import { Input, Modal, Select, message, Upload, Button } from "antd";
 import { Checkbox, Tabs, DatePicker, Space } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import toast from "react-hot-toast";
-import "../../../../assets/styles/index.css";
-
+import { IoReload, IoCopyOutline } from "react-icons/io5";
 import { IoIosListBox } from "react-icons/io";
-import { LuTrash2, LuPlus } from "react-icons/lu";
+import { LuTrash2, LuPlus, LuSave, LuLink2, LuPenSquare } from "react-icons/lu";
 import { FaArrowUp, FaCheck, FaInfo, FaRedoAlt, FaLink } from "react-icons/fa";
 import { TbSquareRoundedLetterC, TbSquareRoundedLetterS } from "react-icons/tb";
-// import { FaArrowUp } from "react-icons/fa6";
+import { FaCircleDollarToSlot } from "react-icons/fa6";
 
 const { TextArea } = Input;
+const oldTitle = document.title;
+const newTitle = "Create Approval Spot - Aeon Delight Vietnam";
 
 const props = {
     action: "//jsonplaceholder.typicode.com/posts/",
@@ -119,6 +118,16 @@ function ApprovalBusinessSpotCreate() {
         toast("This module is under development.");
     };
 
+    /**
+     *  All effected here
+     */
+    useEffect(() => {
+        document.title = newTitle;
+        return () => {
+            document.title = oldTitle;
+        };
+    }, []);
+
     return (
         <>
             <div className="page m-7 my-7 border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.13)] bg-white rounded-xl">
@@ -126,7 +135,7 @@ function ApprovalBusinessSpotCreate() {
                     {/* Header */}
                     <div className="flex justify-between">
                         <div className="text-[27px] font-bold">
-                            Approval Spot
+                            Create Approval Spot
                         </div>
                         <button
                             className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
@@ -379,6 +388,23 @@ function ApprovalBusinessSpotCreate() {
                                 />
                             </div>
                         </div>
+
+                        <div className="mt-4">
+                            <div className="col-span-1">
+                                <label
+                                    htmlFor="email"
+                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                >
+                                    Related Approval
+                                </label>
+                                <Input
+                                    type="text"
+                                    id="approval_type"
+                                    placeholder="Enter Related Approval URL Link"
+                                    className="font-semibold"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Tabs */}
@@ -526,6 +552,7 @@ function ApprovalBusinessSpotCreate() {
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -563,9 +590,17 @@ function ApprovalBusinessSpotCreate() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -576,7 +611,7 @@ function ApprovalBusinessSpotCreate() {
                                                                             Futterkiste
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
+                                                                            Sub-Dante
                                                                             Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -636,7 +671,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     readOnly
                                                                     value="0000000.00"
                                                                 />
@@ -652,7 +687,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -668,7 +703,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -707,6 +742,7 @@ function ApprovalBusinessSpotCreate() {
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -714,9 +750,6 @@ function ApprovalBusinessSpotCreate() {
                                                                         </th>
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
-                                                                        </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
                                                                         </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
@@ -727,9 +760,17 @@ function ApprovalBusinessSpotCreate() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -749,10 +790,6 @@ function ApprovalBusinessSpotCreate() {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy
@@ -885,9 +922,11 @@ function ApprovalBusinessSpotCreate() {
                                                                             Name
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Customer
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -925,9 +964,17 @@ function ApprovalBusinessSpotCreate() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -998,7 +1045,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     readOnly
                                                                     value="0000000.00"
                                                                 />
@@ -1014,7 +1061,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -1030,7 +1077,7 @@ function ApprovalBusinessSpotCreate() {
                                                                 </label>
                                                                 <input
                                                                     type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] rounded-lg  block w-full p-1.5 "
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
                                                                     value="0000000.00"
                                                                     readOnly
                                                                 />
@@ -1066,9 +1113,11 @@ function ApprovalBusinessSpotCreate() {
                                                                             Name
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Customer
                                                                             Site
                                                                         </th>
                                                                         <th className="min-w-[260px] max-h-[260px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                            Sub
                                                                             Item
                                                                         </th>
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
@@ -1076,9 +1125,6 @@ function ApprovalBusinessSpotCreate() {
                                                                         </th>
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
-                                                                        </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
                                                                         </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
@@ -1089,9 +1135,17 @@ function ApprovalBusinessSpotCreate() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                            </button>
+                                                                            <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <IoCopyOutline className="w-5 h-5" />
+                                                                                </button>
+                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                    <LuPenSquare className="w-5 h-5" />
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
                                                                         <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
@@ -1111,10 +1165,6 @@ function ApprovalBusinessSpotCreate() {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy
@@ -1179,7 +1229,8 @@ function ApprovalBusinessSpotCreate() {
                                                                                 <thead className="text-[16px] rounded-t-lg">
                                                                                     <tr className="border-b-2 border-gray-300">
                                                                                         <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center border-r-2 border-gray-300 py-2">
-                                                                                            Permitter Name
+                                                                                            Permitter
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1188,7 +1239,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
-                                                                                            Reason, opinions or conditions for approval
+                                                                                            Reason,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1243,10 +1299,28 @@ function ApprovalBusinessSpotCreate() {
                                                                     />
                                                                 </svg>
                                                                 <div className="ml-6">
-                                                                    <h4 className="text-[18px] font-bold text-[#3A6F41]">
-                                                                        Negotiators
-                                                                    </h4>
-                                                                    <div className="mt-2 mb-2  border-2 border-gray-300 ">
+                                                                    <div className="flex gap-4 items-center">
+                                                                        <h4 className="text-[18px] font-bold text-[#3A6F41]">
+                                                                            Negotiators
+                                                                        </h4>
+                                                                        <div className="flex space-x-2">
+                                                                            <button
+                                                                                className="flex items-center space-x-2 p-1.5 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                // onClick={
+                                                                                //     handleOpenAllocateModal
+                                                                                // }
+                                                                            >
+                                                                                <div className="text-[15px] flex items-center gap-1">
+                                                                                    <IoReload />
+                                                                                    <span>
+                                                                                        Load
+                                                                                        default
+                                                                                    </span>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="mt-2 border-2 border-gray-300 ">
                                                                         <div className="overflow-x-auto">
                                                                             <table className=" w-full bg-white border-collapse text-[15px]">
                                                                                 <thead className="text-[16px] rounded-t-lg">
@@ -1255,7 +1329,8 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Action
                                                                                         </th>
                                                                                         <th className=" w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                                            Negotator Name
+                                                                                            Negotator
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1264,7 +1339,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2">
-                                                                                        Reasons, opinions or conditions for approval
+                                                                                            Reasons,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1305,10 +1385,10 @@ function ApprovalBusinessSpotCreate() {
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr className="">
-                                                                                    <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
-                                                                                        <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                            <LuTrash2 className="] w-5 h-5" />
-                                                                                        </button>
+                                                                                        <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
+                                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                <LuTrash2 className="] w-5 h-5" />
+                                                                                            </button>
                                                                                         </td>
                                                                                         <td className="px-3 py-2 border-r-2 border-gray-300">
                                                                                             <Input
@@ -1343,6 +1423,14 @@ function ApprovalBusinessSpotCreate() {
                                                                             </table>
                                                                         </div>
                                                                     </div>
+                                                                    <div className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold">
+                                                                        <LuPlus />
+                                                                        <div>
+                                                                            Add
+                                                                            new
+                                                                            negotiator
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div className="relative w-full">
@@ -1369,7 +1457,9 @@ function ApprovalBusinessSpotCreate() {
                                                                                 <thead className="text-[17px] rounded-t-lg">
                                                                                     <tr className="border-b-2 border-gray-300">
                                                                                         <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center border-r-2 border-gray-300 py-2">
-                                                                                            Final Approver Name
+                                                                                            Final
+                                                                                            Approver
+                                                                                            Name
                                                                                         </th>
                                                                                         <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
@@ -1378,7 +1468,12 @@ function ApprovalBusinessSpotCreate() {
                                                                                             Date
                                                                                         </th>
                                                                                         <th className="w-1/3 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
-                                                                                            Reasons, opinions or conditions for approval
+                                                                                            Reasons,
+                                                                                            opinions
+                                                                                            or
+                                                                                            conditions
+                                                                                            for
+                                                                                            approval
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
@@ -1416,6 +1511,152 @@ function ApprovalBusinessSpotCreate() {
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="mt-6 border-dashed border-b-2 border-gray-300"></div>
+
+                                            {/* Budget */}
+                                            <div className="mt-6 shadow-sm rounded-lg border-2 bg-[#fbfdff] border-gray-300">
+                                                <div className="rounded-t-lg flex items-center space-x-3 bg-gray-100 border-b-2 border-gray-300 p-2.5 px-4 text-[17px] text-[#37763F] font-bold uppercase ">
+                                                    <div className=" bg-gray-700 text-white p-1.5 rounded-[50px]">
+                                                        <FaCircleDollarToSlot className="w-4 h-4" />
+                                                    </div>
+                                                    <div>Budget</div>
+                                                </div>
+                                                <div className="px-4 py-4 ">
+                                                    {/* Form */}
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Budget (Item)
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Budget Item"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Item 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Item 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Item 3",
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Budget (Amount)
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Budget Amount"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Amount 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Amount 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Amount 3",
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <label
+                                                                htmlFor=""
+                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                            >
+                                                                Account Title
+                                                            </label>
+                                                            <Select
+                                                                showSearch
+                                                                allowClear
+                                                                style={{
+                                                                    width: "100%",
+                                                                    fontSize:
+                                                                        "15px",
+                                                                }}
+                                                                placeholder="Select Account Title"
+                                                                filterOption={(
+                                                                    input,
+                                                                    option
+                                                                ) =>
+                                                                    (
+                                                                        option?.label ??
+                                                                        ""
+                                                                    ).includes(
+                                                                        input
+                                                                    )
+                                                                }
+                                                                options={[
+                                                                    {
+                                                                        value: "1",
+                                                                        label: "Title 1",
+                                                                    },
+                                                                    {
+                                                                        value: "2",
+                                                                        label: "Title 2",
+                                                                    },
+                                                                    {
+                                                                        value: "3",
+                                                                        label: "Title 3",
+                                                                    },
+                                                                ]}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1717,7 +1958,7 @@ function ApprovalBusinessSpotCreate() {
                             onCancel={handleCloseModal}
                             centered
                             maskClosable={false}
-                            width={1080}
+                            width={1200}
                             footer={[
                                 <div className="flex items-center justify-end">
                                     <button
@@ -1738,7 +1979,7 @@ function ApprovalBusinessSpotCreate() {
                             {currentAction === "sales" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -1833,9 +2074,70 @@ function ApprovalBusinessSpotCreate() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term
+                                                </label>
+                                                <Select
+                                                    showSearch
+                                                    allowClear
+                                                    style={{
+                                                        width: "100%",
+                                                        fontSize: "15px",
+                                                    }}
+                                                    placeholder="Select Payment Term"
+                                                    filterOption={(
+                                                        input,
+                                                        option
+                                                    ) =>
+                                                        (
+                                                            option?.label ?? ""
+                                                        ).includes(input)
+                                                    }
+                                                    options={[
+                                                        {
+                                                            value: "1",
+                                                            label: "Test 1",
+                                                        },
+                                                        {
+                                                            value: "2",
+                                                            label: "Test 2",
+                                                        },
+                                                        {
+                                                            value: "3",
+                                                            label: "Test 3",
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term and Condition
+                                                </label>
+                                                <Input
+                                                    type="text"
+                                                    id="approval_type"
+                                                    // placeholder="Enter Payment Term and Condition"
+                                                    className="font-semibold"
+                                                    disabled
+                                                    value="Test 1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Currency
@@ -2136,6 +2438,34 @@ function ApprovalBusinessSpotCreate() {
                                                                 </tr>
                                                                 <tr className="border-b-2 border-gray-300">
                                                                     <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
+                                                                        VAT
+                                                                        Amount
+                                                                    </td>
+                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Original Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className=" px-6 py-2">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Converted Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="border-b-2 border-gray-300">
+                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
                                                                         Before
                                                                         VAT
                                                                     </td>
@@ -2201,10 +2531,10 @@ function ApprovalBusinessSpotCreate() {
                             ) : currentAction === "additionalSales" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Customer
@@ -2243,7 +2573,7 @@ function ApprovalBusinessSpotCreate() {
                                             </div>
                                             <div className="col-span-1">
                                                 <label
-                                                    htmlFor="email"
+                                                    // htmlFor="email"
                                                     className="block mb-2 text-[15px] font-semibold text-gray-900"
                                                 >
                                                     Tax
@@ -2296,6 +2626,9 @@ function ApprovalBusinessSpotCreate() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -2542,6 +2875,34 @@ function ApprovalBusinessSpotCreate() {
                                                                 </tr>
                                                                 <tr className="border-b-2 border-gray-300">
                                                                     <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
+                                                                        VAT
+                                                                        Amount
+                                                                    </td>
+                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Original Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className=" px-6 py-2">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Converted Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="border-b-2 border-gray-300">
+                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
                                                                         Before
                                                                         VAT
                                                                     </td>
@@ -2607,7 +2968,7 @@ function ApprovalBusinessSpotCreate() {
                             ) : currentAction === "cost" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -2702,6 +3063,67 @@ function ApprovalBusinessSpotCreate() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term
+                                                </label>
+                                                <Select
+                                                    showSearch
+                                                    allowClear
+                                                    style={{
+                                                        width: "100%",
+                                                        fontSize: "15px",
+                                                    }}
+                                                    placeholder="Select Payment Term"
+                                                    filterOption={(
+                                                        input,
+                                                        option
+                                                    ) =>
+                                                        (
+                                                            option?.label ?? ""
+                                                        ).includes(input)
+                                                    }
+                                                    options={[
+                                                        {
+                                                            value: "1",
+                                                            label: "Test 1",
+                                                        },
+                                                        {
+                                                            value: "2",
+                                                            label: "Test 2",
+                                                        },
+                                                        {
+                                                            value: "3",
+                                                            label: "Test 3",
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
+                                            <div className="col-span-1">
+                                                <label
+                                                    // htmlFor="email"
+                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                                >
+                                                    Payment Term and Condition
+                                                </label>
+                                                <Input
+                                                    type="text"
+                                                    id="approval_type"
+                                                    // placeholder="Enter Payment Term and Condition"
+                                                    className="font-semibold"
+                                                    disabled
+                                                    value="Test 1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -3005,6 +3427,34 @@ function ApprovalBusinessSpotCreate() {
                                                                 </tr>
                                                                 <tr className="border-b-2 border-gray-300">
                                                                     <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
+                                                                        VAT
+                                                                        Amount
+                                                                    </td>
+                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Original Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className=" px-6 py-2">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Converted Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="border-b-2 border-gray-300">
+                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
                                                                         Before
                                                                         VAT
                                                                     </td>
@@ -3070,7 +3520,7 @@ function ApprovalBusinessSpotCreate() {
                             ) : currentAction === "additionalCost" ? (
                                 <div className="">
                                     <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-5 gap-4">
+                                        <div className="grid grid-cols-3 gap-4">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -3165,6 +3615,9 @@ function ApprovalBusinessSpotCreate() {
                                                     ]}
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-3">
                                             <div className="col-span-1">
                                                 <label
                                                     htmlFor="email"
@@ -3398,6 +3851,34 @@ function ApprovalBusinessSpotCreate() {
                                                                         />
                                                                     </td>
                                                                     <td className="w-[200px] px-6 py-2">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Converted Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr className="border-b-2 border-gray-300">
+                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
+                                                                        VAT
+                                                                        Amount
+                                                                    </td>
+                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                        <Input
+                                                                            type="text"
+                                                                            id="approval_type"
+                                                                            placeholder="Original Price"
+                                                                            className="font-semibold"
+                                                                            readOnly={
+                                                                                true
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className=" px-6 py-2">
                                                                         <Input
                                                                             type="text"
                                                                             id="approval_type"

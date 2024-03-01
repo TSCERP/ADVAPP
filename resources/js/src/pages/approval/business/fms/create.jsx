@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { Input, Modal, Select, message, Upload, Button } from "antd";
-import { Checkbox, Tabs, DatePicker, Space } from "antd";
+import { Input, Modal, Select, message, Upload, Button, Checkbox, Tabs, DatePicker, Space  } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import { IoReload, IoCopyOutline } from "react-icons/io5";
@@ -784,9 +783,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
-                                                                        </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                             Price
@@ -826,10 +822,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy
@@ -1166,9 +1158,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
-                                                                        </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                             Price
@@ -1208,10 +1197,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy

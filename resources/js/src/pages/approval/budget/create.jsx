@@ -720,7 +720,7 @@ const ApprovalBudgetCreate = () => {
                                                                             File
                                                                             Upload
                                                                         </th>
-                                                                        <th className="w-2/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
+                                                                        <th className="w-2/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                             Description
                                                                         </th>
                                                                         <th className="max-w-[100px] bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
@@ -809,7 +809,7 @@ const ApprovalBudgetCreate = () => {
                                                                         </th>
                                                                         <th className=" w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                             Action
-                                                                            by
+                                                                            By
                                                                         </th>
                                                                         <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                             Action

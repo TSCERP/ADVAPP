@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
 {
-    //
+    // Make function add list update PO
+    function list()
+    {
+    }
 }

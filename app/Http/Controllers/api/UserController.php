@@ -98,12 +98,12 @@ class UserController extends Controller
     function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'firstName' => 'required',
+            'FirstName' => 'required',
             'LastName' => 'required',
-            'title' => 'required',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'Title' => 'required',
+            'Avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'required|unique:users,phone,' . $id,
+            'Phone' => 'required|unique:users,phone,' . $id,
             'password' => 'nullable',
             'branch' => 'required',
             'location' => 'required',
@@ -250,5 +250,4 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Password updated successfully'], 200);
     }
-
 }

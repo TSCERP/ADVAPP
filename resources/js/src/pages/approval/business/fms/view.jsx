@@ -28,7 +28,7 @@ const { TextArea } = Input;
 const oldTitle = document.title;
 const newTitle = "View Approval FMS - Aeon Delight Vietnam";
 
-function ApprovalBusinessFMSView() {
+const ApprovalBusinessFMSView = () => {
     /**
      *  All constants defined here
      */
@@ -56,6 +56,8 @@ function ApprovalBusinessFMSView() {
     const [isPermitterCommentExpanding, setIsPermitterCommentExpanding] =
         useState(false);
     const [isApproverCommentExpanding, setIsApproverCommentExpanding] =
+        useState(false);
+    const [isApproverInfoModalOpen, setIsApproverInfoModalOpen] =
         useState(false);
 
     const [currentAction, setCurrentAction] = useState(null);
@@ -374,6 +376,56 @@ function ApprovalBusinessFMSView() {
                         </div>
 
                         <div className="mt-4 grid grid-cols-3 gap-4">
+                            <div className="col-span-1 flex flex-col">
+                                <div className=" rounded-md text-[15px] font-semibold">
+                                    <label
+                                        htmlFor="email"
+                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
+                                    >
+                                        FMS Approval Type
+                                    </label>
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        style={{
+                                            width: "100%",
+                                            fontSize: "15px",
+                                        }}
+                                        placeholder="Select FMS Approval Type"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "GMS",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "SC",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Total",
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                                <div className="p-1.5 px-3 bg-gray-50 border border-[#D9D9D9] rounded-md text-[15px] mt-6 font-semibold">
+                                    <Checkbox
+                                        className="w-full"
+                                        onChange={(e) => {
+                                            console.log(
+                                                `Is this approval new trading? = ${e.target.checked}`
+                                            );
+                                        }}
+                                    >
+                                        New Trading Approval
+                                    </Checkbox>
+                                </div>
+                            </div>
                             <div className="col-span-2">
                                 <label
                                     htmlFor="email"
@@ -386,20 +438,6 @@ function ApprovalBusinessFMSView() {
                                     placeholder="Enter Subject Content"
                                     maxLength={5}
                                 />
-                            </div>
-                            <div className="col-span-1 flex flex-col">
-                                <div className="p-1.5 px-3 bg-gray-50 border border-[#D9D9D9] rounded-md text-[15px] mt-8 font-semibold">
-                                    <Checkbox
-                                        className="w-full"
-                                        onChange={(e) => {
-                                            console.log(
-                                                `Is this approval new trading? = ${e.target.checked}`
-                                            );
-                                        }}
-                                    >
-                                        New Trading Approval
-                                    </Checkbox>
-                                </div>
                             </div>
                         </div>
 
@@ -2186,6 +2224,14 @@ function ApprovalBusinessFMSView() {
                                                                                                         )
                                                                                                     }
                                                                                                 />
+                                                                                                <AiOutlineInfoCircle
+                                                                                                    className="w-6 h-6 text-[#3A6F41] hover:cursor-pointer"
+                                                                                                    onClick={() => {
+                                                                                                        setIsApproverInfoModalOpen(
+                                                                                                            true
+                                                                                                        );
+                                                                                                    }}
+                                                                                                />
                                                                                             </div>
                                                                                         </td>
                                                                                     </tr>
@@ -2890,93 +2936,7 @@ function ApprovalBusinessFMSView() {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div className="mt-6 border-dashed border-b-2 border-gray-300"></div>
-
-                                            {/* Approval Description */}
-                                            <div className="mt-6 shadow-sm rounded-lg border-2 bg-[#fbfdff] border-gray-300">
-                                                <div className="rounded-t-lg flex items-center space-x-3 bg-gray-100 border-b-2 border-gray-300 p-2.5 px-4 text-[17px] text-[#37763F] font-bold uppercase ">
-                                                    <div className=" bg-gray-700 text-white p-1.5 rounded-[50px]">
-                                                        <FaInfo className="w-4 h-4" />
-                                                    </div>
-                                                    <div>
-                                                        Approval Description
-                                                    </div>
-                                                </div>
-                                                <div className="px-4 py-4 ">
-                                                    {/* Form */}
-                                                    <div className="grid grid-cols-4 gap-4">
-                                                        <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
-                                                                Start Date
-                                                            </label>
-                                                            <DatePicker
-                                                                className="w-full"
-                                                                onChange={(
-                                                                    date,
-                                                                    dateString
-                                                                ) => {
-                                                                    setCostStartDate(
-                                                                        dateString
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
-                                                                End Date
-                                                            </label>
-                                                            <DatePicker
-                                                                className="w-full"
-                                                                onChange={(
-                                                                    date,
-                                                                    dateString
-                                                                ) => {
-                                                                    setCostEndDate(
-                                                                        dateString
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="mt-4 grid grid-cols-2 gap-4">
-                                                        <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
-                                                                Location
-                                                            </label>
-                                                            <TextArea
-                                                                rows={4}
-                                                                placeholder="Enter Location"
-                                                                maxLength={5}
-                                                            />
-                                                        </div>
-                                                        <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
-                                                                Content
-                                                            </label>
-                                                            <TextArea
-                                                                rows={4}
-                                                                placeholder="Enter Content"
-                                                                maxLength={5}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                            
                                             <div className="mt-6 border-dashed border-b-2 border-gray-300"></div>
 
                                             {/* Fiscal Recap */}
@@ -5506,7 +5466,7 @@ function ApprovalBusinessFMSView() {
 
                         {/* Negotiator Approval Info Modal */}
                         <Modal
-                            title={"Approval Allocation"}
+                            title={"Approval Information"}
                             visible={negotiatorActions.some(
                                 (action) => action.info === true
                             )}
@@ -5555,6 +5515,118 @@ function ApprovalBusinessFMSView() {
                                                 <tr className="text-[15px]">
                                                     <th className=" min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
                                                         Negotiator Name
+                                                    </th>
+                                                    <th className="max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
+                                                        Approval
+                                                    </th>
+                                                    <th className="max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
+                                                        Date
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Negotiator 1"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Approved with condition"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                    <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="10/12/2023"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Negotiator 1"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Approved"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                    <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="10/12/2023"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 border-dashed border-b-2 border-gray-300"></div>
+                            </div>
+                        </Modal>
+
+                        {/* Final Apporver Approval Info Modal */}
+                        <Modal
+                            title={"Approval Information"}
+                            visible={isApproverInfoModalOpen}
+                            onCancel={() =>
+                                setIsApproverInfoModalOpen(false)
+                            }
+                            centered
+                            maskClosable={false}
+                            width={680}
+                            footer={[
+                                <div className="flex items-center justify-end">
+                                    <button
+                                        className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
+                                        onClick={() =>
+                                            setIsApproverInfoModalOpen(false)
+                                        }
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>,
+                            ]}
+                        >
+                            <div className="pt-3">
+                                <div className=" rounded-t-lg border-2 border-[#A3D1AD] ">
+                                    <div className="  bg-[#d4f2d9]  rounded-t-lg flex items-center justify-start px-3 py-1.5">
+                                        <div className="flex space-x-3 items-center text-[18px] font-bold py-1.5 ">
+                                            <IoIosListBox className="w-6 h-6 text-[#3A6F41]" />
+                                            <div>
+                                                Final Approver Approval Information
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className=" w-full bg-white border-collapse">
+                                            <thead className="bg-[#e6efe7]">
+                                                <tr className="text-[15px]">
+                                                    <th className=" min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
+                                                        Final Approver Name
                                                     </th>
                                                     <th className="max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
                                                         Approval

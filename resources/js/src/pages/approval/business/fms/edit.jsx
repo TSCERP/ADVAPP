@@ -788,9 +788,6 @@ const ApprovalBusinessFMSEdit = () => {
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
-                                                                        </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                             Price
@@ -830,10 +827,6 @@ const ApprovalBusinessFMSEdit = () => {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy
@@ -1170,9 +1163,6 @@ const ApprovalBusinessFMSEdit = () => {
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
-                                                                            Quantity
-                                                                        </th>
                                                                         <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                             Price
@@ -1212,10 +1202,6 @@ const ApprovalBusinessFMSEdit = () => {
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Alfreds
                                                                             Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
                                                                         </td>
                                                                         <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
                                                                             Italy
@@ -3904,7 +3890,7 @@ const ApprovalBusinessFMSEdit = () => {
                             onCancel={handleCloseAllocateModal}
                             centered
                             maskClosable={false}
-                            width={680}
+                            width={1080}
                             footer={[
                                 <div className="flex items-center justify-end">
                                     <button
@@ -3934,8 +3920,11 @@ const ApprovalBusinessFMSEdit = () => {
                                         <table className=" w-full bg-white border-collapse">
                                             <thead className="bg-[#e6efe7]">
                                                 <tr className="text-[15px]">
-                                                    <th className=" min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
+                                                    <th className="min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
                                                         Customer Name
+                                                    </th>
+                                                    <th className="min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
+                                                        Sub Item
                                                     </th>
                                                     <th className="min-w-[50px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
                                                         % Allocate
@@ -3948,7 +3937,16 @@ const ApprovalBusinessFMSEdit = () => {
                                                         <Input
                                                             type="text"
                                                             id="approval_type"
-                                                            placeholder="Costumer 1"
+                                                            placeholder="Customer 1"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Sub Item 1"
                                                             className="font-semibold"
                                                             disabled={true}
                                                         />
@@ -3967,7 +3965,16 @@ const ApprovalBusinessFMSEdit = () => {
                                                         <Input
                                                             type="text"
                                                             id="approval_type"
-                                                            placeholder="Costumer 2"
+                                                            placeholder="Customer 2"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className=" border-l-0 border border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Sub Item 2"
                                                             className="font-semibold"
                                                             disabled={true}
                                                         />
@@ -3996,20 +4003,26 @@ const ApprovalBusinessFMSEdit = () => {
                                         </div>
                                     </div>
                                     <div className="overflow-x-auto">
-                                        <table className=" w-full bg-white border-collapse">
+                                        <table className="w-full bg-white border-collapse">
                                             <thead className="bg-[#e6efe7]">
                                                 <tr className="text-[15px]">
-                                                    <th className=" min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
+                                                    <th className="min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
                                                         Vendor
                                                     </th>
-                                                    <th className="min-w-[50px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
-                                                        Unit Price
+                                                    <th className="min-w-[60px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
+                                                        Sub Item
+                                                    </th>
+                                                    <th className="min-w-[60px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
+                                                        Customer
+                                                    </th>
+                                                    <th className="min-w-[60px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
+                                                        % Allocate
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
+                                                    <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
                                                             id="approval_type"
@@ -4018,11 +4031,28 @@ const ApprovalBusinessFMSEdit = () => {
                                                             disabled={true}
                                                         />
                                                     </td>
-                                                    <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                    <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
                                                             id="approval_type"
-                                                            placeholder="Enter Unit Price"
+                                                            placeholder="Sub Item 1"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Enter Customer"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                    <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Enter % Allocate"
                                                             className="font-semibold"
                                                         />
                                                     </td>
@@ -4037,11 +4067,28 @@ const ApprovalBusinessFMSEdit = () => {
                                                             disabled={true}
                                                         />
                                                     </td>
-                                                    <td className=" border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                    <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
                                                             id="approval_type"
-                                                            placeholder="Enter Unit Price"
+                                                            placeholder="Sub Item 2"
+                                                            className="font-semibold"
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Enter Customer"
+                                                            className="font-semibold"
+                                                        />
+                                                    </td>
+                                                    <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            id="approval_type"
+                                                            placeholder="Enter % Allocate"
                                                             className="font-semibold"
                                                         />
                                                     </td>

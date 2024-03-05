@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::patch('/change-password/{UserId}', [UserController::class, 'changePassword']);
         Route::patch('/disable/{UserId}', [UserController::class, 'blockUser']);
         Route::delete('/delete/{UserId}', [UserController::class, 'delete']);
+        Route::get('/approvals', [UserController::class, 'Approval']);
     });
     //Route for Approvals
     Route::group(['prefix' => 'approvals'], function () {
@@ -75,3 +76,5 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::delete('/delete/{id}', [ProjectController::class, 'delete'])->name('xoa-projects');
     });
 });
+//inlucde route
+include('masterDataApi.php');

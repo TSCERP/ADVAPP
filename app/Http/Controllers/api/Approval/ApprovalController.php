@@ -86,14 +86,58 @@ class ApprovalController extends Controller
     }
     function storeSpot($data)
     {
+        try {
+
+            //todo something
+            //header
+            // detail
+            //summary data 
+            // save to db
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
     function storeFMS($data)
     {
+        try {
+            //todo something
+            // check data
+            // check budget
+            //header
+            // detail
+            //summary data 
+            //buget
+            // save to db
+
+
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
     function storeYearly($data)
     {
+        try {
+
+            //todo something
+            //header
+            // detail
+            //summary data 
+            // save to db
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
     function storeOther($data)
     {
+        try {
+
+            //todo something
+            //header
+            // detail
+            //summary data 
+            // save to db
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 }

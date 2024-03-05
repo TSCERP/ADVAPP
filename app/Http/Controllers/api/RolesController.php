@@ -64,6 +64,24 @@ class RolesController extends Controller
         $role->syncPermissions($request->get('permission'));
         return response()->json(['message' => 'Role created successfully', 'user' => $role], 200);
     }
+
+    public function show($id)
+    {
+        $role = Role::find($id);
+
+        if (!$role) {
+            return response()->json(['error' => 'Role not found'], 404);
+        }
+        $rolePermissions = $role->permissions->map(function ($permission) {
+            return [
+                'id' => $permission->id,
+                'name' => $permission->name
+            ];
+        });
+
+        $allpermissions = Permission::all();
+        return response()->json(['rolePermissions' => $rolePermissions, 'allPermission' => $allpermissions], 200);
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -80,11 +98,8 @@ class RolesController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => implode(' ', $validator->errors()->all())], 422); // Return validation errors with a 422 Unprocessable Entity status code
         }
-
         $role->update($request->only('name'));
-
         $role->syncPermissions($request->get('permission'));
-
         return response()->json(['message' => 'Role updated successfully', 'user' => $role], 200);
     }
 

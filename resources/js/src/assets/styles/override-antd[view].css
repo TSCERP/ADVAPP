@@ -1,0 +1,16 @@
+.ant-select-selection-item,
+.ant-select-selector {
+    color: #000 !important;
+    cursor: default !important;
+}
+
+/* For exchange rate */
+.exchange-rate .ant-input-number-input-wrap input {
+    text-align: right !important;
+}
+
+/* For converted price */
+.converted-price .ant-input-number-input-wrap input {
+    text-align: right !important;
+    color: black !important;
+}

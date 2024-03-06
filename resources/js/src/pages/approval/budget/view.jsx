@@ -22,20 +22,29 @@ import {
     IoCloudUpload,
     IoChatbubbleEllipsesOutline,
     IoChatboxOutline,
-    IoWarningOutline,
+    IoEyeOutline,
+    IoPrintOutline,
 } from "react-icons/io5";
 import { IoIosListBox } from "react-icons/io";
-import { LuTrash2, LuPlus, LuSave, LuLink2, LuPenSquare } from "react-icons/lu";
-import { MdOutlineLink } from "react-icons/md";
+import { LuTrash2, LuPlus, LuSend, LuLink2, LuBook } from "react-icons/lu";
+import {
+    MdDeleteOutline,
+    MdOutlineLink,
+    MdOutlineCancel,
+} from "react-icons/md";
 import { AiOutlineSend, AiOutlineInfoCircle } from "react-icons/ai";
 import { FaArrowUp, FaCheck, FaInfo, FaRedoAlt, FaLink } from "react-icons/fa";
 import { TbSquareRoundedLetterC, TbSquareRoundedLetterS } from "react-icons/tb";
-import { FaCircleDollarToSlot } from "react-icons/fa6";
+import { FaCircleDollarToSlot, FaRegCopy } from "react-icons/fa6";
+import { BiEdit } from "react-icons/bi";
 
 import { GrAttachment } from "react-icons/gr";
 import moment from "moment";
 import toast from "react-hot-toast";
 
+import ApprovalComment from "../../../components/approval/ApprovalComment";
+import Check from "../../../utils/icons/Check";
+import formatBytes from "../../../utils/number/formatBytes";
 import MentionTextArea from "../../../components/approval/MentionTextArea";
 
 // Get instance variables
@@ -66,19 +75,29 @@ function ApprovalBudgetView() {
     /**
      *  All states defined here
      */
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
+    const [permitter, setPermitter] = useState({
+        userId: "1",
+        approval: "1",
+        date: "01/02/2024",
+        reason: "Test 1",
+    });
+
+    const [finalApprover, setFinalApprover] = useState({
+        userId: "3",
+        userName: "Test 1",
+        approval: "1",
+        date: "",
+        reason: "Test 1",
+    });
     const [isPermitterCommentExpanding, setIsPermitterCommentExpanding] =
         useState(false);
-        const [isApproverCommentExpanding, setIsApproverCommentExpanding] =
+    const [isApproverCommentExpanding, setIsApproverCommentExpanding] =
         useState(false);
     const [isApproverInfoModalOpen, setIsApproverInfoModalOpen] =
         useState(false);
 
-    const [currentAction, setCurrentAction] = useState(null);
+    const [fileAttachment, setFileAttachment] = useState([]);
 
-    const [salesStartDate, setSalesStartDate] = useState("");
-    const [salesEndDate, setSalesEndDate] = useState("");
     const [costStartDate, setCostStartDate] = useState("");
     const [costEndDate, setCostEndDate] = useState("");
 
@@ -92,72 +111,36 @@ function ApprovalBudgetView() {
     /**
      *  All functions defined here
      */
-    const handleOpenModal = (action) => {
-        setCurrentAction(action);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setCurrentAction(null);
-    };
-
-    const handleOpenAllocateModal = (action) => {
-        setIsAllocateModalOpen(true);
-    };
-
-    const handleCloseAllocateModal = () => {
-        setIsAllocateModalOpen(false);
-    };
-
-    const handleAddRow = () => {
-        if (currentAction === "sales") {
-            saveSalesItem();
-        } else if (currentAction === "additionalSales") {
-            saveAdditionalSaveItem();
-        } else if (currentAction === "cost") {
-            saveCostItem();
-        } else if (currentAction === "additionalCost") {
-            saveAdditionalCostItem();
-        }
-
-        setIsModalOpen(false);
-        setCurrentAction(null);
-    };
-
-    const saveSalesItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
-    };
-
-    const saveAdditionalSaveItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
-    };
-
-    const saveCostItem = () => {
-        // Gọi API lưu thông tin mua hàng
-        toast("New cost item has been added.");
-    };
-
-    const saveAdditionalCostItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New cost item has been added.");
-    };
-
-    const handleAllocateSave = () => {
-        toast("This module is under development.");
-    };
-
-    const handleAllocateRemove = () => {
-        toast("This module is under development.");
-    };
 
     const handleApprovalMatrix = () => {
         toast("This module is under development.");
     };
 
-    const handleSave = () => {
+    const handlePrint = () => {
+        toast("This module is under development.");
+    };
+
+    const handleDelete = () => {
+        toast("This module is under development.");
+    };
+
+    const handleCancel = () => {
+        toast("This module is under development.");
+    };
+
+    const handleRevise = () => {
+        toast("This module is under development.");
+    };
+
+    const handleCopy = () => {
+        toast("This module is under development.");
+    };
+
+    const handleEdit = () => {
+        toast("This module is under development.");
+    };
+
+    const handleSubmit = () => {
         toast("This module is under development.");
     };
 
@@ -177,25 +160,68 @@ function ApprovalBudgetView() {
                 <div className="p-6">
                     {/* Header */}
                     <div className="flex justify-between">
-                        <div className="text-[27px] font-bold">
-                            Approval Budget
+                        <div className="flex gap-3">
+                            <span className="text-[27px] font-bold">
+                                Approval Budget
+                            </span>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleSubmit}
+                            >
+                                <LuSend className="w-5 h-5" />
+                                <div className="text-[15px]">Submit</div>
+                            </button>
                         </div>
-                        <button
-                            className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
-                            onClick={handleSave}
-                        >
-                            <LuSave className="w-5 h-5" />
-                            <div className="text-[15px]">Save</div>
-                        </button>
+                        <div className="flex gap-3 flex-row-reverse">
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handlePrint}
+                            >
+                                <IoPrintOutline className="w-5 h-5" />
+                                <div className="text-[15px]">Print</div>
+                            </button>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleDelete}
+                            >
+                                <MdDeleteOutline className="w-5 h-5" />
+                                <div className="text-[15px]">Delete</div>
+                            </button>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleCancel}
+                            >
+                                <MdOutlineCancel className="w-5 h-5" />
+                                <div className="text-[15px]">Cancel</div>
+                            </button>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleRevise}
+                            >
+                                <LuBook className="w-5 h-5" />
+                                <div className="text-[15px]">Revise</div>
+                            </button>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleCopy}
+                            >
+                                <FaRegCopy className="w-5 h-5" />
+                                <div className="text-[15px]">Copy</div>
+                            </button>
+                            <button
+                                className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
+                                onClick={handleEdit}
+                            >
+                                <BiEdit className="w-5 h-5" />
+                                <div className="text-[15px]">Edit</div>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Automatic Generated Information */}
                     <div className="grid grid-cols-5 mt-4 gap-4">
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px]  font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px]  font-semibold text-gray-900">
                                 Approval Date
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -203,10 +229,7 @@ function ApprovalBudgetView() {
                             </div>
                         </div>
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px] font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px] font-semibold text-gray-900">
                                 Approval No
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -234,72 +257,14 @@ function ApprovalBudgetView() {
                             </button>
                         </div>
 
-                        {/* <div className="grid grid-cols-3 gap-4">
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval Type
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            className="font-semibold"
-                            disabled={true}
-                            value={"SPOT"}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval Date
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            className="font-semibold"
-                            value={currentTime}
-                            disabled={true}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval No
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            value={"2024-0001"}
-                            className="font-semibold"
-                            disabled={true}
-                        />
-                    </div>
-                </div> */}
-
                         <div className="mt-4 grid grid-cols-3 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Budget Type
                                 </label>
                                 <Select
-                                    showSearch
-                                    allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    disabled={true}
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                     placeholder="Select Budget Type"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -314,22 +279,16 @@ function ApprovalBudgetView() {
                                             label: "SG&A/Revenue Indirect",
                                         },
                                     ]}
+                                    value={"1"}
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category
                                 </label>
                                 <Select
-                                    showSearch
-                                    allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    disabled={true}
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                     placeholder="Select Approval Category"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -348,18 +307,15 @@ function ApprovalBudgetView() {
                                             label: "Category 3",
                                         },
                                     ]}
+                                    value={"1"}
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category (VI)
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Default Approval Category (VI)"
                                     className="font-semibold"
                                     disabled={true}
@@ -367,80 +323,79 @@ function ApprovalBudgetView() {
                             </div>
                         </div>
 
-                        <div className="mt-4 grid grid-cols-3 gap-4">
-                            <div className="col-span-2">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
-                                    Subject
-                                </label>
-                                <TextArea
-                                    rows={4}
-                                    placeholder="Enter Subject Content"
-                                    maxLength={5}
-                                />
-                            </div>
-                            <div className="col-span-1 flex flex-col">
-                                <div className="p-1.5 px-3 bg-gray-50 border border-[#D9D9D9] rounded-md text-[15px] mt-8 font-semibold">
-                                    <Checkbox
-                                        className="w-full"
-                                        onChange={(e) => {
-                                            console.log(
-                                                `Is this approval new trading? = ${e.target.checked}`
-                                            );
-                                        }}
-                                    >
-                                        New Trading Approval
-                                    </Checkbox>
-                                </div>
-                            </div>
+                        <div className="mt-4 ">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Subject
+                            </label>
+                            <TextArea
+                                rows={4}
+                                placeholder="Enter Subject Content"
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={"Test 1"}
+                            />
                         </div>
 
                         <div className="mt-4 grid grid-cols-2 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Division - Department
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
+                                    disabled={true}
                                     placeholder="Enter Division - Department"
-                                    className="font-semibold"
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                    value={"Test 2"}
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     PIC
                                 </label>
-                                <Input
-                                    type="text"
-                                    id="approval_type"
-                                    placeholder="Enter PIC Information"
-                                    className="font-semibold"
-                                />
+                                <span className="ant-border w-full flex">
+                                    Tên PIC nè
+                                </span>
                             </div>
                         </div>
 
                         <div className="mt-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Related Approval
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Enter Related Approval URL Link"
-                                    className="font-semibold"
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                    disabled={true}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-4 gap-4 mt-4">
+                            <div className="col-span-1">
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                    Start Date
+                                </label>
+                                <DatePicker
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                    disabled={true}
+                                    onChange={(date, dateString) => {
+                                        setCostStartDate(dateString);
+                                    }}
+                                />
+                            </div>
+                            <div className="col-span-1">
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                    End Date
+                                </label>
+                                <DatePicker
+                                    className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                    disabled={true}
+                                    onChange={(date, dateString) => {
+                                        setCostEndDate(dateString);
+                                    }}
                                 />
                             </div>
                         </div>
@@ -470,18 +425,8 @@ function ApprovalBudgetView() {
                                                     <div className="py-2 px-3 pr-1">
                                                         <div className="space-y-6 border-l-2 border-dashed">
                                                             <div className="relative w-full">
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="currentColor"
-                                                                    className="absolute -top-0.5 z-10 -ml-3.5 h-7 w-7 rounded-full text-[#3A6F41]"
-                                                                >
-                                                                    <path
-                                                                        fillRule="evenodd"
-                                                                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                                                                        clipRule="evenodd"
-                                                                    />
-                                                                </svg>
+                                                                <Check className="absolute -top-0.5 z-10 -ml-3.5 h-7 w-7 rounded-full text-[#3A6F41]" />
+
                                                                 <div className="ml-6">
                                                                     <h4 className="text-[17px] font-bold text-[#3A6F41]">
                                                                         Permitter
@@ -495,7 +440,7 @@ function ApprovalBudgetView() {
                                                                                             Permitter
                                                                                             Name
                                                                                         </th>
-                                                                                        <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
                                                                                         </th>
                                                                                         <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
@@ -514,32 +459,103 @@ function ApprovalBudgetView() {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                showSearch
+                                                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                placeholder="Select Negotiator"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                value={
+                                                                                                    permitter.userId
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Permitter 1",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Permitter 2",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Permitter 3",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                value={
+                                                                                                    permitter.approval
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px]"
+                                                                                                // value={
+                                                                                                //     ""
+                                                                                                // }
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
                                                                                             <div className="flex gap-2 items-center">
-                                                                                                <Input
-                                                                                                    type="text"
-                                                                                                    id="approval_type"
-                                                                                                    className="font-semibold"
+                                                                                                <TextArea
+                                                                                                    disabled={
+                                                                                                        true
+                                                                                                    }
+                                                                                                    rows={
+                                                                                                        1
+                                                                                                    }
+                                                                                                    className="w-full"
+                                                                                                    value={
+                                                                                                        permitter.reason
+                                                                                                    }
                                                                                                 />
                                                                                                 <IoChatbubbleEllipsesOutline
                                                                                                     className="w-6 h-6 text-[#3A6F41] hover:cursor-pointer"
@@ -556,197 +572,15 @@ function ApprovalBudgetView() {
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    {isPermitterCommentExpanding && (
-                                                                        <div
-                                                                            className={`flex mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center bg-gray-50 py-2 text-[16px] ${
-                                                                                isPermitterCommentExpanding
-                                                                                    ? "expanded"
-                                                                                    : "collapsed"
-                                                                            }`}
-                                                                        >
-                                                                            <div className="w-full px-4">
-                                                                                <div className="comment-header flex items-center gap-4">
-                                                                                    <IoChatboxOutline
-                                                                                        size={
-                                                                                            22
-                                                                                        }
-                                                                                    />
-                                                                                    <h1 className="text-xl font-semibold">
-                                                                                        Comments
-                                                                                    </h1>
-                                                                                </div>
-                                                                                <Divider className="mt-3 mb-4" />
-                                                                                <div className="comment-boby flex flex-col gap-4">
-                                                                                    <div className="flex gap-4">
-                                                                                        <Avatar
-                                                                                            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                                                                                            className="mt-3"
-                                                                                        />
-                                                                                        <div className="max-w-[50%]">
-                                                                                            <div className="bg-[#F1F1F1] rounded-lg py-3 px-4">
-                                                                                                <h3>
-                                                                                                    Trần
-                                                                                                    Văn
-                                                                                                    B
-                                                                                                </h3>
-                                                                                                <div className="font-normal text-wrap">
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="flex justify-between mt-1">
-                                                                                                <span className="text-sm font-normal cursor-pointer">
-                                                                                                    Delete
-                                                                                                </span>
-                                                                                                <span className="text-sm font-normal">
-                                                                                                    21/12/2023
-                                                                                                    08:10
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="flex flex-row-reverse gap-4">
-                                                                                        <Avatar
-                                                                                            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                                                                                            className="mt-3"
-                                                                                        />
-                                                                                        <div className="max-w-[50%]">
-                                                                                            <div className="bg-[#F1F1F1] rounded-lg py-3 px-4">
-                                                                                                <h3>
-                                                                                                    Trần
-                                                                                                    Văn
-                                                                                                    B
-                                                                                                </h3>
-                                                                                                <div className="font-normal text-wrap">
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="flex justify-between mt-1">
-                                                                                                <span className="text-sm font-normal cursor-pointer">
-                                                                                                    Delete
-                                                                                                </span>
-                                                                                                <span className="text-sm font-normal">
-                                                                                                    21/12/2023
-                                                                                                    08:10
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <Divider className="mt-3 mb-4" />
-                                                                                <div className="comment-footer">
-                                                                                    <div className="relative bg-white flex items-center gap-4 p-3 rounded antd-textarea">
-                                                                                        {/* <textarea rows={2} className="text-normal w-[95%] focus:outline-none rounded" style={{ resize: "none" }}/> */}
-                                                                                        <MentionTextArea
-                                                                                            placeholder="Type your comment"
-                                                                                            tagList={
-                                                                                                users
-                                                                                            }
-                                                                                            value={
-                                                                                                permitterComment
-                                                                                            }
-                                                                                            setValue={
-                                                                                                setPermitterComment
-                                                                                            }
-                                                                                        />
-
-                                                                                        <div className="flex gap-3 absolute top-1/2 -translate-y-1/2 right-4">
-                                                                                            <button>
-                                                                                                <GrAttachment
-                                                                                                    size={
-                                                                                                        22
-                                                                                                    }
-                                                                                                />
-                                                                                            </button>
-                                                                                            <button>
-                                                                                                <AiOutlineSend
-                                                                                                    size={
-                                                                                                        22
-                                                                                                    }
-                                                                                                />
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
+                                                                    <ApprovalComment
+                                                                        isExpanded={
+                                                                            isPermitterCommentExpanding
+                                                                        }
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <div className="static flex w-full">
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="currentColor"
-                                                                    className="static -top-0.5 z-10 -ml-3.5 h-7 w-7 rounded-full text-[#3A6F41]"
-                                                                >
-                                                                    <path
-                                                                        fillRule="evenodd"
-                                                                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                                                                        clipRule="evenodd"
-                                                                    />
-                                                                </svg>
+                                                                <Check />
                                                                 <div className="ml-[10px] static flex-1">
                                                                     <h4 className="text-[17px] font-bold text-[#3A6F41]">
                                                                         Final
@@ -762,7 +596,7 @@ function ApprovalBudgetView() {
                                                                                             Approver
                                                                                             Name
                                                                                         </th>
-                                                                                        <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
                                                                                         </th>
                                                                                         <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
@@ -781,29 +615,73 @@ function ApprovalBudgetView() {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            New
-                                                                                            Trading
+                                                                                            <span className="ant-border flex w-full">
+                                                                                                {
+                                                                                                    finalApprover.userName
+                                                                                                }
+                                                                                            </span>
                                                                                         </td>
                                                                                         <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                value={
+                                                                                                    finalApprover.approval
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px] text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                                                value={
+                                                                                                    ""
+                                                                                                }
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
                                                                                             <div className="flex gap-2 items-center">
-                                                                                                <Input
-                                                                                                    type="text"
-                                                                                                    id="approval_type"
-                                                                                                    className="font-semibold"
+                                                                                                <TextArea
+                                                                                                    disabled
+                                                                                                    // style={{
+                                                                                                    //     height: "30px",
+                                                                                                    // }}
+                                                                                                    rows={
+                                                                                                        1
+                                                                                                    }
+                                                                                                    className="w-full h-[30px] text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                                                    value={
+                                                                                                        finalApprover.reason
+                                                                                                    }
                                                                                                 />
                                                                                                 <IoChatbubbleEllipsesOutline
                                                                                                     className="w-6 h-6 text-[#3A6F41] hover:cursor-pointer"
@@ -828,182 +706,11 @@ function ApprovalBudgetView() {
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    {isApproverCommentExpanding && (
-                                                                        <div
-                                                                            className={`flex mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center bg-gray-50 py-2 text-[16px] ${
-                                                                                isApproverCommentExpanding
-                                                                                    ? "expanded"
-                                                                                    : "collapsed"
-                                                                            }`}
-                                                                        >
-                                                                            <div className="w-full px-4">
-                                                                                <div className="comment-header flex items-center gap-4">
-                                                                                    <IoChatboxOutline
-                                                                                        size={
-                                                                                            22
-                                                                                        }
-                                                                                    />
-                                                                                    <h1 className="text-xl font-semibold">
-                                                                                        Comments
-                                                                                    </h1>
-                                                                                </div>
-                                                                                <Divider className="mt-3 mb-4" />
-                                                                                <div className="comment-boby flex flex-col gap-4">
-                                                                                    <div className="flex gap-4">
-                                                                                        <Avatar
-                                                                                            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                                                                                            className="mt-3"
-                                                                                        />
-                                                                                        <div className="max-w-[50%]">
-                                                                                            <div className="bg-[#F1F1F1] rounded-lg py-3 px-4">
-                                                                                                <h3>
-                                                                                                    Trần
-                                                                                                    Văn
-                                                                                                    B
-                                                                                                </h3>
-                                                                                                <div className="font-normal text-wrap">
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="flex justify-between mt-1">
-                                                                                                <span className="text-sm font-normal cursor-pointer">
-                                                                                                    Delete
-                                                                                                </span>
-                                                                                                <span className="text-sm font-normal">
-                                                                                                    21/12/2023
-                                                                                                    08:10
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="flex flex-row-reverse gap-4">
-                                                                                        <Avatar
-                                                                                            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                                                                                            className="mt-3"
-                                                                                        />
-                                                                                        <div className="max-w-[50%]">
-                                                                                            <div className="bg-[#F1F1F1] rounded-lg py-3 px-4">
-                                                                                                <h3>
-                                                                                                    Trần
-                                                                                                    Văn
-                                                                                                    B
-                                                                                                </h3>
-                                                                                                <div className="font-normal text-wrap">
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                    Comment
-                                                                                                    cái
-                                                                                                    gì
-                                                                                                    đó
-                                                                                                    dài
-                                                                                                    thật
-                                                                                                    là
-                                                                                                    dài
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="flex justify-between mt-1">
-                                                                                                <span className="text-sm font-normal cursor-pointer">
-                                                                                                    Delete
-                                                                                                </span>
-                                                                                                <span className="text-sm font-normal">
-                                                                                                    21/12/2023
-                                                                                                    08:10
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <Divider className="mt-3 mb-4" />
-                                                                                <div className="comment-footer">
-                                                                                    <div className="relative bg-white flex items-center gap-4 p-3 rounded antd-textarea">
-                                                                                        {/* <textarea rows={2} className="text-normal w-[95%] focus:outline-none rounded" style={{ resize: "none" }}/> */}
-                                                                                        <MentionTextArea
-                                                                                            placeholder="Type your comment"
-                                                                                            tagList={
-                                                                                                users
-                                                                                            }
-                                                                                            value={
-                                                                                                approverComment
-                                                                                            }
-                                                                                            setValue={
-                                                                                                setApproverComment
-                                                                                            }
-                                                                                        />
-
-                                                                                        <div className="flex gap-3 absolute top-1/2 -translate-y-1/2 right-4">
-                                                                                            <button>
-                                                                                                <GrAttachment
-                                                                                                    size={
-                                                                                                        22
-                                                                                                    }
-                                                                                                />
-                                                                                            </button>
-                                                                                            <button>
-                                                                                                <AiOutlineSend
-                                                                                                    size={
-                                                                                                        22
-                                                                                                    }
-                                                                                                />
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
+                                                                    <ApprovalComment
+                                                                        isExpanded={
+                                                                            isApproverCommentExpanding
+                                                                        }
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1027,57 +734,37 @@ function ApprovalBudgetView() {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-4 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Start Date
                                                             </label>
                                                             <DatePicker
-                                                                className="w-full"
-                                                                onChange={(
-                                                                    date,
-                                                                    dateString
-                                                                ) => {
-                                                                    setCostStartDate(
-                                                                        dateString
-                                                                    );
-                                                                }}
+                                                                disabled
+                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                value={""}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 End Date
                                                             </label>
                                                             <DatePicker
-                                                                className="w-full"
-                                                                onChange={(
-                                                                    date,
-                                                                    dateString
-                                                                ) => {
-                                                                    setCostEndDate(
-                                                                        dateString
-                                                                    );
-                                                                }}
+                                                                disabled
+                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                                                value={""}
                                                             />
                                                         </div>
                                                     </div>
 
                                                     <div className="mt-4 flex">
                                                         <div className="w-full">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Content
                                                             </label>
                                                             <TextArea
+                                                                disabled
+                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                                                 rows={4}
                                                                 placeholder="Enter Content"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                     </div>
@@ -1095,33 +782,6 @@ function ApprovalBudgetView() {
                                                     <div>Attachment</div>
                                                 </div>
                                                 <div className="px-4 py-2 ">
-                                                    <div className="p-8 rounded-xl border-2 border-dashed bg-[#bdffe43a]">
-                                                        <div className="flex flex-col items-center justify-center">
-                                                            <IoCloudUpload className="w-12 h-12 text-[#c1c1c1]" />
-                                                            <h2 className="font-semibold text-xl md:text-2xl">
-                                                                Drag and drop
-                                                                file here
-                                                            </h2>
-                                                            <p className="my-2">
-                                                                File supported:
-                                                                PDF, DOCX.
-                                                                Maximum 7 upload
-                                                                files. Maximum
-                                                                file upload
-                                                                size: 5MB
-                                                            </p>
-                                                            <input
-                                                                id="upload-budget-attachment"
-                                                                type="file"
-                                                                className="hidden"
-                                                            ></input>
-                                                            <label htmlFor="upload-budget-attachment">
-                                                                <button className="p-2 px-4 mt-2 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]">
-                                                                    Choose File
-                                                                </button>
-                                                            </label>
-                                                        </div>
-                                                    </div>
                                                     {/* Form */}
                                                     <div className="mt-4 mb-2 border-2 border-gray-300">
                                                         <div className="overflow-x-auto">
@@ -1139,62 +799,110 @@ function ApprovalBudgetView() {
                                                                         <th className="w-2/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
                                                                             Description
                                                                         </th>
-                                                                        <th className="max-w-[100px] bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2">
-                                                                            Action
-                                                                        </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            1
-                                                                        </td>
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            <a>
-                                                                                Test
-                                                                                1
-                                                                            </a>
-                                                                        </td>
-                                                                        <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="attachment_description"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-6 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            2
-                                                                        </td>
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            <a>
-                                                                                Test
-                                                                                1
-                                                                            </a>
-                                                                        </td>
-                                                                        <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="attachment_description"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-6 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
+                                                                    {fileAttachment.length >
+                                                                    0 ? (
+                                                                        fileAttachment.map(
+                                                                            (
+                                                                                f,
+                                                                                idx
+                                                                            ) => (
+                                                                                <tr
+                                                                                    className="border-b-2 border-gray-300"
+                                                                                    key={
+                                                                                        f.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
+                                                                                        {idx +
+                                                                                            1}
+                                                                                    </td>
+                                                                                    <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <a
+                                                                                            onClick={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                e.preventDefault();
+                                                                                                const fileURL =
+                                                                                                    URL.createObjectURL(
+                                                                                                        f.file
+                                                                                                    );
+                                                                                                window.open(
+                                                                                                    fileURL
+                                                                                                );
+                                                                                            }}
+                                                                                        >
+                                                                                            {
+                                                                                                f
+                                                                                                    .file
+                                                                                                    .name
+                                                                                            }{" "}
+                                                                                            {
+                                                                                                " - "
+                                                                                            }{" "}
+                                                                                            {formatBytes(
+                                                                                                f
+                                                                                                    .file
+                                                                                                    .size
+                                                                                            )}
+                                                                                        </a>
+                                                                                    </td>
+                                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                                        <TextArea
+                                                                                            rows={
+                                                                                                1
+                                                                                            }
+                                                                                            className="!text-black !cursor-default"
+                                                                                            value={
+                                                                                                f.description
+                                                                                            }
+                                                                                            // disabled={mode == "view"}
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                setFileAttachment(
+                                                                                                    fileAttachment.map(
+                                                                                                        (
+                                                                                                            file
+                                                                                                        ) => {
+                                                                                                            if (
+                                                                                                                file.id ==
+                                                                                                                f.id
+                                                                                                            ) {
+                                                                                                                return {
+                                                                                                                    ...file,
+                                                                                                                    description:
+                                                                                                                        e
+                                                                                                                            .target
+                                                                                                                            .value,
+                                                                                                                };
+                                                                                                            } else
+                                                                                                                return file;
+                                                                                                        }
+                                                                                                    )
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )
+                                                                    ) : (
+                                                                        <tr>
+                                                                            <td
+                                                                                colSpan={
+                                                                                    3
+                                                                                }
+                                                                                className="text-center font-semibold p-2"
+                                                                            >
+                                                                                No
+                                                                                file
+                                                                                attachment
+                                                                            </td>
+                                                                        </tr>
+                                                                    )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -1237,58 +945,30 @@ function ApprovalBudgetView() {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
-                                                                        </td>
-                                                                        <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 border-r-2 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                    </tr>
                                                                     <tr className="">
                                                                         <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
+                                                                            Eg.
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className=" px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -1307,9 +987,7 @@ function ApprovalBudgetView() {
                         <Modal
                             title={"Approval Information"}
                             visible={isApproverInfoModalOpen}
-                            onCancel={() =>
-                                setIsApproverInfoModalOpen(false)
-                            }
+                            onCancel={() => setIsApproverInfoModalOpen(false)}
                             centered
                             maskClosable={false}
                             width={680}
@@ -1332,7 +1010,8 @@ function ApprovalBudgetView() {
                                         <div className="flex space-x-3 items-center text-[18px] font-bold py-1.5 ">
                                             <IoIosListBox className="w-6 h-6 text-[#3A6F41]" />
                                             <div>
-                                                Final Approver Approval Information
+                                                Final Approver Approval
+                                                Information
                                             </div>
                                         </div>
                                     </div>
@@ -1356,7 +1035,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Negotiator 1"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -1365,7 +1043,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Approved with condition"
                                                             className="font-semibold"
                                                         />
@@ -1373,7 +1050,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="10/12/2023"
                                                             className="font-semibold"
                                                         />
@@ -1383,7 +1059,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Negotiator 1"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -1392,7 +1067,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Approved"
                                                             className="font-semibold"
                                                         />
@@ -1400,7 +1074,6 @@ function ApprovalBudgetView() {
                                                     <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="10/12/2023"
                                                             className="font-semibold"
                                                         />

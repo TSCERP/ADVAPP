@@ -1,21 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
+import moment from "moment";
+import toast from "react-hot-toast";
+import { nanoid } from "nanoid";
 
-import { Input, Modal, Select, message, Upload, Button, Checkbox, Tabs, DatePicker, Space  } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-
+import {
+    Input,
+    Modal,
+    Select,
+    message,
+    Upload,
+    Button,
+    Checkbox,
+    Tabs,
+    DatePicker,
+    Space,
+    Popconfirm,
+    InputNumber,
+} from "antd";
+import {
+    UploadOutlined,
+    ExclamationCircleFilled,
+    CloseOutlined,
+} from "@ant-design/icons";
+import { MdOutlineLink, MdDriveFolderUpload } from "react-icons/md";
 import { IoReload, IoCopyOutline } from "react-icons/io5";
 import { IoIosListBox } from "react-icons/io";
 import { LuTrash2, LuPlus, LuSave, LuLink2, LuPenSquare } from "react-icons/lu";
-import { MdOutlineLink } from "react-icons/md";
 import { FaArrowUp, FaCheck, FaInfo, FaRedoAlt, FaLink } from "react-icons/fa";
 import { TbSquareRoundedLetterC, TbSquareRoundedLetterS } from "react-icons/tb";
 import { FaCircleDollarToSlot } from "react-icons/fa6";
 
-import moment from "moment";
-import toast from "react-hot-toast";
+import SalesModal from "../../../../components/approval/SalesModal";
+import CostModal from "../../../../components/approval/CostModal";
+import DecimalNumberInput from "../../../../components/approval/DecimalNumberInput";
+
+import formatBytes from "../../../../utils/number/formatBytes";
+import formatNumberWithCommas from "../../../../utils/number/formatNumberWithCommas";
 
 // Get instance variables
 const { TextArea } = Input;
+const { confirm } = Modal;
 const oldTitle = document.title;
 const newTitle = "Create Approval FMS - Aeon Delight Vietnam";
 
@@ -28,15 +52,165 @@ const ApprovalBusinessFMSCreate = () => {
     /**
      *  All states defined here
      */
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
+    const [salesItems, setSalesItems] = useState([
+        {
+            id: nanoid(8),
+            customerId: "1",
+            customerName: "Công ty ABC",
+            customerTax: "1122334455",
+            customerSiteId: "1",
+            customerSiteName: "Site 1",
+            paymentTerm: "1",
+            paymentTermAndCondition: "Test",
+            currency: "VND",
+            exchangeRate: 1,
+            subItem: "1",
+            itemName: "Test Item Name",
+            itemGroup: "Group 1",
+            description: "Test description",
+            unitId: "1",
+            unit: "piece",
+            quantity: 2,
+            vat: 0,
+            unitPrice: 1500000,
+            vatAmount: 0,
+            beforeVAT: 3000000,
+            afterVAT: 3000000,
+            cUnitPrice: 1500000,
+            cVATAmount: 0,
+            cBeforeVAT: 3000000,
+            cAfterVAT: 3000000,
+            allocation: null,
+        },
+    ]);
+    const [salesSummary, setSalesSummary] = useState({
+        total: 0,
+        vat: 0,
+        grandTotal: 0,
+    });
+    const [additionalSalesItems, setAdditionalSalesItems] = useState([
+        {
+            id: nanoid(8),
+            customerId: "2",
+            customerName: "Công ty DEF",
+            customerTax: "5544332211",
+            customerSiteId: "2",
+            customerSiteName: "Site 2",
+            paymentTerm: "2",
+            paymentTermAndCondition: "Test 2",
+            currency: "VND",
+            exchangeRate: 1,
+            subItem: "2",
+            itemName: "Test 2 Item Name",
+            itemGroup: "Group 2",
+            description: "Test description 2",
+            unitId: "2",
+            unit: "piece",
+            vat: 0,
+            unitPrice: 100000,
+            vatAmount: 0,
+            beforeVAT: 500000,
+            afterVAT: 500000,
+            cUnitPrice: 500000,
+            cVATAmount: 0,
+            cBeforeVAT: 500000,
+            cAfterVAT: 500000,
+        },
+    ]);
+    const [costItems, setCostItems] = useState([
+        {
+            id: nanoid(8),
+            vendorId: "1",
+            vendorName: "Công ty ABC",
+            vendorTax: "1122334455",
+            customerSiteId: "1",
+            customerSiteName: "Site 1",
+            paymentTerm: "1",
+            paymentTermAndCondition: "Test",
+            currency: "VND",
+            exchangeRate: 1,
+            subItem: "1",
+            itemName: "Test Item Name",
+            itemGroup: "Group 1",
+            description: "Test description",
+            unitId: "1",
+            unit: "time",
+            quantity: 2,
+            vat: 0,
+            unitPrice: 1500000,
+            vatAmount: 0,
+            beforeVAT: 3000000,
+            afterVAT: 3000000,
+            cUnitPrice: 1500000,
+            cVATAmount: 0,
+            cBeforeVAT: 3000000,
+            cAfterVAT: 3000000,
+            allocation: null,
+        },
+    ]);
+    const [costSummary, setCostSummary] = useState({
+        total: 0,
+        vat: 0,
+        grandTotal: 0,
+    });
+    const [additionalCostItems, setAdditionalCostItems] = useState([
+        {
+            id: nanoid(8),
+            vendorId: "2",
+            vendorName: "Công ty DEF",
+            vendorTax: "5544332211",
+            customerSiteId: "2",
+            customerSiteName: "Site 2",
+            paymentTerm: "2",
+            paymentTermAndCondition: "Test 2",
+            currency: "VND",
+            exchangeRate: 1,
+            subItem: "2",
+            itemName: "Test 2 Item Name",
+            itemGroup: "Group 2",
+            description: "Test description 2",
+            unitId: "2",
+            unit: "piece",
+            vat: 0,
+            unitPrice: 100000,
+            vatAmount: 0,
+            beforeVAT: 500000,
+            afterVAT: 500000,
+            cUnitPrice: 500000,
+            cVATAmount: 0,
+            cBeforeVAT: 500000,
+            cAfterVAT: 500000,
+        },
+    ]);
 
-    const [currentAction, setCurrentAction] = useState(null);
+    const [currentSalesItem, setCurrentSalesItem] = useState(null);
+    const [currentCostItem, setCurrentCostItem] = useState(null);
+
+    const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
+    const [isSalesModalOpen, setIsSalesModalOpen] = useState(false);
+    const [isCostModalOpen, setIsCostModalOpen] = useState(false);
+
+    const [currentType, setCurrentType] = useState(null);
+    const [currentMode, setCurrentMode] = useState(null);
 
     const [salesStartDate, setSalesStartDate] = useState("");
     const [salesEndDate, setSalesEndDate] = useState("");
     const [costStartDate, setCostStartDate] = useState("");
     const [costEndDate, setCostEndDate] = useState("");
+
+    const [negotiators, setNegotiators] = useState([
+        {
+            id: nanoid(8),
+            userId: "1",
+        },
+    ]);
+    const [permitter, setPermitter] = useState(null);
+    const [approver, setApprover] = useState(null);
+
+    const [newTradingAttachment, setNewTradingAttachment] = useState([]);
+    const [afterImplementationAttachment, setAfterImplementationAttachment] =
+        useState([]);
+    const [otherAttachment, setOtherAttachment] = useState([]);
 
     /**
      *  All refs defined here
@@ -45,17 +219,66 @@ const ApprovalBusinessFMSCreate = () => {
     /**
      *  All functions defined here
      */
-    const handleOpenModal = (action) => {
-        setCurrentAction(action);
-        setIsModalOpen(true);
+    const handleOpenSalesCostModal = (type, mode, id) => {
+        setCurrentType(type);
+        setCurrentMode(mode);
+        if (type == "sales" || type == "additionalSales") {
+            if (
+                (mode == "view" || mode == "edit" || mode == "duplicate") &&
+                type == "sales"
+            ) {
+                setCurrentSalesItem(salesItems.find((item) => item.id == id));
+            }
+            if (
+                (mode == "view" || mode == "edit" || mode == "duplicate") &&
+                type == "additionalSales"
+            ) {
+                setCurrentSalesItem(
+                    additionalSalesItems.find((item) => item.id == id)
+                );
+            }
+            setIsSalesModalOpen(true);
+        } else if (type == "cost" || type == "additionalCost") {
+            console.log("Hi");
+            if (
+                (mode == "view" || mode == "edit" || mode == "duplicate") &&
+                type == "cost"
+            ) {
+                console.log(
+                    "Edit: ",
+                    costItems.find((item) => item.id == id)
+                );
+                setCurrentCostItem(costItems.find((item) => item.id == id));
+            }
+            if (
+                (mode == "view" || mode == "edit" || mode == "duplicate") &&
+                type == "additionalCost"
+            ) {
+                setCurrentCostItem(
+                    additionalCostItems.find((item) => item.id == id)
+                );
+            }
+            setIsCostModalOpen(true);
+        }
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setCurrentAction(null);
+    const handleCloseSalesCostModal = () => {
+        setIsSalesModalOpen(false);
+        setIsCostModalOpen(false);
+        setCurrentSalesItem(null);
+        setCurrentCostItem(null);
     };
 
     const handleOpenAllocateModal = (action) => {
+        if (salesItems.length > costItems.length) {
+            toast.error("Please enter more purchasing item.");
+            return;
+        }
+        if (salesItems.length < costItems.length) {
+            toast.error("Please enter more sales item.");
+            return;
+        }
+        // Khúc này phải xử lý dữ liệu cho hiển thị allocate modal
         setIsAllocateModalOpen(true);
     };
 
@@ -63,39 +286,44 @@ const ApprovalBusinessFMSCreate = () => {
         setIsAllocateModalOpen(false);
     };
 
-    const handleAddRow = () => {
-        if (currentAction === "sales") {
-            saveSalesItem();
-        } else if (currentAction === "additionalSales") {
-            saveAdditionalSaveItem();
-        } else if (currentAction === "cost") {
-            saveCostItem();
-        } else if (currentAction === "additionalCost") {
-            saveAdditionalCostItem();
+    const handleSubmitSales = (info) => {
+        console.log("Log ra info: ", info);
+        if (currentMode == "create") {
+            if (currentType == "sales") {
+                toast("Processing adding new sales item");
+            } else if (currentType == "additionalSales") {
+                toast("Processing adding additional sales item");
+            }
+        } else if (currentMode == "edit") {
+            if (currentType == "sales") {
+                toast("Processing editing new sales item");
+            } else if (currentType == "additionalSales") {
+                toast("Processing editing additional sales item");
+            }
         }
-
-        setIsModalOpen(false);
-        setCurrentAction(null);
+        setIsSalesModalOpen(false);
     };
 
-    const saveSalesItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
+    const handleSubmitCost = (info) => {
+        console.log("Log ra info: ", info);
+        if (currentMode == "create") {
+            if (currentType == "cost") {
+                toast("Processing adding new cost item");
+            } else if (currentType == "additionalCost") {
+                toast("Processing adding additional cost item");
+            }
+        } else if (currentMode == "edit") {
+            if (currentType == "cost") {
+                toast("Processing editing new cost item");
+            } else if (currentType == "additionalCost") {
+                toast("Processing editing additional cost item");
+            }
+        }
+        setIsCostModalOpen(false);
     };
 
-    const saveAdditionalSaveItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
-    };
-
-    const saveCostItem = () => {
-        // Gọi API lưu thông tin mua hàng
-        toast("New cost item has been added.");
-    };
-
-    const saveAdditionalCostItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New cost item has been added.");
+    const handleDeleteSalesCostItem = (type, id) => {
+        toast("Deleting " + type + "...");
     };
 
     const handleAllocateSave = () => {
@@ -103,7 +331,18 @@ const ApprovalBusinessFMSCreate = () => {
     };
 
     const handleAllocateRemove = () => {
-        toast("This module is under development.");
+        confirm({
+            title: "Are you sure remove allocation?",
+            icon: <ExclamationCircleFilled />,
+            content: "Some descriptions",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+                toast("This module is under development.");
+            },
+            onCancel() {},
+        });
     };
 
     const handleApprovalMatrix = () => {
@@ -112,6 +351,120 @@ const ApprovalBusinessFMSCreate = () => {
 
     const handleSave = () => {
         toast("This module is under development.");
+    };
+
+    const handleAttachmentFileChange = (event, type) => {
+        const fileInput = event.target;
+
+        // Kiểm tra loại file và kích thước của từng file được chọn
+        const allowedFileTypes = [
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "text/plain",
+            "application/vnd.ms-excel",
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+        ];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        for (let i = 0; i < fileInput.files.length; i++) {
+            const file = fileInput.files[i];
+
+            // Kiểm tra loại file
+            if (!allowedFileTypes.includes(file.type)) {
+                toast.error("Accepted doc, docx, txt, excel, pdf, image only");
+                fileInput.value = "";
+                return;
+            }
+
+            // Kiểm tra kích thước file
+            if (file.size > maxSize) {
+                alert(`File ${file.name} is larger than 5MB.`);
+                fileInput.value = "";
+                return;
+            }
+        }
+
+        const files = event.target.files;
+
+        console.log([...Array.from(files)]);
+
+        if (files.length > 0) {
+            switch (type) {
+                case "newTrading":
+                    setNewTradingAttachment([
+                        ...newTradingAttachment,
+                        ...Array.from(files),
+                    ]);
+                    break;
+                case "implementation":
+                    setAfterImplementationAttachment([
+                        ...afterImplementationAttachment,
+                        ...Array.from(files),
+                    ]);
+                    break;
+                case "other":
+                    setOtherAttachment([
+                        ...otherAttachment,
+                        ...Array.from(files),
+                    ]);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    const handleRemoveAttachment = (idx, type) => {
+        switch (type) {
+            case "newTrading":
+                setNewTradingAttachment(
+                    newTradingAttachment.filter((_, index) => index != idx)
+                );
+                break;
+            case "implementation":
+                setAfterImplementationAttachment(
+                    afterImplementationAttachment.filter(
+                        (_, index) => index != idx
+                    )
+                );
+                break;
+            case "other":
+                setOtherAttachment(
+                    otherAttachment.filter((_, index) => index != idx)
+                );
+                break;
+            default:
+                break;
+        }
+        toast.success("File has been removed.");
+    };
+
+    const handleAddNewNegotiator = () => {
+        const lastNegotiator = negotiators[negotiators.length - 1];
+        if (lastNegotiator.userId) {
+            const newNegotiators = [
+                ...negotiators,
+                {
+                    id: nanoid(8),
+                    userId: "",
+                },
+            ];
+            setNegotiators(newNegotiators);
+        } else {
+            toast.error("Please select a user before continuing.");
+        }
+    };
+
+    const handleRemoveNegotiator = (id) => {
+        if (negotiators.length > 1) {
+            setNegotiators(negotiators.filter(($) => $.id != id));
+        } else {
+            toast("Approval must have at least 1 negotiator.");
+        }
     };
 
     /**
@@ -123,6 +476,32 @@ const ApprovalBusinessFMSCreate = () => {
             document.title = oldTitle;
         };
     }, []);
+
+    useEffect(() => {
+        if (salesItems.length > 0) {
+            let result = { total: 0, vat: 0, grandTotal: 0 };
+            salesItems.forEach((item, _) => {
+                const { cBeforeVAT, cVATAmount, cAfterVAT } = item;
+                if (cBeforeVAT) result.total += cBeforeVAT;
+                if (cVATAmount) result.vat += cVATAmount;
+                if (cAfterVAT) result.grandTotal += cAfterVAT;
+            });
+            setSalesSummary(result);
+        }
+    }, [salesItems]);
+
+    useEffect(() => {
+        if (costItems.length > 0) {
+            let result = { total: 0, vat: 0, grandTotal: 0 };
+            costItems.forEach((item, _) => {
+                const { cBeforeVAT, cVATAmount, cAfterVAT } = item;
+                if (cBeforeVAT) result.total += cBeforeVAT;
+                if (cVATAmount) result.vat += cVATAmount;
+                if (cAfterVAT) result.grandTotal += cAfterVAT;
+            });
+            setCostSummary(result);
+        }
+    }, [costItems]);
 
     return (
         <>
@@ -145,10 +524,7 @@ const ApprovalBusinessFMSCreate = () => {
                     {/* Automatic Generated Information */}
                     <div className="grid grid-cols-5 mt-4 gap-4">
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px]  font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px]  font-semibold text-gray-900">
                                 Approval Date
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -156,10 +532,7 @@ const ApprovalBusinessFMSCreate = () => {
                             </div>
                         </div>
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px] font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px] font-semibold text-gray-900">
                                 Approval No
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -187,72 +560,15 @@ const ApprovalBusinessFMSCreate = () => {
                             </button>
                         </div>
 
-                        {/* <div className="grid grid-cols-3 gap-4">
-                        <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                            >
-                                Approval Type
-                            </label>
-                            <Input
-                                type="text"
-                                id="approval_type"
-                                placeholder="Enter Approval Type"
-                                className="font-semibold"
-                                disabled={true}
-                                value={"SPOT"}
-                            />
-                        </div>
-                        <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                            >
-                                Approval Date
-                            </label>
-                            <Input
-                                type="text"
-                                id="approval_type"
-                                placeholder="Enter Approval Type"
-                                className="font-semibold"
-                                value={currentTime}
-                                disabled={true}
-                            />
-                        </div>
-                        <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                            >
-                                Approval No
-                            </label>
-                            <Input
-                                type="text"
-                                id="approval_type"
-                                placeholder="Enter Approval Type"
-                                value={"2024-0001"}
-                                className="font-semibold"
-                                disabled={true}
-                            />
-                        </div>
-                    </div> */}
-
                         <div className="mt-4 grid grid-cols-3 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category
                                 </label>
                                 <Select
                                     showSearch
                                     allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    className="w-full text-[15px]"
                                     placeholder="Select Approval Category"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -274,34 +590,24 @@ const ApprovalBusinessFMSCreate = () => {
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category (VI)
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Default Approval Category (VI)"
                                     className="font-semibold"
                                     disabled={true}
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Win Rate
                                 </label>
                                 <Select
                                     showSearch
                                     allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    className="w-full text-[15px]"
                                     placeholder="Select Win Rate"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -327,19 +633,13 @@ const ApprovalBusinessFMSCreate = () => {
                         <div className="mt-4 grid grid-cols-3 gap-4">
                             <div className="col-span-1 flex flex-col">
                                 <div className=" rounded-md text-[15px] font-semibold">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                         FMS Approval Type
                                     </label>
                                     <Select
                                         showSearch
                                         allowClear
-                                        style={{
-                                            width: "100%",
-                                            fontSize: "15px",
-                                        }}
+                                        className="w-full text-[15px]"
                                         placeholder="Select FMS Approval Type"
                                         filterOption={(input, option) =>
                                             (option?.label ?? "").includes(
@@ -376,62 +676,44 @@ const ApprovalBusinessFMSCreate = () => {
                                 </div>
                             </div>
                             <div className="col-span-2">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Subject
                                 </label>
                                 <TextArea
                                     rows={4}
                                     placeholder="Enter Subject Content"
-                                    maxLength={5}
                                 />
                             </div>
                         </div>
 
                         <div className="mt-4 grid grid-cols-2 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Division - Department
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Enter Division - Department"
                                     className="font-semibold"
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     PIC
                                 </label>
-                                <Input
-                                    type="text"
-                                    id="approval_type"
-                                    placeholder="Enter PIC Information"
-                                    className="font-semibold"
-                                />
+                                <span className="ant-border w-full flex">
+                                    Tên PIC nè
+                                </span>
                             </div>
                         </div>
 
                         <div className="mt-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Related Approval
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Enter Related Approval URL Link"
                                     className="font-semibold"
                                 />
@@ -463,10 +745,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-4 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Start Date
                                                             </label>
                                                             <DatePicker
@@ -482,10 +761,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 End Date
                                                             </label>
                                                             <DatePicker
@@ -504,30 +780,22 @@ const ApprovalBusinessFMSCreate = () => {
 
                                                     <div className="mt-4 grid grid-cols-2 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Good/Service
                                                                 Summary
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Good/Service Summary"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Note
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Note"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                     </div>
@@ -593,88 +861,155 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Quantity
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                             Price
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             %
                                                                             Allocation
                                                                         </th>
-                                                                        <th className="min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Before
                                                                             VAT
                                                                         </th>
-                                                                        <th className="min-w-[120px] max-h-[120px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[120px] max-h-[120px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             VAT
                                                                             (%)
                                                                         </th>
-                                                                        <th className="border-r-0 min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="text-center border-r-0 min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] px-8 py-2">
                                                                             After
                                                                             VAT
-                                                                            (%)
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <IoCopyOutline className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuPenSquare className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
-                                                                        <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="border-r-0 bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                    </tr>
+                                                                    {salesItems.length >
+                                                                        0 &&
+                                                                        salesItems.map(
+                                                                            (
+                                                                                item,
+                                                                                _
+                                                                            ) => (
+                                                                                <tr
+                                                                                    key={
+                                                                                        item.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
+                                                                                        <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                            <Popconfirm
+                                                                                                title="Delete item"
+                                                                                                description="Are you sure to delete this item? This action cannot be reversed"
+                                                                                                okButtonProps={{
+                                                                                                    ghost: true,
+                                                                                                    danger: true,
+                                                                                                }}
+                                                                                                onConfirm={() =>
+                                                                                                    handleDeleteSalesCostItem(
+                                                                                                        "sales",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                                </button>
+                                                                                            </Popconfirm>
+
+                                                                                            <button
+                                                                                                className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "sales",
+                                                                                                        "duplicate",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <IoCopyOutline className="w-5 h-5" />
+                                                                                            </button>
+                                                                                            <button
+                                                                                                className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "sales",
+                                                                                                        "edit",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <LuPenSquare className="w-5 h-5" />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.id ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerSiteName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.itemName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.description ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.unit ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.quantity
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.unitPrice
+                                                                                        ) ||
+                                                                                            0}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.allocation
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.beforeVAT
+                                                                                        ) ||
+                                                                                            0}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.vat ||
+                                                                                            0}
+                                                                                        {
+                                                                                            "%"
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td className="text-right border-r-0 bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.afterVAT
+                                                                                        ) ||
+                                                                                            0}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -682,8 +1017,9 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div
                                                         className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold"
                                                         onClick={() =>
-                                                            handleOpenModal(
-                                                                "sales"
+                                                            handleOpenSalesCostModal(
+                                                                "sales",
+                                                                "create"
                                                             )
                                                         }
                                                     >
@@ -695,50 +1031,38 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div className="flex flex-col items-end pr-2 space-y-3">
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Total
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    readOnly
-                                                                    value="0000000.00"
-                                                                />
+                                                                <span className="font-semibold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        salesSummary.total
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Tax
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    value="0000000.00"
-                                                                    readOnly
-                                                                />
+                                                                <span className="font-semibold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg  block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        salesSummary.vat
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Grand Total
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    value="0000000.00"
-                                                                    readOnly
-                                                                />
+                                                                <span className="font-semibold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg  block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        salesSummary.grandTotal
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -780,53 +1104,107 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Description
                                                                         </th>
-                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                             Price
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <IoCopyOutline className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuPenSquare className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
-                                                                        <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                    </tr>
+                                                                    {additionalSalesItems.length >
+                                                                        0 &&
+                                                                        additionalSalesItems.map(
+                                                                            (
+                                                                                item,
+                                                                                _
+                                                                            ) => (
+                                                                                <tr
+                                                                                    key={
+                                                                                        item.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
+                                                                                        <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                            <Popconfirm
+                                                                                                title="Delete item"
+                                                                                                description="Are you sure to delete this item? This action cannot be reversed"
+                                                                                                okButtonProps={{
+                                                                                                    ghost: true,
+                                                                                                    danger: true,
+                                                                                                }}
+                                                                                                onConfirm={() =>
+                                                                                                    handleDeleteSalesCostItem(
+                                                                                                        "additionalSales",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                                </button>
+                                                                                            </Popconfirm>
+                                                                                            <button
+                                                                                                className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "additionalSales",
+                                                                                                        "duplicate",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <IoCopyOutline className="w-5 h-5" />
+                                                                                            </button>
+                                                                                            <button
+                                                                                                className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "additionalSales",
+                                                                                                        "edit",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <LuPenSquare className="w-5 h-5" />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.id ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerSiteName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.itemName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.description ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.unit ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.unitPrice
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -834,8 +1212,9 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div
                                                         className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold"
                                                         onClick={() =>
-                                                            handleOpenModal(
-                                                                "additionalSales"
+                                                            handleOpenSalesCostModal(
+                                                                "additionalSales",
+                                                                "create"
                                                             )
                                                         }
                                                     >
@@ -859,10 +1238,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-4 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Start Date
                                                             </label>
                                                             <DatePicker
@@ -878,10 +1254,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 End Date
                                                             </label>
                                                             <DatePicker
@@ -900,30 +1273,22 @@ const ApprovalBusinessFMSCreate = () => {
 
                                                     <div className="mt-4 grid grid-cols-2 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Good/Service
                                                                 Summary
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Good/Service Summary"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Note
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Note"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                     </div>
@@ -964,91 +1329,157 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Description
                                                                         </th>
-                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[80px] max-h-[80px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Quantity
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                             Price
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             %
                                                                             Allocation
                                                                         </th>
-                                                                        <th className="min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Before
                                                                             VAT
                                                                         </th>
-                                                                        <th className="min-w-[120px] max-h-[120px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[120px] max-h-[120px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             VAT
                                                                             (%)
                                                                         </th>
-                                                                        <th className="border-r-0 min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="border-r-0 min-w-[180px] max-h-[180px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             After
                                                                             VAT
-                                                                            (%)
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <IoCopyOutline className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuPenSquare className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
-                                                                        <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="border-r-0 bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                    </tr>
+                                                                    {costItems.length >
+                                                                        0 &&
+                                                                        costItems.map(
+                                                                            (
+                                                                                item,
+                                                                                _
+                                                                            ) => (
+                                                                                <tr
+                                                                                    key={
+                                                                                        item.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-2">
+                                                                                        <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                            <Popconfirm
+                                                                                                title="Delete item"
+                                                                                                description="Are you sure to delete this item? This action cannot be reversed"
+                                                                                                okButtonProps={{
+                                                                                                    ghost: true,
+                                                                                                    danger: true,
+                                                                                                }}
+                                                                                                onConfirm={() =>
+                                                                                                    handleDeleteSalesCostItem(
+                                                                                                        "sales",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                                </button>
+                                                                                            </Popconfirm>
+                                                                                            <button
+                                                                                                className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "cost",
+                                                                                                        "duplicate",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <IoCopyOutline className="w-5 h-5" />
+                                                                                            </button>
+                                                                                            <button
+                                                                                                className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "cost",
+                                                                                                        "edit",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <LuPenSquare className="w-5 h-5" />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.id ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.vendorName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerSiteName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.itemName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.description ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-centerbg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.unit ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.quantity
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.unitPrice
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.allocation
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.beforeVAT
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.vat ||
+                                                                                            ""}
+                                                                                        {
+                                                                                            "%"
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td className="text-right border-r-0 bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.afterVAT
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -1056,8 +1487,9 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div
                                                         className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold"
                                                         onClick={() =>
-                                                            handleOpenModal(
-                                                                "cost"
+                                                            handleOpenSalesCostModal(
+                                                                "cost",
+                                                                "create"
                                                             )
                                                         }
                                                     >
@@ -1069,50 +1501,38 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div className="flex flex-col items-end pr-2 space-y-3">
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Total
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    readOnly
-                                                                    value="0000000.00"
-                                                                />
+                                                                <span className="font-semibold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg  block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        costSummary.total
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Tax
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    value="0000000.00"
-                                                                    readOnly
-                                                                />
+                                                                <span className="font-sembold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg  block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        costSummary.vat
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div className="w-1/4">
                                                             <div className="flex items-center space-x-2">
-                                                                <label
-                                                                    htmlFor="password"
-                                                                    className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  "
-                                                                >
+                                                                <label className="w-2/4 block mb-2 text-[15px] font-semibold text-gray-900  ">
                                                                     Grand Total
                                                                 </label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg block w-full p-1.5 "
-                                                                    value="0000000.00"
-                                                                    readOnly
-                                                                />
+                                                                <span className="font-semibold bg-gray-50 border border-gray-300 text-gray-900 text-[15px] text-right rounded-lg  block w-full p-1.5 ">
+                                                                    {formatNumberWithCommas(
+                                                                        costSummary.grandTotal
+                                                                    ) || 0}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1155,53 +1575,107 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         <th className="min-w-[200px] max-h-[200px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
                                                                             Description
                                                                         </th>
-                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[100px] max-h-[100px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                         </th>
-                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-left px-8 py-2">
+                                                                        <th className="min-w-[150px] max-h-[150px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2">
                                                                             Unit
                                                                             Price
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td className=" bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <IoCopyOutline className="w-5 h-5" />
-                                                                                </button>
-                                                                                <button className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuPenSquare className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2"></td>
-                                                                        <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Dante
-                                                                            Sparks
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Alfreds
-                                                                            Futterkiste
-                                                                        </td>
-                                                                        <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
-                                                                            Italy
-                                                                        </td>
-                                                                    </tr>
+                                                                    {additionalCostItems.length >
+                                                                        0 &&
+                                                                        additionalCostItems.map(
+                                                                            (
+                                                                                item,
+                                                                                _
+                                                                            ) => (
+                                                                                <tr
+                                                                                    key={
+                                                                                        item.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className="bg-[#F5FDF8] border-l-0 border border-[#6a9e72] px-10 py-3">
+                                                                                        <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                            <Popconfirm
+                                                                                                title="Delete item"
+                                                                                                description="Are you sure to delete this item? This action cannot be reversed"
+                                                                                                okButtonProps={{
+                                                                                                    ghost: true,
+                                                                                                    danger: true,
+                                                                                                }}
+                                                                                                onConfirm={() =>
+                                                                                                    handleDeleteSalesCostItem(
+                                                                                                        "additionalCost",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                    <LuTrash2 className="w-5 h-5" />
+                                                                                                </button>
+                                                                                            </Popconfirm>
+                                                                                            <button
+                                                                                                className="text-[#b43bcc] p-1.5 rounded-full hover:bg-[#ffe4ff] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "additionalCost",
+                                                                                                        "duplicate",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <IoCopyOutline className="w-5 h-5" />
+                                                                                            </button>
+                                                                                            <button
+                                                                                                className="text-[#f3dc31] p-1.5 rounded-full hover:bg-[#ffffe4] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                                onClick={() =>
+                                                                                                    handleOpenSalesCostModal(
+                                                                                                        "additionalCost",
+                                                                                                        "edit",
+                                                                                                        item.id
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                <LuPenSquare className="w-5 h-5" />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.id ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="w-[200px] bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.vendorName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.customerSiteName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.itemName ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.description ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-center bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {item.unit ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                    <td className="text-right bg-[#F5FDF8] border border-[#6a9e72] px-8 py-2">
+                                                                                        {formatNumberWithCommas(
+                                                                                            item.unitPrice
+                                                                                        ) ||
+                                                                                            ""}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -1209,8 +1683,9 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <div
                                                         className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold"
                                                         onClick={() =>
-                                                            handleOpenModal(
-                                                                "additionalCost"
+                                                            handleOpenSalesCostModal(
+                                                                "additionalCost",
+                                                                "create"
                                                             )
                                                         }
                                                     >
@@ -1264,7 +1739,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                                                             Permitter
                                                                                             Name
                                                                                         </th>
-                                                                                        <th className=" w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                                             Approval
                                                                                         </th>
                                                                                         <th className="w-1/5 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
@@ -1283,31 +1758,97 @@ const ApprovalBusinessFMSCreate = () => {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                showSearch
+                                                                                                className="w-full text-[15px]"
+                                                                                                placeholder="Select Negotiator"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                value={
+                                                                                                    permitter
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Permitter 1",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Permitter 2",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Permitter 3",
+                                                                                                    },
+                                                                                                ]}
+                                                                                                onChange={(
+                                                                                                    value
+                                                                                                ) => {
+                                                                                                    setPermitter(
+                                                                                                        value
+                                                                                                    );
+                                                                                                }}
                                                                                             />
                                                                                         </td>
-                                                                                        <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                        <td className="px-3 py-2 border-r-2 border-gray-300">
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className={`w-full text-[15px] 
+                                                                                                                "!font-normal !text-gray-900 !cursor-default"
+                                                                                                        `}
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px]"
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <TextArea
+                                                                                                disabled
+                                                                                                rows={
+                                                                                                    1
+                                                                                                }
+                                                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                                                                             />
                                                                                         </td>
                                                                                     </tr>
@@ -1360,7 +1901,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                                                         <th className="w-1/10 bg-[#D4F2D9] text-[#3A6F41] text-center border-r-2 border-gray-300 py-2">
                                                                                             Action
                                                                                         </th>
-                                                                                        <th className=" w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center  px-8 py-2 border-r-2 border-gray-300">
                                                                                             Negotator
                                                                                             Name
                                                                                         </th>
@@ -1381,81 +1922,165 @@ const ApprovalBusinessFMSCreate = () => {
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <tr className="border-b-2 border-gray-300">
-                                                                                        <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                                            </button>
-                                                                                        </td>
-                                                                                        <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className="w-[200px] border-r-2 border-gray-300 px-3 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className=" px-3 py-2 ">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr className="">
-                                                                                        <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                                <LuTrash2 className="] w-5 h-5" />
-                                                                                            </button>
-                                                                                        </td>
-                                                                                        <td className="px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className="px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                        <td className=" px-3 py-2 ">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
-                                                                                            />
-                                                                                        </td>
-                                                                                    </tr>
+                                                                                    {negotiators.length >
+                                                                                        0 &&
+                                                                                        negotiators.map(
+                                                                                            (
+                                                                                                negotiator,
+                                                                                                key
+                                                                                            ) => (
+                                                                                                <tr
+                                                                                                    key={
+                                                                                                        negotiator.id
+                                                                                                    }
+                                                                                                    className={`border-gray-300 border-b-2 ${
+                                                                                                        key !==
+                                                                                                            length -
+                                                                                                                1 &&
+                                                                                                        "border-b-0"
+                                                                                                    }`}
+                                                                                                >
+                                                                                                    <td className="font-semibold text-center  px-3 py-2 border-r-2 border-gray-300">
+                                                                                                        <Popconfirm
+                                                                                                            title="Delete negotiator"
+                                                                                                            description="Are you sure to delete this one? This action cannot be reversed"
+                                                                                                            okButtonProps={{
+                                                                                                                ghost: true,
+                                                                                                                danger: true,
+                                                                                                            }}
+                                                                                                            onConfirm={() =>
+                                                                                                                handleRemoveNegotiator(
+                                                                                                                    negotiator.id
+                                                                                                                )
+                                                                                                            }
+                                                                                                        >
+                                                                                                            <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
+                                                                                                                <LuTrash2 className="w-5 h-5" />
+                                                                                                            </button>
+                                                                                                        </Popconfirm>
+                                                                                                    </td>
+                                                                                                    <td className="px-3 py-2 border-r-2 border-gray-300">
+                                                                                                        <Select
+                                                                                                            showSearch
+                                                                                                            className="w-full text-[15px]"
+                                                                                                            placeholder="Select Negotiator"
+                                                                                                            filterOption={(
+                                                                                                                input,
+                                                                                                                option
+                                                                                                            ) =>
+                                                                                                                (
+                                                                                                                    option?.label ??
+                                                                                                                    ""
+                                                                                                                ).includes(
+                                                                                                                    input
+                                                                                                                )
+                                                                                                            }
+                                                                                                            value={
+                                                                                                                negotiator.userId
+                                                                                                            }
+                                                                                                            options={[
+                                                                                                                {
+                                                                                                                    value: "1",
+                                                                                                                    label: "Negotiator 1",
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    value: "2",
+                                                                                                                    label: "Negotiator 2",
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    value: "3",
+                                                                                                                    label: "Negotiator 3",
+                                                                                                                },
+                                                                                                            ]}
+                                                                                                            onChange={(
+                                                                                                                value
+                                                                                                            ) => {
+                                                                                                                setNegotiators(
+                                                                                                                    negotiators.map(
+                                                                                                                        (
+                                                                                                                            $
+                                                                                                                        ) => {
+                                                                                                                            if (
+                                                                                                                                $.id ==
+                                                                                                                                negotiator.id
+                                                                                                                            ) {
+                                                                                                                                return {
+                                                                                                                                    ...$,
+                                                                                                                                    userId: value,
+                                                                                                                                };
+                                                                                                                            } else
+                                                                                                                                return $;
+                                                                                                                        }
+                                                                                                                    )
+                                                                                                                );
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                    <td className="w-[200px] px-3 border-r-2 py-2">
+                                                                                                        <Select
+                                                                                                            disabled={
+                                                                                                                true
+                                                                                                            }
+                                                                                                            className={`w-full text-[15px] 
+                                                                                                                "!font-normal !text-gray-900 !cursor-default"
+                                                                                                        `}
+                                                                                                            placeholder="Select Approval"
+                                                                                                            filterOption={(
+                                                                                                                input,
+                                                                                                                option
+                                                                                                            ) =>
+                                                                                                                (
+                                                                                                                    option?.label ??
+                                                                                                                    ""
+                                                                                                                ).includes(
+                                                                                                                    input
+                                                                                                                )
+                                                                                                            }
+                                                                                                            options={[
+                                                                                                                {
+                                                                                                                    value: "1",
+                                                                                                                    label: "Approve",
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    value: "2",
+                                                                                                                    label: "Reject",
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    value: "3",
+                                                                                                                    label: "Approve with condition",
+                                                                                                                },
+                                                                                                            ]}
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                    <td className="w-[200px] border-r-2 border-gray-300 px-3 py-2">
+                                                                                                        <DatePicker
+                                                                                                            disabled
+                                                                                                            placeholder=""
+                                                                                                            className="w-full h-[30px]"
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                    <td className="px-3 py-2 ">
+                                                                                                        <TextArea
+                                                                                                            style={{
+                                                                                                                height: "30px",
+                                                                                                            }}
+                                                                                                            disabled
+                                                                                                            className="w-full"
+                                                                                                        />
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            )
+                                                                                        )}
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold">
+                                                                    <div
+                                                                        className="flex items-center mb-6 border-2 border-t-0 border-gray-300 space-x-2 justify-center  bg-gray-50 hover:bg-[#e5feea] hover:text-[#3A6F41] hover:border-[#A3D1AD] text-gray-500 cursor-pointer py-2 text-[16px] font-semibold"
+                                                                        onClick={() =>
+                                                                            handleAddNewNegotiator()
+                                                                        }
+                                                                    >
                                                                         <LuPlus />
                                                                         <div>
                                                                             Add
@@ -1512,28 +2137,62 @@ const ApprovalBusinessFMSCreate = () => {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            New
-                                                                                            Trading
+                                                                                            <span className="ant-border flex w-full">
+                                                                                                Auto
+                                                                                                approver
+                                                                                                name
+                                                                                            </span>
                                                                                         </td>
                                                                                         <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className={`w-full text-[15px] 
+                                                                                                                "!font-normal !text-gray-900 !cursor-default"
+                                                                                                        `}
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px]"
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <TextArea
+                                                                                                disabled
+                                                                                                style={{
+                                                                                                    height: "30px",
+                                                                                                }}
+                                                                                                className="w-full"
                                                                                             />
                                                                                         </td>
                                                                                     </tr>
@@ -1562,20 +2221,13 @@ const ApprovalBusinessFMSCreate = () => {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-3 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Budget (Item)
                                                             </label>
                                                             <Select
                                                                 showSearch
                                                                 allowClear
-                                                                style={{
-                                                                    width: "100%",
-                                                                    fontSize:
-                                                                        "15px",
-                                                                }}
+                                                                className="w-full text-[15px]"
                                                                 placeholder="Select Budget Item"
                                                                 filterOption={(
                                                                     input,
@@ -1602,23 +2254,17 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         label: "Item 3",
                                                                     },
                                                                 ]}
+                                                                value={""}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Budget (Amount)
                                                             </label>
                                                             <Select
                                                                 showSearch
                                                                 allowClear
-                                                                style={{
-                                                                    width: "100%",
-                                                                    fontSize:
-                                                                        "15px",
-                                                                }}
+                                                                className="w-full text-[15px]"
                                                                 placeholder="Select Budget Amount"
                                                                 filterOption={(
                                                                     input,
@@ -1645,23 +2291,17 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         label: "Amount 3",
                                                                     },
                                                                 ]}
+                                                                value={""}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Account Title
                                                             </label>
                                                             <Select
                                                                 showSearch
                                                                 allowClear
-                                                                style={{
-                                                                    width: "100%",
-                                                                    fontSize:
-                                                                        "15px",
-                                                                }}
+                                                                className="w-full text-[15px]"
                                                                 placeholder="Select Account Title"
                                                                 filterOption={(
                                                                     input,
@@ -1688,6 +2328,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                                         label: "Title 3",
                                                                     },
                                                                 ]}
+                                                                value={""}
                                                             />
                                                         </div>
                                                     </div>
@@ -1710,10 +2351,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-4 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Start Date
                                                             </label>
                                                             <DatePicker
@@ -1729,10 +2367,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 End Date
                                                             </label>
                                                             <DatePicker
@@ -1751,29 +2386,21 @@ const ApprovalBusinessFMSCreate = () => {
 
                                                     <div className="mt-4 grid grid-cols-2 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Location
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Location"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Content
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Content"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                     </div>
@@ -1815,17 +2442,105 @@ const ApprovalBusinessFMSCreate = () => {
                                                                             Trading
                                                                         </td>
                                                                         <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
+                                                                            <TextArea
+                                                                                rows={
+                                                                                    1
+                                                                                }
+                                                                                className="!text-black h-full !cursor-default"
+                                                                                // value={description}
+                                                                                // disabled={mode == "view"}
+                                                                                // onChange={(e) =>
+                                                                                //     setDescription(e.target.value)
+                                                                                // }
                                                                             />
                                                                         </td>
                                                                         <td className="w-[200px] px-6 py-2">
-                                                                            <div>
-                                                                                Upload
-                                                                                File
-                                                                            </div>
+                                                                            {newTradingAttachment.length >
+                                                                                0 && (
+                                                                                <div className="mb-2 font-normal">
+                                                                                    <p className="underlined">
+                                                                                        Selected
+                                                                                        files:
+                                                                                    </p>
+                                                                                    <ol>
+                                                                                        {newTradingAttachment.map(
+                                                                                            (
+                                                                                                file,
+                                                                                                index
+                                                                                            ) => (
+                                                                                                <li
+                                                                                                    key={
+                                                                                                        index
+                                                                                                    }
+                                                                                                    className="ml-2"
+                                                                                                >
+                                                                                                    <a
+                                                                                                        onClick={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            e.preventDefault();
+                                                                                                            const fileURL =
+                                                                                                                URL.createObjectURL(
+                                                                                                                    file
+                                                                                                                );
+                                                                                                            window.open(
+                                                                                                                fileURL
+                                                                                                            );
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        {index +
+                                                                                                            1 +
+                                                                                                            ". "}
+                                                                                                        {
+                                                                                                            file.name
+                                                                                                        }
+                                                                                                        {
+                                                                                                            " - "
+                                                                                                        }
+                                                                                                        {formatBytes(
+                                                                                                            file.size
+                                                                                                        )}
+                                                                                                    </a>
+                                                                                                    <CloseOutlined
+                                                                                                        className="ml-2 text-red-700 hover:text-red-400 ease-in cursor-pointer"
+                                                                                                        onClick={() =>
+                                                                                                            handleRemoveAttachment(
+                                                                                                                index,
+                                                                                                                "newTrading"
+                                                                                                            )
+                                                                                                        }
+                                                                                                    />
+                                                                                                </li>
+                                                                                            )
+                                                                                        )}
+                                                                                    </ol>
+                                                                                </div>
+                                                                            )}
+                                                                            <input
+                                                                                id="new-trading-attachment"
+                                                                                type="file"
+                                                                                className="hidden"
+                                                                                accept=".doc, .docx, .txt, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif"
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    handleAttachmentFileChange(
+                                                                                        e,
+                                                                                        "newTrading"
+                                                                                    )
+                                                                                }
+                                                                                multiple
+                                                                            ></input>
+                                                                            <label
+                                                                                htmlFor="new-trading-attachment"
+                                                                                className="flex items-center w-fit rounded border-2 py-1 px-2 gap-2 hover:text-blue-500 hover:ease-in-out hover:duration-75 cursor-pointer"
+                                                                            >
+                                                                                <span>
+                                                                                    Upload
+                                                                                    File
+                                                                                </span>
+                                                                                <MdDriveFolderUpload className="w-6 h-6 -mt-1" />
+                                                                            </label>
                                                                         </td>
                                                                     </tr>
                                                                     <tr className="border-b-2 border-gray-300">
@@ -1835,17 +2550,105 @@ const ApprovalBusinessFMSCreate = () => {
                                                                             implementation
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
+                                                                            <TextArea
+                                                                                rows={
+                                                                                    1
+                                                                                }
+                                                                                className="!text-black !cursor-default"
+                                                                                // value={description}
+                                                                                // disabled={mode == "view"}
+                                                                                // onChange={(e) =>
+                                                                                //     setDescription(e.target.value)
+                                                                                // }
                                                                             />
                                                                         </td>
-                                                                        <td className=" px-6 py-2">
-                                                                            <div>
-                                                                                Upload
-                                                                                File
-                                                                            </div>
+                                                                        <td className="px-6 py-2">
+                                                                            {afterImplementationAttachment.length >
+                                                                                0 && (
+                                                                                <div className="mb-2 font-normal">
+                                                                                    <p>
+                                                                                        Selected
+                                                                                        files:
+                                                                                    </p>
+                                                                                    <ol>
+                                                                                        {afterImplementationAttachment.map(
+                                                                                            (
+                                                                                                file,
+                                                                                                index
+                                                                                            ) => (
+                                                                                                <li
+                                                                                                    key={
+                                                                                                        index
+                                                                                                    }
+                                                                                                    className="ml-2"
+                                                                                                >
+                                                                                                    {index +
+                                                                                                        1 +
+                                                                                                        ". "}
+                                                                                                    <a
+                                                                                                        onClick={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            e.preventDefault();
+                                                                                                            const fileURL =
+                                                                                                                URL.createObjectURL(
+                                                                                                                    file
+                                                                                                                );
+                                                                                                            window.open(
+                                                                                                                fileURL
+                                                                                                            );
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        {
+                                                                                                            file.name
+                                                                                                        }
+                                                                                                        {
+                                                                                                            " - "
+                                                                                                        }
+                                                                                                        {formatBytes(
+                                                                                                            file.size
+                                                                                                        )}
+                                                                                                    </a>
+                                                                                                    <CloseOutlined
+                                                                                                        className="ml-2 text-red-700 hover:text-red-400 ease-in cursor-pointer"
+                                                                                                        onClick={() =>
+                                                                                                            handleRemoveAttachment(
+                                                                                                                index,
+                                                                                                                "implementation"
+                                                                                                            )
+                                                                                                        }
+                                                                                                    />
+                                                                                                </li>
+                                                                                            )
+                                                                                        )}
+                                                                                    </ol>
+                                                                                </div>
+                                                                            )}
+                                                                            <input
+                                                                                id="after-implementation-attachment"
+                                                                                type="file"
+                                                                                className="hidden"
+                                                                                accept=".doc, .docx, .txt, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif"
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    handleAttachmentFileChange(
+                                                                                        e,
+                                                                                        "implementation"
+                                                                                    )
+                                                                                }
+                                                                                multiple
+                                                                            ></input>
+                                                                            <label
+                                                                                htmlFor="after-implementation-attachment"
+                                                                                className="flex items-center w-fit rounded border-2 py-1 px-2 gap-2 hover:text-blue-500 hover:ease-in-out hover:duration-75 cursor-pointer"
+                                                                            >
+                                                                                <span>
+                                                                                    Upload
+                                                                                    File
+                                                                                </span>
+                                                                                <MdDriveFolderUpload className="w-6 h-6 -mt-1" />
+                                                                            </label>
                                                                         </td>
                                                                     </tr>
                                                                     <tr className="">
@@ -1853,17 +2656,105 @@ const ApprovalBusinessFMSCreate = () => {
                                                                             Other
                                                                         </td>
                                                                         <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
+                                                                            <TextArea
+                                                                                rows={
+                                                                                    1
+                                                                                }
+                                                                                className="!text-black !cursor-default"
+                                                                                // value={description}
+                                                                                // disabled={mode == "view"}
+                                                                                // onChange={(e) =>
+                                                                                //     setDescription(e.target.value)
+                                                                                // }
                                                                             />
                                                                         </td>
                                                                         <td className=" px-6 py-2">
-                                                                            <div>
-                                                                                Upload
-                                                                                File
-                                                                            </div>
+                                                                            {otherAttachment.length >
+                                                                                0 && (
+                                                                                <div className="mb-2 font-normal">
+                                                                                    <p>
+                                                                                        Selected
+                                                                                        files:
+                                                                                    </p>
+                                                                                    <ol>
+                                                                                        {otherAttachment.map(
+                                                                                            (
+                                                                                                file,
+                                                                                                index
+                                                                                            ) => (
+                                                                                                <li
+                                                                                                    key={
+                                                                                                        index
+                                                                                                    }
+                                                                                                    className="ml-2"
+                                                                                                >
+                                                                                                    {index +
+                                                                                                        1 +
+                                                                                                        ". "}
+                                                                                                    <a
+                                                                                                        onClick={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            e.preventDefault();
+                                                                                                            const fileURL =
+                                                                                                                URL.createObjectURL(
+                                                                                                                    file
+                                                                                                                );
+                                                                                                            window.open(
+                                                                                                                fileURL
+                                                                                                            );
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        {
+                                                                                                            file.name
+                                                                                                        }
+                                                                                                        {
+                                                                                                            " - "
+                                                                                                        }
+                                                                                                        {formatBytes(
+                                                                                                            file.size
+                                                                                                        )}
+                                                                                                    </a>
+                                                                                                    <CloseOutlined
+                                                                                                        className="ml-2 text-red-700 hover:text-red-400 ease-in cursor-pointer"
+                                                                                                        onClick={() =>
+                                                                                                            handleRemoveAttachment(
+                                                                                                                index,
+                                                                                                                "other"
+                                                                                                            )
+                                                                                                        }
+                                                                                                    />
+                                                                                                </li>
+                                                                                            )
+                                                                                        )}
+                                                                                    </ol>
+                                                                                </div>
+                                                                            )}
+                                                                            <input
+                                                                                id="other-attachment"
+                                                                                type="file"
+                                                                                className="hidden"
+                                                                                accept=".doc, .docx, .txt, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif"
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    handleAttachmentFileChange(
+                                                                                        e,
+                                                                                        "other"
+                                                                                    )
+                                                                                }
+                                                                                multiple
+                                                                            ></input>
+                                                                            <label
+                                                                                htmlFor="other-attachment"
+                                                                                className="flex items-center w-fit rounded border-2 py-1 px-2 gap-2 hover:text-blue-500 hover:ease-in-out hover:duration-75 cursor-pointer"
+                                                                            >
+                                                                                <span>
+                                                                                    Upload
+                                                                                    File
+                                                                                </span>
+                                                                                <MdDriveFolderUpload className="w-6 h-6 -mt-1" />
+                                                                            </label>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -1894,7 +2785,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                                             Approval
                                                                             No.
                                                                         </th>
-                                                                        <th className=" w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
+                                                                        <th className="w-1/4 bg-[#D4F2D9] text-[#3A6F41] text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
                                                                             Action
                                                                             by
                                                                         </th>
@@ -1908,58 +2799,30 @@ const ApprovalBusinessFMSCreate = () => {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
-                                                                        </td>
-                                                                        <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 border-r-2 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                    </tr>
                                                                     <tr className="">
                                                                         <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
+                                                                            Eg.
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className=" px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -1975,2024 +2838,27 @@ const ApprovalBusinessFMSCreate = () => {
                         />
 
                         {/* Modals */}
-                        <Modal
-                            title={
-                                currentAction === "sales"
-                                    ? "New Sales Item"
-                                    : currentAction === "additionalSales"
-                                    ? "New Addtional Sales Item"
-                                    : currentAction === "cost"
-                                    ? "New Cost Item"
-                                    : "New Additional Cost Item"
-                            }
-                            visible={isModalOpen}
-                            onOk={handleAddRow}
-                            onCancel={handleCloseModal}
-                            centered
-                            maskClosable={false}
-                            width={1200}
-                            footer={[
-                                <div className="flex items-center justify-end">
-                                    <button
-                                        className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
-                                        onClick={handleCloseModal}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        className="p-2 px-8 ml-4 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
-                                        onClick={handleAddRow}
-                                    >
-                                        Save
-                                    </button>
-                                </div>,
-                            ]}
-                        >
-                            {currentAction === "sales" ? (
-                                <div className="">
-                                    <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Tax
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Approval Type"
-                                                    className="font-semibold"
-                                                    value="Tax Information"
-                                                    disabled={true}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer Site
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer Site"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer Site 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer Site 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer Site 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Payment Term
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Payment Term"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Test 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Test 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Test 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Payment Term and Condition
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    // placeholder="Enter Payment Term and Condition"
-                                                    className="font-semibold"
-                                                    disabled
-                                                    value="Test 1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Currency
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Currency"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "VND",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "USD",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "YEN",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Exchange Rate
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Exchange Rate"
-                                                    className="font-semibold"
-                                                    value="1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="shadow-sm mt-5 mb-3 rounded-lg border-2 border-gray-300 ">
-                                            <div className="flex items-center space-x-3 rounded-t-lg bg-gray-100 border-b-2 border-gray-300 p-1.5 px-4 text-[15px] text-[#37763F] font-bold uppercase ">
-                                                <div>Item Information</div>
-                                            </div>
-                                            <div className="px-4 py-3 ">
-                                                {/* Form */}
-                                                <div className="grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Sub Item
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Sub Item"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Name
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Name Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Group
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Group Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-2 grid grid-cols-1 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor=""
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Description
-                                                        </label>
-                                                        <TextArea
-                                                            rows={1}
-                                                            placeholder="Enter Good/Service Summary"
-                                                            maxLength={5}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-3 grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Unit
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Unit"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Quantity
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Enter Quanity"
-                                                            className="font-semibold"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            VAT (%)
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select % VAT"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "5%",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "10%",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "15%",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Currency Convert */}
-                                                <div className="mt-6 mb-2  border-2 border-gray-300 ">
-                                                    <div className="overflow-x-auto">
-                                                        <table className=" w-full bg-white border-collapse text-[15px]">
-                                                            <thead className=" rounded-t-lg">
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <th className="w-1/6 text-center border-r-2 border-gray-300 py-2"></th>
-                                                                    <th className="bg-blue-50 w-2/5 text-blue-600 text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
-                                                                        Original
-                                                                        Price
-                                                                    </th>
-                                                                    <th className="w-2/5 bg-violet-100 text-violet-600 text-center text-[17px] px-8 py-2">
-                                                                        Converted
-                                                                        Price
-                                                                        (VND)
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center  px-6 py-2 border-r-2 border-gray-300">
-                                                                        Unit
-                                                                        Price
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Enter Price"
-                                                                            className="font-semibold"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="w-[200px] px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        VAT
-                                                                        Amount
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        Before
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="">
-                                                                    <td className="font-semibold text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                        After
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : currentAction === "additionalSales" ? (
-                                <div className="">
-                                    <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Tax
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Approval Type"
-                                                    className="font-semibold"
-                                                    value="Tax Information"
-                                                    disabled={true}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer Site
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer Site"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer Site 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer Site 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer Site 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Currency
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Currency"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "VND",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "USD",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "YEN",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Exchange Rate
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Exchange Rate"
-                                                    className="font-semibold"
-                                                    value="1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="shadow-sm mt-5 mb-3 rounded-lg border-2 border-gray-300 ">
-                                            <div className="flex items-center space-x-3 rounded-t-lg bg-gray-100 border-b-2 border-gray-300 p-1.5 px-4 text-[15px] text-[#37763F] font-bold uppercase ">
-                                                <div>Item Information</div>
-                                            </div>
-                                            <div className="px-4 py-3 ">
-                                                {/* Form */}
-                                                <div className="grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Sub Item
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Sub Item"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Name
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Name Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Group
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Group Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-2 grid grid-cols-1 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor=""
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Description
-                                                        </label>
-                                                        <TextArea
-                                                            rows={1}
-                                                            placeholder="Enter Good/Service Summary"
-                                                            maxLength={5}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-3 grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Unit
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Unit"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Checkout */}
-                                                <div className="mt-6 mb-2  border-2 border-gray-300 ">
-                                                    <div className="overflow-x-auto">
-                                                        <table className=" w-full bg-white border-collapse text-[15px]">
-                                                            <thead className=" rounded-t-lg">
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <th className="w-1/6 text-center border-r-2 border-gray-300 py-2"></th>
-                                                                    <th className="bg-blue-50 w-2/5 text-blue-600 text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
-                                                                        Original
-                                                                        Price
-                                                                    </th>
-                                                                    <th className="w-2/5 bg-violet-100 text-violet-600 text-center text-[17px] px-8 py-2">
-                                                                        Converted
-                                                                        Price
-                                                                        (VND)
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center  px-6 py-2 border-r-2 border-gray-300">
-                                                                        Unit
-                                                                        Price
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Enter Price"
-                                                                            className="font-semibold"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="w-[200px] px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        VAT
-                                                                        Amount
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        Before
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="">
-                                                                    <td className="font-semibold text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                        After
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : currentAction === "cost" ? (
-                                <div className="">
-                                    <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Vendor
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Tax
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Approval Type"
-                                                    className="font-semibold"
-                                                    value="Tax Information"
-                                                    disabled={true}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer Site
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer Site"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer Site 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer Site 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer Site 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Payment Term
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Payment Term"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Test 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Test 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Test 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    // htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Payment Term and Condition
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    // placeholder="Enter Payment Term and Condition"
-                                                    className="font-semibold"
-                                                    disabled
-                                                    value="Test 1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Currency
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Currency"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "VND",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "USD",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "YEN",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Exchange Rate
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Exchange Rate"
-                                                    className="font-semibold"
-                                                    value="1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="shadow-sm mt-5 mb-3 rounded-lg border-2 border-gray-300 ">
-                                            <div className="flex items-center space-x-3 rounded-t-lg bg-gray-100 border-b-2 border-gray-300 p-1.5 px-4 text-[15px] text-[#37763F] font-bold uppercase ">
-                                                <div>Item Information</div>
-                                            </div>
-                                            <div className="px-4 py-3 ">
-                                                {/* Form */}
-                                                <div className="grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Sub Item
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Sub Item"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Name
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Name Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Group
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Group Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-2 grid grid-cols-1 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor=""
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Description
-                                                        </label>
-                                                        <TextArea
-                                                            rows={1}
-                                                            placeholder="Enter Good/Service Summary"
-                                                            maxLength={5}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-3 grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Unit
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Unit"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Quantity
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Enter Quanity"
-                                                            className="font-semibold"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            VAT (%)
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select % VAT"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "5%",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "10%",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "15%",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Checkout */}
-                                                <div className="mt-6 mb-2  border-2 border-gray-300 ">
-                                                    <div className="overflow-x-auto">
-                                                        <table className=" w-full bg-white border-collapse text-[15px]">
-                                                            <thead className=" rounded-t-lg">
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <th className="w-1/6 text-center border-r-2 border-gray-300 py-2"></th>
-                                                                    <th className="bg-blue-50 w-2/5 text-blue-600 text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
-                                                                        Original
-                                                                        Price
-                                                                    </th>
-                                                                    <th className="w-2/5 bg-violet-100 text-violet-600 text-center text-[17px] px-8 py-2">
-                                                                        Converted
-                                                                        Price
-                                                                        (VND)
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center  px-6 py-2 border-r-2 border-gray-300">
-                                                                        Unit
-                                                                        Price
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Enter Price"
-                                                                            className="font-semibold"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="w-[200px] px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        VAT
-                                                                        Amount
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        Before
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="">
-                                                                    <td className="font-semibold text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                        After
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : currentAction === "additionalCost" ? (
-                                <div className="">
-                                    <div className="w-full my-3 mb-6 ">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Vendor
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Tax
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Approval Type"
-                                                    className="font-semibold"
-                                                    value="Tax Information"
-                                                    disabled={true}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Customer Site
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Customer Site"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "Customer Site 1",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "Customer Site 2",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "Customer Site 3",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4 mt-3">
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Currency
-                                                </label>
-                                                <Select
-                                                    showSearch
-                                                    allowClear
-                                                    style={{
-                                                        width: "100%",
-                                                        fontSize: "15px",
-                                                    }}
-                                                    placeholder="Select Currency"
-                                                    filterOption={(
-                                                        input,
-                                                        option
-                                                    ) =>
-                                                        (
-                                                            option?.label ?? ""
-                                                        ).includes(input)
-                                                    }
-                                                    options={[
-                                                        {
-                                                            value: "1",
-                                                            label: "VND",
-                                                        },
-                                                        {
-                                                            value: "2",
-                                                            label: "USD",
-                                                        },
-                                                        {
-                                                            value: "3",
-                                                            label: "YEN",
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                >
-                                                    Exchange Rate
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    id="approval_type"
-                                                    placeholder="Enter Exchange Rate"
-                                                    className="font-semibold"
-                                                    value="1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="shadow-sm mt-5 mb-3 rounded-lg border-2 border-gray-300 ">
-                                            <div className="flex items-center space-x-3 rounded-t-lg bg-gray-100 border-b-2 border-gray-300 p-1.5 px-4 text-[15px] text-[#37763F] font-bold uppercase ">
-                                                <div>Item Information</div>
-                                            </div>
-                                            <div className="px-4 py-3 ">
-                                                {/* Form */}
-                                                <div className="grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Sub Item
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Sub Item"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Name
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Name Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Item Group
-                                                        </label>
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
-                                                            placeholder="Item Group Information"
-                                                            className="font-semibold"
-                                                            disabled={true}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-2 grid grid-cols-1 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor=""
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Description
-                                                        </label>
-                                                        <TextArea
-                                                            rows={1}
-                                                            placeholder="Enter Good/Service Summary"
-                                                            maxLength={5}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-3 grid grid-cols-3 gap-4">
-                                                    <div className="col-span-1">
-                                                        <label
-                                                            htmlFor="email"
-                                                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                        >
-                                                            Unit
-                                                        </label>
-                                                        <Select
-                                                            showSearch
-                                                            allowClear
-                                                            style={{
-                                                                width: "100%",
-                                                                fontSize:
-                                                                    "15px",
-                                                            }}
-                                                            placeholder="Select Unit"
-                                                            filterOption={(
-                                                                input,
-                                                                option
-                                                            ) =>
-                                                                (
-                                                                    option?.label ??
-                                                                    ""
-                                                                ).includes(
-                                                                    input
-                                                                )
-                                                            }
-                                                            options={[
-                                                                {
-                                                                    value: "1",
-                                                                    label: "Customer 1",
-                                                                },
-                                                                {
-                                                                    value: "2",
-                                                                    label: "Customer 2",
-                                                                },
-                                                                {
-                                                                    value: "3",
-                                                                    label: "Customer 3",
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Checkout */}
-                                                <div className="mt-6 mb-2  border-2 border-gray-300 ">
-                                                    <div className="overflow-x-auto">
-                                                        <table className=" w-full bg-white border-collapse text-[15px]">
-                                                            <thead className=" rounded-t-lg">
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <th className="w-1/6 text-center border-r-2 border-gray-300 py-2"></th>
-                                                                    <th className="bg-blue-50 w-2/5 text-blue-600 text-center text-[17px] px-8 py-2 border-r-2 border-gray-300">
-                                                                        Original
-                                                                        Price
-                                                                    </th>
-                                                                    <th className="w-2/5 bg-violet-100 text-violet-600 text-center text-[17px] px-8 py-2">
-                                                                        Converted
-                                                                        Price
-                                                                        (VND)
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center  px-6 py-2 border-r-2 border-gray-300">
-                                                                        Unit
-                                                                        Price
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Enter Price"
-                                                                            className="font-semibold"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="w-[200px] px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        VAT
-                                                                        Amount
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="border-b-2 border-gray-300">
-                                                                    <td className="font-semibold text-center px-8 py-2 border-r-2 border-gray-300">
-                                                                        Before
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr className="">
-                                                                    <td className="font-semibold text-center  px-8 py-2 border-r-2 border-gray-300">
-                                                                        After
-                                                                        VAT
-                                                                    </td>
-                                                                    <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Original Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                    <td className=" px-6 py-2">
-                                                                        <Input
-                                                                            type="text"
-                                                                            id="approval_type"
-                                                                            placeholder="Converted Price"
-                                                                            className="font-semibold"
-                                                                            readOnly={
-                                                                                true
-                                                                            }
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : null}
-                        </Modal>
+                        <SalesModal
+                            mode={currentMode}
+                            type={currentType}
+                            isModalOpen={isSalesModalOpen}
+                            info={currentSalesItem}
+                            handleCloseModal={() => handleCloseSalesCostModal()}
+                            handleSave={(info) => handleSubmitSales(info)}
+                        />
+                        <CostModal
+                            mode={currentMode}
+                            type={currentType}
+                            info={currentCostItem}
+                            isModalOpen={isCostModalOpen}
+                            handleCloseModal={() => handleCloseSalesCostModal()}
+                            handleSave={(info) => handleSubmitCost(info)}
+                        />
 
                         {/* Allocate Modals */}
                         <Modal
                             title={"Approval Allocation"}
-                            visible={isAllocateModalOpen}
+                            open={isAllocateModalOpen}
                             onCancel={handleCloseAllocateModal}
                             centered
                             maskClosable={false}
@@ -4032,7 +2898,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <th className="min-w-[60px] max-h-[60px] bg-[#d4f2d9] border-2 border-l-0 border-[#99d2a4]  text-center py-2">
                                                         Sub Item
                                                     </th>
-                                                    <th className="min-w-[50px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
+                                                    <th className="max-w-[80px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] border-r-0 text-center px-8 py-2">
                                                         % Allocate
                                                     </th>
                                                 </tr>
@@ -4042,7 +2908,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Customer 1"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4051,18 +2916,17 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Sub Item 1"
                                                             className="font-semibold"
                                                             disabled={true}
                                                         />
                                                     </td>
                                                     <td className="  border border-r-0 border-[#6a9e72] px-3 py-2">
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
+                                                        <DecimalNumberInput
+                                                            min={0}
+                                                            max={100}
+                                                            addonAfter="%"
                                                             placeholder="Enter % Allocate"
-                                                            className="font-semibold"
                                                         />
                                                     </td>
                                                 </tr>
@@ -4070,7 +2934,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className=" border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Customer 2"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4079,18 +2942,17 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className=" border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Sub Item 2"
                                                             className="font-semibold"
                                                             disabled={true}
                                                         />
                                                     </td>
                                                     <td className=" border border-r-0 border-[#6a9e72] px-3 py-2">
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
+                                                        <DecimalNumberInput
+                                                            min={0}
+                                                            max={100}
+                                                            addonAfter="%"
                                                             placeholder="Enter % Allocate"
-                                                            className="font-semibold"
                                                         />
                                                     </td>
                                                 </tr>
@@ -4121,7 +2983,7 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <th className="min-w-[60px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
                                                         Customer
                                                     </th>
-                                                    <th className="min-w-[60px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
+                                                    <th className="max-w-[80px] max-h-[50px] bg-[#d4f2d9] border-2 border-[#99d2a4] text-center px-8 py-2 border-r-0">
                                                         % Allocate
                                                     </th>
                                                 </tr>
@@ -4131,7 +2993,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Vendor 1"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4140,7 +3001,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Sub Item 1"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4149,17 +3009,16 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Enter Customer"
                                                             className="font-semibold"
                                                         />
                                                     </td>
                                                     <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
+                                                        <DecimalNumberInput
+                                                            min={0}
+                                                            max={100}
+                                                            addonAfter="%"
                                                             placeholder="Enter % Allocate"
-                                                            className="font-semibold"
                                                         />
                                                     </td>
                                                 </tr>
@@ -4167,7 +3026,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="  border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Vendor 2"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4176,7 +3034,6 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="border-l-0 border border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Sub Item 2"
                                                             className="font-semibold"
                                                             disabled={true}
@@ -4185,17 +3042,16 @@ const ApprovalBusinessFMSCreate = () => {
                                                     <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
                                                         <Input
                                                             type="text"
-                                                            id="approval_type"
                                                             placeholder="Enter Customer"
                                                             className="font-semibold"
                                                         />
                                                     </td>
                                                     <td className="border border-r-0 border-[#6a9e72] px-3 py-2">
-                                                        <Input
-                                                            type="text"
-                                                            id="approval_type"
+                                                        <DecimalNumberInput
+                                                            min={0}
+                                                            max={100}
+                                                            addonAfter="%"
                                                             placeholder="Enter % Allocate"
-                                                            className="font-semibold"
                                                         />
                                                     </td>
                                                 </tr>

@@ -14,4 +14,27 @@ class Project extends Model
         'Active', 'IsDeleted', 'CreatedBy',
         'UpdatedBy', 'DeletedBy', 'DeletedAt'
     ];
+    protected $casts
+    = [
+        'Active' => 'boolean',
+        'IsDeleted' => 'boolean',
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
+    ];
+    public function scopeActive($query)
+    {
+        return $query->where('IsDeleted', 0);
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'CreatedBy', 'id');
+    }
+
+    /**
+     * Get the user who updated the project.
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'UpdatedBy', 'id');
+    }
 }

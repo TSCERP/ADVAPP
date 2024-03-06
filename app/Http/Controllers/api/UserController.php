@@ -10,8 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\MasterData\Permitter;
+use App\Models\MasterData\NegoApproval;
+use App\Models\MasterData\FinalApproval;
 
 class UserController extends Controller
 {
@@ -98,12 +102,12 @@ class UserController extends Controller
     function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'firstName' => 'required',
+            'FirstName' => 'required',
             'LastName' => 'required',
-            'title' => 'required',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'Title' => 'required',
+            'Avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'required|unique:users,phone,' . $id,
+            'Phone' => 'required|unique:users,phone,' . $id,
             'password' => 'nullable',
             'branch' => 'required',
             'location' => 'required',
@@ -250,5 +254,26 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Password updated successfully'], 200);
     }
+    public function Approval(Request $request)
+    {
+        $EmpCode = Auth::user()->EmployeeCode;
+        $Nego = NegoApproval::where('EmployeeID', $EmpCode)->get();
+        $Permitter = Permitter::where('EmployeeID', $EmpCode)->get();
+        $Final = FinalApproval::where('EmployeeID', $EmpCode)->get();
+        $approval = [
+            'Nego' => $Nego,
+            'Permitter' => $Permitter,
+            'Final' => $Final
+        ];
+        return response()->json($approval, 200);
+    }
+    function sync()
+    {
+        // create if not exists
+        /** mapping data from employee data 
+         * 
+         */
 
+        //update if exists
+    }
 }

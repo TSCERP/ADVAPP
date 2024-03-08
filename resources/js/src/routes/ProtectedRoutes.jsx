@@ -1,21 +1,22 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import useAppContext from "../store/AppContext";
+import { useSelector } from "react-redux";
 import Forbidden from "../pages/errors/forbidden";
 
 const ProtectedRoute = ({ permissionsRequired = [], children }) => {
-
-    const { user, isAuthenticated } = useAppContext();
+    const { userData, isAuthenticated } = useSelector((state) => state.auth);
 
     const hasPermission = () => {
-        if (user && user.permissions) {
-            // console.log("hasPermission", permissionsRequired.every((permission) =>user.permissions.includes(permission)));
+        if (userData && userData.permissions) {
+            console.log(userData.permissions);
+            console.log("hasPermission", permissionsRequired.every((permission) =>userData.permissions.includes(permission)));
             return permissionsRequired.every((permission) =>
-              user.permissions.includes(permission)
+                userData.permissions.includes(permission)
             );
         }
         return false;
     };
+    hasPermission()
 
     return isAuthenticated ? (
         hasPermission() ? (

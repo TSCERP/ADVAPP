@@ -23,10 +23,10 @@ class User extends Authenticatable
         'LastName',
         'Title',
         'Avatar',
-        'email',
+        'Email',
         'Phone',
         'EmailVerifiedAt',
-        'password',
+        'Password',
         'IsSupperadm',
         'IsPermitter',
         'IsNego',
@@ -58,7 +58,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'EmailVerifiedAt' => 'datetime',
-        'password' => 'hashed',
+        'Password' => 'hashed',
         'IsSupperadm' => 'boolean',
         'IsPermitter' => 'boolean',
         'IsNego' => 'boolean',

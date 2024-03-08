@@ -29,7 +29,7 @@ Route::get('/handle-auth', function (Request $request) {
     ], 405);
 })->name('handleAuth');
 
-
+Route::post('/create', [UserController::class, 'create']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::middleware(['auth:sanctum',])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
     });
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::post('/create', [UserController::class, 'create']);
+        // Route::post('/create', [UserController::class, 'create']);
         Route::get('/find/{UserId}', [UserController::class, 'UserById']);
         Route::patch('/update/{UserId}', [UserController::class, 'update']);
         Route::patch('/update-profile/{UserId}', [UserController::class, 'updateProfile']);

@@ -173,7 +173,7 @@ const ListFilter = (props) => {
                     </label>
                     <Search
                         className="mt-1"
-                        placeholder="input search loading default"
+                        placeholder="Enter keywords"
                     />
                 </div>
 

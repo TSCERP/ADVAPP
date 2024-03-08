@@ -96,14 +96,14 @@ import PaymentRequestEdit from "../pages/payment-request/edit";
 import PaymentRequestView from "../pages/payment-request/view";
 
 // Master Data
-import Employees from "../pages/employees";
-import Vendors from "../pages/vendors";
-import Customers from "../pages/customers";
-import MasterDataItems from "../pages/items";
+import EmployeeList from "../pages/employees/index";
+import VendorList from "../pages/vendors/index";
+import CustomerList from "../pages/customers/index";
+import ItemList from "../pages/items/index";
 
 // Administration
-import UsersList from "../pages/users";
-import UserProfile from "../pages/users/[id]";
+import UsersList from "../pages/users/index";
+import UserProfile from "../pages/users/user";
 import Roles from "../pages/roles";
 import Integration from "../pages/integration";
 import Settings from "../pages/settings";
@@ -375,18 +375,18 @@ function AppRoutes() {
             />
 
             {/* Master Data */}
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/vendors" element={<Vendors />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/items" element={<MasterDataItems />} />
+            <Route path="/employees" element={<EmployeeList />} />
+            <Route path="/vendors" element={<VendorList />} />
+            <Route path="/customers" element={<CustomerList />} />
+            <Route path="/items" element={<ItemList />} />
 
             {/* Administration */}
             <Route path="/users" element={<UsersList />} />
-            <Route path="/users/details" element={<UserProfile />} />
+            <Route path="/users/view/:id" element={<UserProfile mode="view" />} />
+            <Route path="/users/edit/:id" element={<UserProfile mode="edit" />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/integration" element={<Integration />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/users/details" element={<UserProfile />} />
 
             <Route path="*" element={<NotFound />} />
         </Routes>

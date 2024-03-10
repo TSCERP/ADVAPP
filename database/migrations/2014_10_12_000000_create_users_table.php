@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('LastName', 200);
             $table->text('Title')->nullable();
             $table->text('Avatar')->nullable();
-            $table->string('Email')->unique();
+            $table->string('email')->unique();
             $table->string('Phone')->nullable();
             $table->timestamp('EmailVerifiedAt')->nullable();
-            $table->string('Password');
+            $table->string('password');
             $table->boolean('IsSupperadm')->default(false);
             $table->boolean('IsPermitter')->default(false);
             $table->boolean('IsNego')->default(false);
@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('Location')->nullable();
             $table->string('EmployeeCode')->nullable();
             $table->integer('ObjType')->default(10);
+            $table->string('FullName')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

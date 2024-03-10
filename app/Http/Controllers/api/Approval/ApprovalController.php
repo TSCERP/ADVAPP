@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Approval;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Approvals;
+use Illuminate\Support\Facades\Auth;
 
 class ApprovalController extends Controller
 {
@@ -70,6 +71,9 @@ class ApprovalController extends Controller
             case ('YEARLY'):
                 $data = $this->storeYearly($request);
                 break;
+            case ('SG&A'):
+                $data = $this->storeOther($request);
+                break;
             case ('OTHER'):
                 $data = $this->storeOther($request);
                 break;
@@ -87,7 +91,30 @@ class ApprovalController extends Controller
     function storeSpot($data)
     {
         try {
+            $header = $data->only(
+                "DocType",
+                "StartDate",
+                "EndDate",
+                "NewTrading",
+                "CategoryCode",
+                "CategoryName",
+                "CategoryVI",
+                "DocDate",
+                "Subject",
+                "WinRate",
+                "Revised",
+                "Related"
+            );
+            $header['PIC'] = Auth::user()->id;
+            $header['Department'] = Auth::user()->id;
+            $header['Section'] = date('Y-m-d H:i:s');
+            if ($data->Revised == true) {
+                $header['RevisedBy'] = Auth::user()->id;
+                $header['RevisedDate'] = now();
+            }
+            $header['PIC'] = Auth::user()->id;
 
+            dd($header);
             //todo something
             //header
             // detail

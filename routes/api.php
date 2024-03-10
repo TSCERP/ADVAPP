@@ -57,14 +57,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::patch('/disable/{UserId}', [UserController::class, 'blockUser']);
         Route::delete('/delete/{UserId}', [UserController::class, 'delete']);
         Route::get('/approvals', [UserController::class, 'Approval']);
-    });
-    //Route for Approvals
-    Route::group(['prefix' => 'approvals'], function () {
-        Route::get('/', [ApprovalController::class, 'list'])->name('danh-sach-approvals');
-        Route::get('/{id}', [ApprovalController::class, 'show'])->name('chi-tiet-approvals');
-        Route::post('/create', [ApprovalController::class, 'create'])->name('tao-approvals');
-        Route::patch('/update/{id}', [ApprovalController::class, 'update'])->name('cap-nhat-approvals');
-        Route::delete('/delete/{id}', [ApprovalController::class, 'delete'])->name('xoa-approvals');
+        Route::get('/sync', [UserController::class, 'sync']);
     });
     //Project
     Route::group(['prefix' => 'projects'], function () {
@@ -78,3 +71,15 @@ Route::middleware(['auth:sanctum',])->group(function () {
 });
 //inlucde route
 include('masterDataApi.php');
+//route approvals
+include('Approvals.php');
+//route purchase order
+include('PO.php');
+//route sales quotation
+include('SQ.php');
+//route CHO
+include('CHO.php');
+//route VHO
+include('VHO.php');
+//route PR
+include('PR.php');

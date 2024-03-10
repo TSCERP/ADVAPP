@@ -144,11 +144,11 @@ function AppRoutes() {
                 element={<ApprovalBusinessSpotCreate />}
             />
             <Route
-                path="/approval/business/spot/edit"
+                path="/approval/business/spot/edit/:id"
                 element={<ApprovalBusinessSpotEdit />}
             />
             <Route
-                path="/approval/business/spot/view"
+                path="/approval/business/spot/view/:id"
                 element={<ApprovalBusinessSpotView />}
             />
             {/* Approval Business - FMS */}
@@ -157,15 +157,15 @@ function AppRoutes() {
                 element={<ApprovalBusinessFMSList />}
             />
             <Route
-                path="/approval/business/fms/create"
+                path="/approval/business/fms/create/"
                 element={<ApprovalBusinessFMSCreate />}
             />
             <Route
-                path="/approval/business/fms/edit"
+                path="/approval/business/fms/edit/:id"
                 element={<ApprovalBusinessFMSEdit />}
             />
             <Route
-                path="/approval/business/fms/view"
+                path="/approval/business/fms/view/:id"
                 element={<ApprovalBusinessFMSView />}
             />
             <Route
@@ -182,11 +182,11 @@ function AppRoutes() {
                 element={<ApprovalBusinessYearlyCreate />}
             />
             <Route
-                path="/approval/business/yearly/edit"
+                path="/approval/business/yearly/edit/:id"
                 element={<ApprovalBusinessYearlyEdit />}
             />
             <Route
-                path="/approval/business/yearly/view"
+                path="/approval/business/yearly/view/:id"
                 element={<ApprovalBusinessYearlyView />}
             />
             {/* Approval Budget */}
@@ -196,11 +196,11 @@ function AppRoutes() {
                 element={<ApprovalBudgetCreate />}
             />
             <Route
-                path="/approval/budget/edit"
+                path="/approval/budget/edit/:id"
                 element={<ApprovalBudgetEdit />}
             />
             <Route
-                path="/approval/budget/view"
+                path="/approval/budget/view/:id"
                 element={<ApprovalBudgetView />}
             />
             {/* Approval SG&A Cost */}
@@ -209,8 +209,8 @@ function AppRoutes() {
                 path="/approval/sg&a/create"
                 element={<ApprovalSGACreate />}
             />
-            <Route path="/approval/sg&a/edit" element={<ApprovalSGAEdit />} />
-            <Route path="/approval/sg&a/view" element={<ApprovalSGAView />} />
+            <Route path="/approval/sg&a/edit/:id" element={<ApprovalSGAEdit />} />
+            <Route path="/approval/sg&a/view/:id" element={<ApprovalSGAView />} />
             {/* Approval Other */}
             <Route path="/approval/other" element={<ApprovalOtherList />} />
             <Route
@@ -218,11 +218,11 @@ function AppRoutes() {
                 element={<ApprovalOtherCreate />}
             />
             <Route
-                path="/approval/other/edit"
+                path="/approval/other/edit/:id"
                 element={<ApprovalOtherEdit />}
             />
             <Route
-                path="/approval/other/view"
+                path="/approval/other/view/:id"
                 element={<ApprovalOtherView />}
             />
 

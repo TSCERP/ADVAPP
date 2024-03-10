@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import moment from "moment";
+import toast from "react-hot-toast";
+import { nanoid } from "nanoid";
 import {
     Input,
     Modal,
@@ -22,8 +24,7 @@ import { FaArrowUp, FaCheck, FaInfo, FaRedoAlt, FaLink } from "react-icons/fa";
 import { TbSquareRoundedLetterC, TbSquareRoundedLetterS } from "react-icons/tb";
 import { FaCircleDollarToSlot } from "react-icons/fa6";
 
-import moment from "moment";
-import toast from "react-hot-toast";
+import formatBytes from "../../../utils/number/formatBytes";
 
 // Get instance variables
 const { TextArea } = Input;
@@ -39,8 +40,9 @@ const ApprovalBudgetEdit = () => {
     /**
      *  All states defined here
      */
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
+    const [permitter, setPermitter] = useState(null);
+    const [approver, setApprover] = useState(null);
+    const [fileAttachment, setFileAttachment] = useState([]);
 
     const [currentAction, setCurrentAction] = useState(null);
 
@@ -56,65 +58,54 @@ const ApprovalBudgetEdit = () => {
     /**
      *  All functions defined here
      */
-    const handleOpenModal = (action) => {
-        setCurrentAction(action);
-        setIsModalOpen(true);
-    };
+    const handleAttachmentFileChange = (event) => {
+        const fileInput = event.target;
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setCurrentAction(null);
-    };
+        const allowedFileTypes = [
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "text/plain",
+            "application/vnd.ms-excel",
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+        ];
+        const maxSize = 5 * 1024 * 1024; // 5MB
 
-    const handleOpenAllocateModal = (action) => {
-        setIsAllocateModalOpen(true);
-    };
+        for (let i = 0; i < fileInput.files.length; i++) {
+            const file = fileInput.files[i];
 
-    const handleCloseAllocateModal = () => {
-        setIsAllocateModalOpen(false);
-    };
+            if (!allowedFileTypes.includes(file.type)) {
+                toast.error("Accepted doc, docx, txt, excel, pdf, image only");
+                fileInput.value = "";
+                return;
+            }
 
-    const handleAddRow = () => {
-        if (currentAction === "sales") {
-            saveSalesItem();
-        } else if (currentAction === "additionalSales") {
-            saveAdditionalSaveItem();
-        } else if (currentAction === "cost") {
-            saveCostItem();
-        } else if (currentAction === "additionalCost") {
-            saveAdditionalCostItem();
+            if (file.size > maxSize) {
+                alert(`File ${file.name} is larger than 5MB.`);
+                fileInput.value = "";
+                return;
+            }
         }
 
-        setIsModalOpen(false);
-        setCurrentAction(null);
+        const files = event.target.files;
+
+        // Tạo mảng mới với các đối tượng mới
+        const newFileAttachments = Array.from(files).map((file) => ({
+            id: nanoid(8),
+            description: "",
+            file: file,
+        }));
+
+        // Cập nhật state
+        setFileAttachment([...fileAttachment, ...newFileAttachments]);
     };
 
-    const saveSalesItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
-    };
-
-    const saveAdditionalSaveItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New sales item has been added.");
-    };
-
-    const saveCostItem = () => {
-        // Gọi API lưu thông tin mua hàng
-        toast("New cost item has been added.");
-    };
-
-    const saveAdditionalCostItem = () => {
-        // Gọi API lưu thông tin bán hàng
-        toast("New cost item has been added.");
-    };
-
-    const handleAllocateSave = () => {
-        toast("This module is under development.");
-    };
-
-    const handleAllocateRemove = () => {
-        toast("This module is under development.");
+    const handleRemoveAttachment = (idx) => {
+        setFileAttachment(fileAttachment.filter((_, index) => index != idx));
+        toast.success("File has been removed.");
     };
 
     const handleApprovalMatrix = () => {
@@ -156,10 +147,7 @@ const ApprovalBudgetEdit = () => {
                     {/* Automatic Generated Information */}
                     <div className="grid grid-cols-5 mt-4 gap-4">
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px]  font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px]  font-semibold text-gray-900">
                                 Approval Date
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -167,10 +155,7 @@ const ApprovalBudgetEdit = () => {
                             </div>
                         </div>
                         <div className="col-span-1">
-                            <label
-                                htmlFor="email"
-                                className="block text-[15px] font-semibold text-gray-900"
-                            >
+                            <label className="block text-[15px] font-semibold text-gray-900">
                                 Approval No
                             </label>
                             <div className="font-bold text-[#3A6F41] text-lg inter-font">
@@ -198,72 +183,15 @@ const ApprovalBudgetEdit = () => {
                             </button>
                         </div>
 
-                        {/* <div className="grid grid-cols-3 gap-4">
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval Type
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            className="font-semibold"
-                            disabled={true}
-                            value={"SPOT"}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval Date
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            className="font-semibold"
-                            value={currentTime}
-                            disabled={true}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-[15px] font-semibold text-gray-900"
-                        >
-                            Approval No
-                        </label>
-                        <Input
-                            type="text"
-                            id="approval_type"
-                            placeholder="Enter Approval Type"
-                            value={"2024-0001"}
-                            className="font-semibold"
-                            disabled={true}
-                        />
-                    </div>
-                </div> */}
-
                         <div className="mt-4 grid grid-cols-3 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Budget Type
                                 </label>
                                 <Select
                                     showSearch
                                     allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    className="w-full text-[15px]"
                                     placeholder="Select Budget Type"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -281,19 +209,13 @@ const ApprovalBudgetEdit = () => {
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category
                                 </label>
                                 <Select
                                     showSearch
                                     allowClear
-                                    style={{
-                                        width: "100%",
-                                        fontSize: "15px",
-                                    }}
+                                    className="w-full text-[15px]"
                                     placeholder="Select Approval Category"
                                     filterOption={(input, option) =>
                                         (option?.label ?? "").includes(input)
@@ -315,15 +237,11 @@ const ApprovalBudgetEdit = () => {
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Approval Category (VI)
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Default Approval Category (VI)"
                                     className="font-semibold"
                                     disabled={true}
@@ -331,80 +249,72 @@ const ApprovalBudgetEdit = () => {
                             </div>
                         </div>
 
-                        <div className="mt-4 grid grid-cols-3 gap-4">
-                            <div className="col-span-2">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
-                                    Subject
-                                </label>
-                                <TextArea
-                                    rows={4}
-                                    placeholder="Enter Subject Content"
-                                    maxLength={5}
-                                />
-                            </div>
-                            <div className="col-span-1 flex flex-col">
-                                <div className="p-1.5 px-3 bg-gray-50 border border-[#D9D9D9] rounded-md text-[15px] mt-8 font-semibold">
-                                    <Checkbox
-                                        className="w-full"
-                                        onChange={(e) => {
-                                            console.log(
-                                                `Is this approval new trading? = ${e.target.checked}`
-                                            );
-                                        }}
-                                    >
-                                        New Trading Approval
-                                    </Checkbox>
-                                </div>
-                            </div>
+                        <div className="mt-4">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Subject
+                            </label>
+                            <TextArea
+                                rows={4}
+                                placeholder="Enter Subject Content"
+                                className="w-full"
+                            />
                         </div>
 
                         <div className="mt-4 grid grid-cols-2 gap-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Division - Department
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Enter Division - Department"
                                     className="font-semibold"
                                 />
                             </div>
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     PIC
                                 </label>
-                                <Input
-                                    type="text"
-                                    id="approval_type"
-                                    placeholder="Enter PIC Information"
-                                    className="font-semibold"
-                                />
+                                <span className="ant-border w-full flex">
+                                    Tên PIC nè
+                                </span>
                             </div>
                         </div>
 
                         <div className="mt-4">
                             <div className="col-span-1">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                >
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                     Related Approval
                                 </label>
                                 <Input
                                     type="text"
-                                    id="approval_type"
                                     placeholder="Enter Related Approval URL Link"
                                     className="font-semibold"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-4 gap-4 mt-4">
+                            <div className="col-span-1">
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                    Start Date
+                                </label>
+                                <DatePicker
+                                    className="w-full text-[15px]"
+                                    onChange={(date, dateString) => {
+                                        setCostStartDate(dateString);
+                                    }}
+                                />
+                            </div>
+                            <div className="col-span-1">
+                                <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                    End Date
+                                </label>
+                                <DatePicker
+                                    className="w-full text-[15px]"
+                                    onChange={(date, dateString) => {
+                                        setCostEndDate(dateString);
+                                    }}
                                 />
                             </div>
                         </div>
@@ -478,31 +388,97 @@ const ApprovalBudgetEdit = () => {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                showSearch
+                                                                                                className="w-full text-[15px]"
+                                                                                                placeholder="Select Negotiator"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                value={
+                                                                                                    permitter
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Permitter 1",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Permitter 2",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Permitter 3",
+                                                                                                    },
+                                                                                                ]}
+                                                                                                onChange={(
+                                                                                                    value
+                                                                                                ) => {
+                                                                                                    setPermitter(
+                                                                                                        value
+                                                                                                    );
+                                                                                                }}
                                                                                             />
                                                                                         </td>
-                                                                                        <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                        <td className="px-3 py-2 border-r-2 border-gray-300">
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className={`w-full text-[15px] 
+                                                                                                                "!font-normal !text-gray-900 !cursor-default"
+                                                                                                        `}
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px]"
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <TextArea
+                                                                                                disabled
+                                                                                                rows={
+                                                                                                    1
+                                                                                                }
+                                                                                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                                                                             />
                                                                                         </td>
                                                                                     </tr>
@@ -559,28 +535,62 @@ const ApprovalBudgetEdit = () => {
                                                                                 <tbody>
                                                                                     <tr className="">
                                                                                         <td className="font-semibold text-left  px-3 py-2 border-r-2 border-gray-300">
-                                                                                            New
-                                                                                            Trading
+                                                                                            <span className="ant-border flex w-full">
+                                                                                                Auto
+                                                                                                approver
+                                                                                                name
+                                                                                            </span>
                                                                                         </td>
                                                                                         <td className=" px-3 py-2 border-r-2 border-gray-300">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <Select
+                                                                                                disabled={
+                                                                                                    true
+                                                                                                }
+                                                                                                className={`w-full text-[15px] 
+                                                                                                                "!font-normal !text-gray-900 !cursor-default"
+                                                                                                        `}
+                                                                                                placeholder="Select Approval"
+                                                                                                filterOption={(
+                                                                                                    input,
+                                                                                                    option
+                                                                                                ) =>
+                                                                                                    (
+                                                                                                        option?.label ??
+                                                                                                        ""
+                                                                                                    ).includes(
+                                                                                                        input
+                                                                                                    )
+                                                                                                }
+                                                                                                options={[
+                                                                                                    {
+                                                                                                        value: "1",
+                                                                                                        label: "Approve",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "2",
+                                                                                                        label: "Reject",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        value: "3",
+                                                                                                        label: "Approve with condition",
+                                                                                                    },
+                                                                                                ]}
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 border-r-2 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <DatePicker
+                                                                                                disabled
+                                                                                                placeholder=""
+                                                                                                className="w-full h-[30px]"
                                                                                             />
                                                                                         </td>
                                                                                         <td className="w-[200px] px-3 py-2">
-                                                                                            <Input
-                                                                                                type="text"
-                                                                                                id="approval_type"
-                                                                                                className="font-semibold"
+                                                                                            <TextArea
+                                                                                                disabled
+                                                                                                rows={
+                                                                                                    1
+                                                                                                }
+                                                                                                className="w-full"
                                                                                             />
                                                                                         </td>
                                                                                     </tr>
@@ -611,10 +621,7 @@ const ApprovalBudgetEdit = () => {
                                                     {/* Form */}
                                                     <div className="grid grid-cols-4 gap-4">
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Start Date
                                                             </label>
                                                             <DatePicker
@@ -630,10 +637,7 @@ const ApprovalBudgetEdit = () => {
                                                             />
                                                         </div>
                                                         <div className="col-span-1">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 End Date
                                                             </label>
                                                             <DatePicker
@@ -652,16 +656,12 @@ const ApprovalBudgetEdit = () => {
 
                                                     <div className="mt-4 flex">
                                                         <div className="w-full">
-                                                            <label
-                                                                htmlFor=""
-                                                                className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                                            >
+                                                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                                                 Content
                                                             </label>
                                                             <TextArea
                                                                 rows={4}
                                                                 placeholder="Enter Content"
-                                                                maxLength={5}
                                                             />
                                                         </div>
                                                     </div>
@@ -688,21 +688,29 @@ const ApprovalBudgetEdit = () => {
                                                             </h2>
                                                             <p className="my-2">
                                                                 File supported:
-                                                                PDF, DOCX.
-                                                                Maximum 7 upload
-                                                                files. Maximum
-                                                                file upload
-                                                                size: 5MB
+                                                                .pdf, .doc(x),
+                                                                .txt. Maximum 7
+                                                                upload files.
+                                                                Maximum file
+                                                                upload size: 5MB
                                                             </p>
                                                             <input
                                                                 id="upload-budget-attachment"
                                                                 type="file"
                                                                 className="hidden"
+                                                                accept=".doc, .docx, .txt, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif"
+                                                                onChange={(e) =>
+                                                                    handleAttachmentFileChange(
+                                                                        e
+                                                                    )
+                                                                }
+                                                                multiple
                                                             ></input>
-                                                            <label htmlFor="upload-budget-attachment">
-                                                                <button className="p-2 px-4 mt-2 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]">
-                                                                    Choose File
-                                                                </button>
+                                                            <label
+                                                                htmlFor="upload-budget-attachment"
+                                                                className="p-2 px-4 mt-2 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg cursor-pointer active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
+                                                            >
+                                                                Choose File
                                                             </label>
                                                         </div>
                                                     </div>
@@ -729,56 +737,121 @@ const ApprovalBudgetEdit = () => {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            1
-                                                                        </td>
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            <a>
-                                                                                Test
-                                                                                1
-                                                                            </a>
-                                                                        </td>
-                                                                        <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="attachment_description"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-6 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            2
-                                                                        </td>
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            <a>
-                                                                                Test
-                                                                                1
-                                                                            </a>
-                                                                        </td>
-                                                                        <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="attachment_description"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-6 py-2">
-                                                                            <div className="flex w-fit m-auto flex-row-reverse">
-                                                                                <button className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all">
-                                                                                    <LuTrash2 className="w-5 h-5" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
+                                                                    {fileAttachment.length >
+                                                                    0 ? (
+                                                                        fileAttachment.map(
+                                                                            (
+                                                                                f,
+                                                                                idx
+                                                                            ) => (
+                                                                                <tr
+                                                                                    className="border-b-2 border-gray-300"
+                                                                                    key={
+                                                                                        f.id
+                                                                                    }
+                                                                                >
+                                                                                    <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
+                                                                                        {idx +
+                                                                                            1}
+                                                                                    </td>
+                                                                                    <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
+                                                                                        <a
+                                                                                            onClick={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                e.preventDefault();
+                                                                                                const fileURL =
+                                                                                                    URL.createObjectURL(
+                                                                                                        f.file
+                                                                                                    );
+                                                                                                window.open(
+                                                                                                    fileURL
+                                                                                                );
+                                                                                            }}
+                                                                                        >
+                                                                                            {
+                                                                                                f
+                                                                                                    .file
+                                                                                                    .name
+                                                                                            }{" "}
+                                                                                            {
+                                                                                                " - "
+                                                                                            }{" "}
+                                                                                            {formatBytes(
+                                                                                                f
+                                                                                                    .file
+                                                                                                    .size
+                                                                                            )}
+                                                                                        </a>
+                                                                                    </td>
+                                                                                    <td className="px-6 py-2 border-r-2 border-gray-300">
+                                                                                        <TextArea
+                                                                                            rows={
+                                                                                                1
+                                                                                            }
+                                                                                            className="!text-black !cursor-default"
+                                                                                            value={
+                                                                                                f.description
+                                                                                            }
+                                                                                            // disabled={mode == "view"}
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                setFileAttachment(
+                                                                                                    fileAttachment.map(
+                                                                                                        (
+                                                                                                            file
+                                                                                                        ) => {
+                                                                                                            if (
+                                                                                                                file.id ==
+                                                                                                                f.id
+                                                                                                            ) {
+                                                                                                                return {
+                                                                                                                    ...file,
+                                                                                                                    description:
+                                                                                                                        e
+                                                                                                                            .target
+                                                                                                                            .value,
+                                                                                                                };
+                                                                                                            } else
+                                                                                                                return file;
+                                                                                                        }
+                                                                                                    )
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                    </td>
+                                                                                    <td className="px-6 py-2">
+                                                                                        <div className="flex w-fit m-auto flex-row-reverse">
+                                                                                            <button
+                                                                                                onClick={() =>
+                                                                                                    handleRemoveAttachment(
+                                                                                                        idx
+                                                                                                    )
+                                                                                                }
+                                                                                                className="text-[#B83232] p-1.5 rounded-full hover:bg-[#feebeb] font-medium active:scale-[.87] active:duration-75 transition-all"
+                                                                                            >
+                                                                                                <LuTrash2 className="w-5 h-5" />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        )
+                                                                    ) : (
+                                                                        <tr>
+                                                                            <td
+                                                                                colSpan={
+                                                                                    4
+                                                                                }
+                                                                                className="text-center font-semibold p-2"
+                                                                            >
+                                                                                No
+                                                                                file
+                                                                                attachment
+                                                                            </td>
+                                                                        </tr>
+                                                                    )}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -821,58 +894,30 @@ const ApprovalBudgetEdit = () => {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr className="border-b-2 border-gray-300">
-                                                                        <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
-                                                                        </td>
-                                                                        <td className=" px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 border-r-2 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="w-[200px] px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
-                                                                        </td>
-                                                                    </tr>
                                                                     <tr className="">
                                                                         <td className="font-semibold text-left  px-8 py-2 border-r-2 border-gray-300">
-                                                                            New
-                                                                            Trading
+                                                                            Eg.
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className="px-6 py-2 border-r-2 border-gray-300">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                         <td className=" px-6 py-2">
-                                                                            <Input
-                                                                                type="text"
-                                                                                id="approval_type"
-                                                                                className="font-semibold"
-                                                                            />
+                                                                            <span className="ant-border flex w-full">
+                                                                                Trường
+                                                                                thông
+                                                                                tin
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -898,22 +943,8 @@ const ApprovalBudgetEdit = () => {
                     </div>
                 </div>
             </div>
-            {/* Scroller */}
-            <button
-                className="fixed bottom-6 right-10 bg-[#0D0D0D] hover:bg-[#181818] hover:shadow-lg text-white font-bold py-4 px-4 rounded-full shadow-lg"
-                onClick={() => {
-                    window.focus();
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                    });
-                    toast("This feature is coming soon.");
-                }}
-            >
-                <FaArrowUp className="w-5 h-5" />
-            </button>
         </>
     );
-}
+};
 
 export default ApprovalBudgetEdit;

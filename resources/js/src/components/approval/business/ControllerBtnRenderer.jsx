@@ -15,7 +15,7 @@ const ControllerBtnRenderer = ({ data }) => {
         <div className="h-full flex items-center justify-center gap-x-3">
             <Link
                 // Nhớ thêm id nhé !!!
-                to={`${data.path}/edit`}
+                to={`${data.path}/edit/${data.id}`}
                 className="text-gray-700 hover:text-[#57a3e1]"
             >
                 <div>

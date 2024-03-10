@@ -38,8 +38,71 @@ import { DatePicker, Space, Select, Checkbox, Badge, Input } from "antd";
 const { RangePicker } = DatePicker;
 const { Search } = Input;
 
+const approvalStatusOptions = [
+    {
+        value: "1",
+        label: "Draft",
+    },
+    {
+        value: "2",
+        label: "New",
+    },
+    {
+        value: "3",
+        label: "Waiting For Negotiator",
+    },
+    {
+        value: "4",
+        label: "Waiting For Permitter",
+    },
+    {
+        value: "5",
+        label: "Waiting For Approver",
+    },
+    {
+        value: "6",
+        label: "Closed",
+    },
+    {
+        value: "7",
+        label: "Revised",
+    },
+];
+
+const approvalNoOptions = [
+    {
+        value: "1",
+        label: "1903005-001",
+    },
+    {
+        value: "2",
+        label: "1903005-002",
+    },
+    {
+        value: "3",
+        label: "1903005-003",
+    },
+    {
+        value: "4",
+        label: "1903005-004",
+    },
+    {
+        value: "5",
+        label: "1903005-005",
+    },
+    {
+        value: "6",
+        label: "1903005-006",
+    },
+];
+
 const ListFilter = (props) => {
-    const {} = props;
+    const {
+        type = "",
+        approvalNoList,
+        setApprovalFilter,
+        setApprovalSearch,
+    } = props;
 
     // All state
     const [searchInput, setSearchInput] = useState("");
@@ -108,37 +171,204 @@ const ListFilter = (props) => {
                     <label className="text-[15px] font-semibold mb-1">
                         What are you looking for?
                     </label>
-                    {/* <div className="relative mt-1">
-                        <div className="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
-                            <svg
-                                className="w-4 h-4 text-gray-500 "
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                />
-                            </svg>
-                        </div>
-                        <input
-                            type="search"
-                            id="default-search"
-                            className="block w-full p-1.5 ps-12 text-[15px] text-gray-900 border border-gray-300 rounded-lg bg-gray-50 "
-                            placeholder="Search Approvals"
-                        />
-                    </div> */}
-                    <Search className="mt-1" placeholder="input search loading default" />
+                    <Search
+                        className="mt-1"
+                        placeholder="input search loading default"
+                    />
                 </div>
 
-                {/* Filter */}
-                <div className="flex justify-between gap-x-1 items-end h-full w-3/4">
-                    <div className="w-[80%] flex gap-x-3">
+                {/* Filter not FMS */}
+                {type != "fms" && (
+                    <div className="flex justify-between gap-x-1 items-end h-full w-3/4">
+                        <div className="w-[80%] flex gap-x-3">
+                            <div className="flex flex-col w-fit">
+                                <label className="text-[14px] font-semibold mb-1">
+                                    Date Range:
+                                </label>
+                                <Space direction="vertical" size={10}>
+                                    <RangePicker
+                                        style={{
+                                            width: 240,
+                                            fontFamily: "Inter, sans-serif",
+                                            paddingTop: "7px",
+                                            paddingBottom: "7px",
+                                        }}
+                                        showNow={true}
+                                        onChange={(date, dateString) => {
+                                            // setSelectedDateRange(
+                                            //     dateString
+                                            // );
+                                            // setSelectedFromDate(
+                                            //     dateString[0]
+                                            // );
+                                            // setSelectedToDate(
+                                            //     dateString[1]
+                                            // );
+                                            // addToFilters(
+                                            //     "selectedDateRange",
+                                            //     dateString
+                                            // );
+                                            if (
+                                                dateString[0] !== "" &&
+                                                dateString[1] !== ""
+                                            ) {
+                                                setSelectedDateRange(
+                                                    dateString
+                                                );
+                                                setSelectedFromDate(
+                                                    dateString[0]
+                                                );
+                                                setSelectedToDate(
+                                                    dateString[1]
+                                                );
+                                                addToFilters(
+                                                    "selectedDateRange",
+                                                    dateString
+                                                );
+                                            } else {
+                                                removeFromFilters(
+                                                    "selectedDateRange"
+                                                );
+                                            }
+                                        }}
+                                    />
+                                </Space>
+                            </div>
+                            <div className="flex flex-col w-full">
+                                <label className="text-[14px] font-semibold mb-1">
+                                    Approval.No:
+                                </label>
+                                <Select
+                                    showSearch
+                                    allowClear
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        fontSize: "15px",
+                                    }}
+                                    placeholder="Search Approval No"
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? "").includes(input)
+                                    }
+                                    options={approvalNoOptions}
+                                    onSelect={(value) => {
+                                        setSelectedApprovalNo(value);
+                                        addToFilters(
+                                            "selectedApprovalNo",
+                                            value
+                                        );
+                                    }}
+                                    onClear={() =>
+                                        removeFromFilters("selectedApprovalNo")
+                                    }
+                                />
+                            </div>
+                            <div className="flex flex-col w-full">
+                                <label className="text-[14px] font-semibold mb-1">
+                                    Approval Status:
+                                </label>
+                                <Select
+                                    showSearch
+                                    allowClear
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        fontSize: "15px",
+                                    }}
+                                    placeholder="Select Status"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? "").includes(input)
+                                    }
+                                    onSelect={(value) => {
+                                        setSelectedStatus(value);
+                                        console.log(
+                                            "Selected Approval Status: ",
+                                            filters
+                                        );
+                                        addToFilters("selectedStatus", value);
+                                    }}
+                                    onClear={() =>
+                                        removeFromFilters("selectedStatus")
+                                    }
+                                    options={approvalStatusOptions}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Controller */}
+                        <div className="w-full max-w-[20%] pl-2 flex justify-end gap-x-3 font-medium h-full">
+                            <Badge
+                                size="default"
+                                count={filters.length}
+                                className="relative"
+                            >
+                                <div
+                                    className={`flex justify-center items-center w-fit p-2 px-2.5 rounded-lg  text-gray-600 cursor-pointer active:scale-[.94] active:duration-75 transition-all ${
+                                        filters.length > 0
+                                            ? "border-2 border-[#A1C4A6] bg-gray-100"
+                                            : "border-2 border-gray-300 bg-gray-100"
+                                    }`}
+                                    onClick={handleClearFilters}
+                                >
+                                    {filters.length > 0 ? (
+                                        <LuRotateCcw className="w-5 h-5" />
+                                    ) : (
+                                        <IoFilter className="w-5 h-5" />
+                                    )}
+                                    {/* <div className="text-[15px]">Filter</div> */}
+                                </div>
+                            </Badge>
+                            <button
+                                className="flex justify-center items-center space-x-2 w-full max-w-lg: p-[9px] px-3 rounded-lg bg-[#3a6f41] hover:bg-[#216721] text-white cursor-pointer active:scale-[.94] active:duration-75 transition-all"
+                                onClick={toggleExpand}
+                            >
+                                {expanded ? (
+                                    <>
+                                        {/* <div>Filter</div> */}
+                                        <LuChevronUp className="w-5 h-5" />
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* <div>Filter</div> */}
+                                        <LuChevronDown className="w-5 h-5" />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+            {/* Filter FMS */}
+            {type == "fms" && (
+                <div className="flex justify-between gap-x-1 items-end h-full w-full">
+                    <div className="flex flex-1 gap-x-3">
+                        <div className="flex flex-col w-full">
+                            <label className="text-[14px] font-semibold mb-1">
+                                FMS Approval Type:
+                            </label>
+                            <Select
+                                showSearch
+                                allowClear
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    fontSize: "15px",
+                                }}
+                                placeholder="Search Approval No"
+                                filterOption={(input, option) =>
+                                    (option?.label ?? "").includes(input)
+                                }
+                                options={approvalNoOptions}
+                                onSelect={(value) => {
+                                    setSelectedApprovalNo(value);
+                                    addToFilters("selectedApprovalNo", value);
+                                }}
+                                onClear={() =>
+                                    removeFromFilters("selectedApprovalNo")
+                                }
+                            />
+                        </div>
                         <div className="flex flex-col w-fit">
                             <label className="text-[14px] font-semibold mb-1">
                                 Date Range:
@@ -202,32 +432,7 @@ const ListFilter = (props) => {
                                 filterOption={(input, option) =>
                                     (option?.label ?? "").includes(input)
                                 }
-                                options={[
-                                    {
-                                        value: "1",
-                                        label: "1903005-001",
-                                    },
-                                    {
-                                        value: "2",
-                                        label: "1903005-002",
-                                    },
-                                    {
-                                        value: "3",
-                                        label: "1903005-003",
-                                    },
-                                    {
-                                        value: "4",
-                                        label: "1903005-004",
-                                    },
-                                    {
-                                        value: "5",
-                                        label: "1903005-005",
-                                    },
-                                    {
-                                        value: "6",
-                                        label: "1903005-006",
-                                    },
-                                ]}
+                                options={approvalNoOptions}
                                 onSelect={(value) => {
                                     setSelectedApprovalNo(value);
                                     addToFilters("selectedApprovalNo", value);
@@ -265,36 +470,7 @@ const ListFilter = (props) => {
                                 onClear={() =>
                                     removeFromFilters("selectedStatus")
                                 }
-                                options={[
-                                    {
-                                        value: "1",
-                                        label: "Draft",
-                                    },
-                                    {
-                                        value: "2",
-                                        label: "New",
-                                    },
-                                    {
-                                        value: "3",
-                                        label: "Waiting For Negotiator",
-                                    },
-                                    {
-                                        value: "4",
-                                        label: "Waiting For Permitter",
-                                    },
-                                    {
-                                        value: "5",
-                                        label: "Waiting For Approver",
-                                    },
-                                    {
-                                        value: "6",
-                                        label: "Closed",
-                                    },
-                                    {
-                                        value: "7",
-                                        label: "Revised",
-                                    },
-                                ]}
+                                options={approvalStatusOptions}
                             />
                         </div>
                     </div>
@@ -340,7 +516,7 @@ const ListFilter = (props) => {
                         </button>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Advanced Filter */}
             {expanded && (
@@ -527,20 +703,6 @@ const ListFilter = (props) => {
                     </div>
                 </div>
             )}
-
-            {/* Clear all filter */}
-            {/* {filters.length > 0 && (
-            <div className="flex w-full justify-between items-center font-semibold  ">
-                <div>
-                    <p>Filters: {JSON.stringify(filters)}</p>
-                </div>
-
-                <div className="flex items-center gap-x-2 rounded-full cursor-pointer px-4 text-gray-700 p-2 bg-gray-100 active:scale-[.94] active:duration-75 transition-all " onClick={handleClearFilters}>
-                    <LuX className="w-4 h-4" />
-                    <span>Clear all filter </span>
-                </div>
-            </div>
-        )}     */}
         </div>
     );
 };

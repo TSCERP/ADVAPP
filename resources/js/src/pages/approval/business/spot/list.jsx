@@ -265,6 +265,7 @@ function ApprovalBusinessSpotList() {
 
     // All States
     const [filters, setFilters] = useState([]);
+    const [searchKeyWord, setSearchKeyWord] = useState("");
 
     const scrollRef = useRef(null);
     const gridRef = useRef(null);
@@ -334,7 +335,7 @@ function ApprovalBusinessSpotList() {
                 </div>
 
                 {/* Search & Filter Section */}
-                <ListFilter />
+                <ListFilter type ='spot' />
 
                 {/* Data Table */}
                 <div className="my-2  rounded-lg h-[calc(100vh-250px)]">

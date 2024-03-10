@@ -1,15 +1,13 @@
 import React from "react";
 import { MentionsInput, Mention } from "react-mentions";
-import mentionsInputStyle from './mentionInputStyle';
-import mentionStyle from './mentionStyle';
+import mentionsInputStyle from "./mentionInputStyle";
+import mentionStyle from "./mentionStyle";
 
-const MentionTextArea = ({placeholder, tagList, value, setValue}) => {
+const MentionTextArea = ({ placeholder, tagList, value, setValue, onEnter }) => {
     return (
         <MentionsInput
             placeholder={placeholder}
             a11ySuggestionsListLabel={"Suggested mentions"}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
             rows={2}
             className="focus:outline-none rounded"
             // style={{
@@ -19,6 +17,16 @@ const MentionTextArea = ({placeholder, tagList, value, setValue}) => {
             //     outline: "none",
             // }}
             style={mentionsInputStyle}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    onEnter(e.value)
+                }
+            }}
+            allowSuggestionsAboveCursor={true}
+            forceSuggestionsAboveCursor={true}
         >
             <Mention style={mentionStyle} data={tagList} />
         </MentionsInput>

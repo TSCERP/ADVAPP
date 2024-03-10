@@ -40,6 +40,7 @@ class Approvals extends Model
         'UpdateDate',
         'IsClose',
         'BaseRef',
+        'Related'
     ];
     protected $casts = [
         'DocNum' => 'string',
@@ -71,6 +72,7 @@ class Approvals extends Model
         'BaseRef' => 'string',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
+        'Related' => 'string',
     ];
     // Sự kiện trước khi tạo mới record
     protected static function boot()

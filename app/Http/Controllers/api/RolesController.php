@@ -89,7 +89,7 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Role $role, Request $request)
+    public function update($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name',
@@ -98,8 +98,14 @@ class RolesController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => implode(' ', $validator->errors()->all())], 422); // Return validation errors with a 422 Unprocessable Entity status code
         }
-        $role->update($request->only('name'));
-        $role->syncPermissions($request->get('permission'));
+        // Find the role by its ID
+        $role = Role::findOrFail($id);
+
+        // Update the role's name
+        $role->update(['name' => $request->input('name')]);
+
+        // Sync the permissions for the role
+        $role->syncPermissions($request->input('permission'));
         return response()->json(['message' => 'Role updated successfully', 'user' => $role], 200);
     }
 

@@ -16,6 +16,7 @@ use Illuminate\Validation\Rule;
 use App\Models\MasterData\Permitter;
 use App\Models\MasterData\NegoApproval;
 use App\Models\MasterData\FinalApproval;
+use App\Models\MasterData\Employees as Employee;
 
 class UserController extends Controller
 {
@@ -67,16 +68,15 @@ class UserController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'firstName' => 'required',
-            'LastName' => 'required',
-            'title' => 'required',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'FullName' => 'required',
+            'Title' => 'required',
+            'Avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
+            'Phone' => 'required|unique:users,phone',
             'password' => 'required',
-            'branch' => 'required',
-            'location' => 'required',
-            'employeeCode' => 'required|unique:users,employeeCode',
+            'Branch' => 'required',
+            'Location' => 'required',
+            'EmployeeCode' => 'required|unique:users,employeeCode',
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +84,11 @@ class UserController extends Controller
         }
 
         $input = $request->all();
+        $parts = explode(' ', $request->FullName);
+        $FirstName = $parts[0];
+        $LastName = end($parts);
+        $input['FirstName'] = $FirstName;
+        $input['LastName'] = explode(' ', $input['FullName'])[1];
         $input['password'] = Hash::make($input['password']);
 
         $user = User::create($input);
@@ -161,9 +166,7 @@ class UserController extends Controller
     public function updateProfile(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'gender' => 'required|in:male,female',
+            'FullName' => 'required',
             // 'avatar' => 'nullable|string|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -171,7 +174,7 @@ class UserController extends Controller
             return response()->json(['error' => implode(' ', $validator->errors()->all())], 422);
         }
 
-        $input = $request->only(['first_name', 'last_name', 'gender']);
+        $input = $request->only(['FullName']);
 
         $user = User::find($id);
 
@@ -269,11 +272,31 @@ class UserController extends Controller
     }
     function sync()
     {
-        // create if not exists
-        /** mapping data from employee data 
-         * 
-         */
+        $employees = Employee::all();
 
-        //update if exists
+        foreach ($employees as $employee) {
+            $parts = explode(' ', $employee->EmployeeName);
+            $FirstName = $parts[0];
+            $LastName = end($parts);
+            // Kiểm tra xem người dùng đã tồn tại chưa
+            User::firstOrCreate(
+                ['email' => $employee->Email], // Điều kiện để tìm kiếm người dùng
+                [
+                    'FullName' => $employee->EmployeeName,
+                    'FirstName' => $FirstName,
+                    'LastName' =>  $LastName,
+                    'email' => $employee->Email,
+                    'EmployeeCode' => $employee->EmployeeID,
+                    'Title' => $employee->JobTiles,
+                    'Branch' => $employee->BranchID,
+                    'Location' => $employee->LocationID,
+                    'Section' => $employee->SectionID,
+                    'Department' => $employee->DepartmentID,
+                    'Division' => $employee->DivisionID,
+                    'password' => Hash::make('ADV@sbo1q2w3e'),
+                ]
+            );
+        }
+        return response()->json(['message' => 'Sync successfully'], 200);
     }
 }

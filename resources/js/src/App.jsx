@@ -71,7 +71,7 @@ function App() {
                 }}
                 toastOptions={{
                     className: "",
-                    duration: 5000,
+                    duration: 3000,
                     style: {
                         background: "#363636",
                         color: "#fff",

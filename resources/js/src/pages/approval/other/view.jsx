@@ -722,7 +722,7 @@ function ApprovalOtherView() {
                                                                         Negotiators
                                                                     </h4>
                                                                     <div className="mt-2 mb-2  border-2 border-gray-300 ">
-                                                                        <div className="overflow-x-auto">
+                                                                        <div className="overflow-x-auto overflow-y-visible no-scrollbar">
                                                                             <table className=" w-full bg-white border-collapse text-[15px]">
                                                                                 <thead className="text-[16px] rounded-t-lg">
                                                                                     <tr className="border-b-2 border-gray-300">

@@ -1,33 +1,44 @@
 import React, { useState } from "react";
-import "../assets/styles/index.css";
 import { Link, useNavigate, NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 import { UserOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 import Avatar from "react-avatar";
-import { Dropdown, Space } from "antd";
+import { Dropdown, Space, Button, Modal, Popover } from "antd";
+
 import { LuPenSquare, LuPlus, LuChevronDown } from "react-icons/lu";
 import { BiSolidPlusCircle } from "react-icons/bi";
-import useAppContext from "../store/AppContext";
-import userApi from "../api/userApi";
-import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 import PeSQ from "../utils/icons/PeSQ";
 import PePO from "../utils/icons/PePO";
 import PeVH from "../utils/icons/PeVH";
 import PeCH from "../utils/icons/PeCH";
 import PePR from "../utils/icons/PePR";
-import { 
-    PiNotepadDuotone, PiNotepadBold, PiClipboardTextDuotone, PiClipboardTextFill,
-    PiNoteBold, PiNoteDuotone, PiClipboardTextBold 
+import {
+    PiNotepadDuotone,
+    PiNotepadBold,
+    PiClipboardTextDuotone,
+    PiClipboardTextFill,
+    PiNoteBold,
+    PiNoteDuotone,
+    PiClipboardTextBold,
 } from "react-icons/pi";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Button, Modal, Popover } from "antd";
+
+import { removeUserInfo } from "../redux/auth/auth.slice";
+import authApi from "../api/authApi";
+
 const { confirm } = Modal;
 
 function HeadMenu() {
     const navigate = useNavigate();
-    const { user, setUser, isAuthenticated, setIsAuthenticated } =
-        useAppContext();
+    const dispatch = useDispatch();
+    // const { user, setUser, isAuthenticated, setIsAuthenticated } =
+    //     useAppContext();
+    const { loading, accessToken, userData } = useSelector(
+        (state) => state.auth
+    );
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
@@ -36,20 +47,20 @@ function HeadMenu() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await userApi.logout();
-            console.log("Kết quả trả về từ API:", response);
-
+            const response = await authApi.logout();
+            // console.log("Kết quả trả về từ API:", response);
             Cookies.remove("isAuthenticated");
-            localStorage.removeItem("userInfo");
+            // localStorage.removeItem("userInfo");
             toast.success("Signed out successfully!");
-            setUser(null);
-            setIsAuthenticated(false);
+            // setUser(null);
+            // setIsAuthenticated(false);
+            dispatch(removeUserInfo());
             setOpen(false);
-            setIsLoading(false);
             navigate("/login");
         } catch (error) {
-            console.log("Lỗi đăng xuất:", error);
+            console.error("Lỗi đăng xuất:", error);
             toast.error("Couldn't sign out. Let's try again.");
+        } finally {
             setIsLoading(false);
         }
     };
@@ -73,11 +84,7 @@ function HeadMenu() {
     const items = [
         {
             label: (
-                <Link
-                    to="/profile"
-                    className="font-medium text-[15px]"
-                > 
-
+                <Link to="/profile" className="font-medium text-[15px]">
                     <div className="font-medium w-full">Profile</div>
                 </Link>
             ),
@@ -85,11 +92,7 @@ function HeadMenu() {
         },
         {
             label: (
-                <Link
-                    to="/settings"
-                    className="font-medium text-[15px]"
-                > 
-            
+                <Link to="/settings" className="font-medium text-[15px]">
                     <div className="font-medium w-full">Setting</div>
                 </Link>
             ),
@@ -121,8 +124,8 @@ function HeadMenu() {
                             to="/approval/business/spot/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className=" font-medium w-full">Spot</div>
                         </Link>
                     </li>
@@ -131,8 +134,8 @@ function HeadMenu() {
                             to="/approval/business/fms/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full">FMS</div>
                         </Link>
                     </li>
@@ -141,8 +144,8 @@ function HeadMenu() {
                             to="/approval/business/yearly/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full">Yearly</div>
                         </Link>
                     </li>
@@ -151,8 +154,8 @@ function HeadMenu() {
                             to="/approval/budget/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full">Budget</div>
                         </Link>
                     </li>
@@ -161,8 +164,8 @@ function HeadMenu() {
                             to="/approval/sg&a/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full">SG&A</div>
                         </Link>
                     </li>
@@ -171,8 +174,8 @@ function HeadMenu() {
                             to="/approval/other/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        >   
-                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiNoteBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full ">Other</div>
                         </Link>
                     </li>
@@ -188,8 +191,8 @@ function HeadMenu() {
                             to="/contract-management/contracts/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
+                        >
+                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
                             <div className="font-medium w-full">Contract</div>
                         </Link>
                     </li>
@@ -198,9 +201,11 @@ function HeadMenu() {
                             to="/contract-management/contract-appendix/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Contract Appendix</div>
+                        >
+                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Contract Appendix
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -208,9 +213,11 @@ function HeadMenu() {
                             to="/contract-management/revised-appendix/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Revised Appendix</div>
+                        >
+                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Revised Appendix
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -218,9 +225,11 @@ function HeadMenu() {
                             to="/contract-management/liquidation/create"
                             onClick={hide}
                             className="group w-full flex items-center py-1.5 px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Liquidation</div>
+                        >
+                            <PiClipboardTextBold className="w-6 h-6 text-gray-700 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Liquidation
+                            </div>
                         </Link>
                     </li>
                 </ul>
@@ -235,9 +244,11 @@ function HeadMenu() {
                             to="/sales-quotation/create"
                             onClick={hide}
                             className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PeSQ className="w-6 h-6 text-gray-400 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Sales Quotation</div>
+                        >
+                            <PeSQ className="w-6 h-6 text-gray-400 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Sales Quotation
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -245,9 +256,11 @@ function HeadMenu() {
                             to="/customer-handover/create"
                             onClick={hide}
                             className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PeCH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Customer Handover</div>
+                        >
+                            <PeCH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Customer Handover
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -255,9 +268,11 @@ function HeadMenu() {
                             to="/purchase-order/create"
                             onClick={hide}
                             className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PePO className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Purchase Order</div>
+                        >
+                            <PePO className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Purchase Order
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -265,9 +280,11 @@ function HeadMenu() {
                             to="/vendor-handover/create"
                             onClick={hide}
                             className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PeVH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Vendor Handover</div>
+                        >
+                            <PeVH className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Vendor Handover
+                            </div>
                         </Link>
                     </li>
                     <li className=" gap-x-3 w-full ">
@@ -275,9 +292,11 @@ function HeadMenu() {
                             to="/payment-request/create"
                             onClick={hide}
                             className="group w-full flex items-center py-[0.45rem] px-3 gap-x-3 rounded-lg hover:text-[#228b22] hover:bg-[#EFF6EF]"
-                        > 
-                            <PePR className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] "/>
-                            <div className="font-medium w-full">Payment Request</div>
+                        >
+                            <PePR className="w-6 h-6 text-gray-500 group-hover:text-[#228b22] " />
+                            <div className="font-medium w-full">
+                                Payment Request
+                            </div>
                         </Link>
                     </li>
                 </ul>
@@ -314,31 +333,38 @@ function HeadMenu() {
                 maskClosable={false}
                 onCancel={handleCancel}
                 footer={[
-                    <div className="flex items-center justify-end">
+                    <div key={1} className="flex items-center justify-end">
                         <button
                             className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
-                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            style={{
+                                pointerEvents: isLoading ? "none" : "auto",
+                            }}
                             onClick={handleCancel}
                         >
                             Cancel
                         </button>
                         <button
                             className="p-2 px-8 ml-4 font-medium text-[15px] bg-[#3a6f41] text-white rounded-lg active:scale-[.87] active:duration-75 transition-all hover:bg-[#216721]"
-                            style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
+                            style={{
+                                pointerEvents: isLoading ? "none" : "auto",
+                            }}
                             onClick={handleSignOut}
                         >
                             {isLoading ? (
-                                    <div className="flex items-center justify-center space-x-3">
-                                        <CgSpinnerTwo className="w-5 h-5 animate-spin"/>
-                                        <div>Singing Out...</div>
-                                    </div>
-                                ) : "OK" }
+                                <div className="flex items-center justify-center space-x-3">
+                                    <CgSpinnerTwo className="w-5 h-5 animate-spin" />
+                                    <div>Singing Out...</div>
+                                </div>
+                            ) : (
+                                "OK"
+                            )}
                         </button>
-                    </div>
-
+                    </div>,
                 ]}
             >
-                <p className="text-base mb-8">Are you sure you want to sign out?</p>
+                <p className="text-base mb-8">
+                    Are you sure you want to sign out?
+                </p>
             </Modal>
 
             {/* User Info*/}
@@ -353,17 +379,17 @@ function HeadMenu() {
                     onClick={(e) => e.preventDefault()}
                 >
                     <Space>
-                        {user &&
-                        (user.avatar === null || user.avatar === "") ? (
+                        {userData &&
+                        (userData.avatar === null || userData.avatar === "") ? (
                             <Avatar
-                                name={user ? user.firstName : ""}
+                                name={userData ? userData.firstName : ""}
                                 size="28"
                                 round={true}
                                 textSizeRatio={2}
                             />
                         ) : (
                             <Avatar
-                                src={user ? user.avatar : ""}
+                                src={userData ? userData.avatar : ""}
                                 size="28"
                                 round={true}
                                 textSizeRatio={2}
@@ -371,10 +397,10 @@ function HeadMenu() {
                         )}
                         <div className="flex  items-center mx-1 font-medium text-[15px]">
                             <p>
-                                {(user?.firstName
-                                    ? user?.firstName + " "
+                                {(userData?.firstName
+                                    ? userData?.firstName + " "
                                     : "") +
-                                    (user?.LastName ? user?.LastName : "")}
+                                    (userData?.LastName ? userData?.LastName : "")}
                             </p>
                             <LuChevronDown className="flex ml-1 w-4 h-4 text-gray-500" />
                         </div>

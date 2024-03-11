@@ -356,6 +356,7 @@ const ApprovalBudgetList = () => {
                             paginationPageSizeSelector={
                                 paginationPageSizeSelector
                             }
+                            paginationPageSize={50}
                         />
                     </div>
                 </div>

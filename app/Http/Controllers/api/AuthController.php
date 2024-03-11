@@ -44,7 +44,8 @@ class AuthController extends Controller
             $user = Auth::user();
             $permissions = $user->roles->flatMap->permissions->pluck('name')->unique()->toArray();
             if (!Hash::check($request->password, $user->password, [])) {
-                throw new \Exception('Error in Login');
+
+                throw new \Exception('Error in Login: ');
             }
             $user = Auth::user();
 
@@ -89,9 +90,9 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             return response()->json([
                 'status_code' => 500,
-                'message' => 'Error in Login' . $error,
+                'message' => 'Error in Login: ' . $error,
                 'error' => true,
-            ]);
+            ], 500);
         }
     }
     public function logout(Request $request)

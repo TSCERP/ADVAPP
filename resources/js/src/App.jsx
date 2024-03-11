@@ -3,28 +3,26 @@ import { Toaster } from "react-hot-toast";
 import HeadMenu from "./layouts/headmenu.jsx";
 import SideMenu from "./layouts/SideMenu.jsx";
 import { BrowserRouter as Router, Navigate } from "react-router-dom";
-import "../src/assets/styles/index.css";
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Layout } from "antd";
 import AppRoutes from "./routes/AppRoutes.jsx";
-import AuthRoutes from "./routes/authRoutes.jsx";
-import useAppContext from "./store/AppContext.jsx";
+import AuthRoutes from "./routes/AuthRoutes.jsx";
+import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
 import Cookies from "js-cookie";
 
 const { Sider, Content, Header } = Layout;
 
 function App() {
+    const { isAuthenticated, accessToken } = useSelector((state) => state.auth);
+
     const [collapsed, setCollapsed] = useState(false);
-    const { isAuthenticated } = useAppContext();
-    const localStorageUser = localStorage.getItem("userInfo");
-    const accessToken = localStorageUser ? JSON.parse(localStorageUser)?.access_token : null;
 
     return (
         <Router>
             {!isAuthenticated && !accessToken ? (
-                <AuthRoutes />       
+                <AuthRoutes />
             ) : (
                 <Layout
                     style={{

@@ -55,7 +55,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            $user->is_active = $user->is_active == 1 ? 0 : 1;
+            $user->IsActive = $user->IsActive == 1 ? 0 : 1;
             $user->save();
 
             return response()->json(['message' => 'block successfully'], 200);
@@ -93,8 +93,8 @@ class UserController extends Controller
 
         $user = User::create($input);
 
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
+        if ($request->hasFile('Avatar')) {
+            $avatar = $request->file('Avatar');
             $avatarPath = $avatar->storeAs('public/avatars/' . $user->id, $avatar->getClientOriginalName());
 
             $avatarPathWithoutPublic = str_replace('public/', '', $avatarPath);
@@ -111,12 +111,12 @@ class UserController extends Controller
             'LastName' => 'required',
             'Title' => 'required',
             'Avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'Email' => 'required|email|unique:users,email,' . $id,
             'Phone' => 'required|unique:users,phone,' . $id,
-            'password' => 'nullable',
-            'branch' => 'required',
-            'location' => 'required',
-            'employeeCode' => 'required|unique:users,employeeCode,' . $id,
+            'Password' => 'nullable',
+            'Branch' => 'required',
+            'Location' => 'required',
+            'EmployeeCode' => 'required|unique:users,employeeCode,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -125,22 +125,22 @@ class UserController extends Controller
 
         $input = $request->all();
 
-        if (!empty($input['password'])) {
-            $input['password'] = Hash::make($input['password']);
+        if (!empty($input['Password'])) {
+            $input['Password'] = Hash::make($input['password']);
         } else {
             $input = Arr::except($input, array('password'));
         }
 
         $user = User::find($id);
 
-        if ($request->has('avatar')) {
-            $avatar = $request->file('avatar');
+        if ($request->has('Avatar')) {
+            $avatar = $request->file('Avatar');
 
             if ($request->avatar == '-1') {
                 // Delete avatar file and set avatar field to null
                 if ($user->avatar) {
                     Storage::delete('public/' . $user->avatar);
-                    $input['avatar'] = null;
+                    $input['Avatar'] = null;
                 }
             } elseif ($avatar) {
                 // Delete old avatar file
@@ -149,11 +149,11 @@ class UserController extends Controller
                 }
 
                 // Upload new avatar file
-                $avatar = $request->file('avatar');
+                $avatar = $request->file('Avatar');
                 $avatarPath = $avatar->storeAs('public/avatars/' . $user->id, $avatar->getClientOriginalName());
 
                 $avatarPathWithoutPublic = str_replace('public/', '', $avatarPath);
-                $input['avatar'] = $avatarPathWithoutPublic;
+                $input['Avatar'] = $avatarPathWithoutPublic;
             }
         }
 

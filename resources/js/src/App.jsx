@@ -7,7 +7,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Layout } from "antd";
 import AppRoutes from "./routes/AppRoutes.jsx";
-import AuthRoutes from "./routes/authRoutes.jsx";
+import AuthRoutes from "./routes/AuthRoutes.jsx";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
 import Cookies from "js-cookie";

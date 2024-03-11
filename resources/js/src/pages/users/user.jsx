@@ -21,20 +21,22 @@ import {
 } from "antd";
 import { useDropzone } from "react-dropzone";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { Formik, Field, Form, ErrorMessage, useFormikContext } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
+import { FaCamera } from "react-icons/fa";
 import { LuTrash2, LuPlus, LuSave, LuLink2 } from "react-icons/lu";
+import { UserOutlined } from "@ant-design/icons";
+import { MdDisabledVisible, MdDeleteOutline } from "react-icons/md";
 
 import DefaultAvatar from "../../assets/images/Default-Avatar.png";
 
 const { TextArea } = Input;
 const oldTitle = document.title;
-const newTitle = "User Information - Aeon Delight Vietnam";
+const newTitle_view = "User Information - Aeon Delight Vietnam";
+const newTitle_edit = "Edit User Information - Aeon Delight Vietnam";
 
-function UserProfile() {
+function UserProfile({ mode }) {
     const { userId } = useParams();
     const navigate = useNavigate();
 
@@ -69,18 +71,23 @@ function UserProfile() {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const [input, setInput] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        username: "",
-        gender: "",
-        password: "",
-        authorization: "",
-        sapId: "",
-        integrationId: "1",
-        factory: "",
-        branch: "",
+    const [userInfo, setUserInfo] = useState({
+        EmployeeCode: "111",
+        FirstName: "Test",
+        LastName: "Test",
+        Title: "",
+        Email: "",
+        IsSupperadm: false,
+        IsNego: false,
+        IsActive: true,
+        IntegrationKey: "1",
+        Division: "",
+        Department: "",
+        Team: "",
+        Section: "",
+        Branch: "",
+        Location: "",
+        UserRole: ["admin", "client"],
     });
 
     const [originalInfo, setOriginalInfo] = useState(null);
@@ -145,385 +152,371 @@ function UserProfile() {
         });
     };
 
-    const handleDeleteAvatar = async () => {
-        setAvatar({
-            ...avatar,
-            file: null,
-            imgSrc: null,
-        });
+    // const handleDeleteAvatar = async () => {
+    //     setAvatar({
+    //         ...avatar,
+    //         file: null,
+    //         imgSrc: null,
+    //     });
 
-        if (selectedFile) {
-            setSelectedFile(null);
-        }
+    //     if (selectedFile) {
+    //         setSelectedFile(null);
+    //     }
 
-        if (!avatar.autoImg) {
-            if (input.lastName && input.firstName) {
-                setAvatarLoading(true);
-                const tempName =
-                    input.lastName.trim().charAt(0) +
-                    input.firstName.trim().charAt(0);
-                const base64 = await getAutoAvatar(tempName);
-                setAvatar({
-                    autoImg: base64,
-                    file: null,
-                    imgSrc: null,
-                });
-                setAvatarLoading(false);
-            }
-        } else {
-            setAvatar({
-                autoImg: avatar.autoImg,
-                file: null,
-                imgSrc: null,
-            });
-        }
-    };
+    //     if (!avatar.autoImg) {
+    //         if (input.lastName && input.firstName) {
+    //             setAvatarLoading(true);
+    //             const tempName =
+    //                 input.lastName.trim().charAt(0) +
+    //                 input.firstName.trim().charAt(0);
+    //             const base64 = await getAutoAvatar(tempName);
+    //             setAvatar({
+    //                 autoImg: base64,
+    //                 file: null,
+    //                 imgSrc: null,
+    //             });
+    //             setAvatarLoading(false);
+    //         }
+    //     } else {
+    //         setAvatar({
+    //             autoImg: avatar.autoImg,
+    //             file: null,
+    //             imgSrc: null,
+    //         });
+    //     }
+    // };
 
-    const handleSignOut = async () => {
-        try {
-            const res = await usersApi.signOut();
-            localStorage.removeItem("userInfo");
-            Cookies.remove("isAuthenticated");
-            setUser(null);
-            toast.success("Vui lòng đăng nhập để tiếp tục");
-        } catch (error) {
-            console.error(error);
-            localStorage.removeItem("userInfo");
-            Cookies.remove("isAuthenticated");
-            setUser(null);
-            toast.success("Vui lòng đăng nhập để tiếp tục");
-        }
-    };
+    // const handleSignOut = async () => {
+    //     try {
+    //         const res = await usersApi.signOut();
+    //         localStorage.removeItem("userInfo");
+    //         Cookies.remove("isAuthenticated");
+    //         setUser(null);
+    //         toast.success("Vui lòng đăng nhập để tiếp tục");
+    //     } catch (error) {
+    //         console.error(error);
+    //         localStorage.removeItem("userInfo");
+    //         Cookies.remove("isAuthenticated");
+    //         setUser(null);
+    //         toast.success("Vui lòng đăng nhập để tiếp tục");
+    //     }
+    // };
 
-    const handleFormSubmit = async (values) => {
-        const updatedValues = { ...values };
-        const { password: newPassword, ...updatedInfo } = values;
-        const { password: oldPassword, ...oldInfo } = originalInfo;
-        const isChanged = areObjectsEqual(updatedInfo, oldInfo);
+    // const handleFormSubmit = async (values) => {
+    //     const updatedValues = { ...values };
+    //     const { password: newPassword, ...updatedInfo } = values;
+    //     const { password: oldPassword, ...oldInfo } = originalInfo;
+    //     const isChanged = areObjectsEqual(updatedInfo, oldInfo);
 
-        if (!isChanged || newPassword || originalAvatar != avatar.file) {
-            setLoading(true);
-            if (selectedFile) {
-                if (selectedFile instanceof File) {
-                    updatedValues.avatar = selectedFile;
-                }
-            } else if (
-                avatar.file == originalAvatar ||
-                avatar.imgSrc == originalAvatar
-            ) {
-                updatedValues.avatar = "";
-                delete updatedValues.avatar;
-            } else {
-                updatedValues.avatar = -1;
-            }
+    //     if (!isChanged || newPassword || originalAvatar != avatar.file) {
+    //         setLoading(true);
+    //         if (selectedFile) {
+    //             if (selectedFile instanceof File) {
+    //                 updatedValues.avatar = selectedFile;
+    //             }
+    //         } else if (
+    //             avatar.file == originalAvatar ||
+    //             avatar.imgSrc == originalAvatar
+    //         ) {
+    //             updatedValues.avatar = "";
+    //             delete updatedValues.avatar;
+    //         } else {
+    //             updatedValues.avatar = -1;
+    //         }
 
-            // console.log("Updated values: ", updatedValues);
+    //         // console.log("Updated values: ", updatedValues);
 
-            try {
-                const res = await usersApi.updateUser(userId, updatedValues);
-                // console.log("Thành công: ", res);
-                if (user.id != userId) {
-                    toast.success("Điều chỉnh thông tin thành công.");
-                }
-                if (user.id == userId && newPassword) {
-                    // if (newPassword) {
-                    handleSignOut();
-                    setLoading(false);
-                    return;
-                    // }
-                }
-                toast.success("Điều chỉnh thông tin thành công.");
-                getCurrentUser();
-                setLoading(false);
-            } catch (error) {
-                console.error(error);
-                toast.error("Có lỗi xảy ra, vui lòng thử lại.");
-                setLoading(false);
-            }
-            // console.log("Giá trị updated values: ", updatedValues);
-        } else {
-            toast("Bạn chưa điều chỉnh thông tin.", {
-                icon: ` ℹ️`,
-            });
-            return;
-        }
-    };
-
-    const getAutoAvatar = async (name) => {
-        try {
-            const res = await generateAvatar(name);
-            const base64 = await blobToBase64(res);
-            const imgSrc = `data:image/png;base64,${base64}`;
-            // setAvatar({ ...avatar, imgSrc: null, autoImg: imgSrc });
-            return imgSrc;
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-    };
-
-    const getCurrentUser = useCallback(async () => {
-        try {
-            if (!userId) {
-                navigate("/notfound");
-                return;
-            }
-            const data = await usersApi.getUserDetails(userId);
-            const {
-                first_name: firstName,
-                last_name: lastName,
-                email,
-                username: username,
-                gender,
-                sap_id: sapId,
-                integration_id: integrationId,
-                plant,
-                branch,
-                avatar,
-                roles,
-            } = data.user;
-
-            const role = data.UserRole;
-
-            const userData = {
-                firstName: firstName || "",
-                lastName: lastName || "",
-                email: email || "",
-                username: username || "",
-                gender,
-                password: "",
-                authorization: role,
-                sapId: sapId || "",
-                integrationId: integrationId || "1",
-                factory: plant || "",
-                branch: branch || "",
-            };
-
-            // console.log("User: ", userData);
-
-            if (branch) {
-                const res = await usersApi.getFactoriesByBranchId(branch);
-
-                const options = res.map((item) => ({
-                    value: item.Code,
-                    label: item.Name,
-                }));
-
-                setFactories(options);
-                setIsFirstLoading(false);
-            }
-
-            // const userData = await res;
-            setInput(userData);
-            setOriginalInfo(userData);
-
-            if (avatar) {
-                setOriginalAvatar(avatar);
-                setAvatar({
-                    autoImg: null,
-                    file: data.user.avatar,
-                    imgSrc: data.user.avatar,
-                });
-            }
-            setFormKey((prevKey) => prevKey + 1);
-        } catch (error) {
-            // console.error(error);
-            toast.error("Không tìm thấy user");
-            if (error.response && error.response.status === 404) {
-                navigate("/notfound", { replace: true });
-            }
-        }
-    }, [userId]);
-
-    useEffect(() => {
-        if (input.lastName && input.firstName && !avatar.file) {
-            const tempName =
-                input.lastName.trim().charAt(0) +
-                input.firstName.trim().charAt(0);
-            const res = (async () => {
-                const base64 = await getAutoAvatar(tempName);
-                // console.log("Auto ava: ", base64);
-                setAvatar({ ...avatar, autoImg: base64 });
-            })();
-            setAvatarLoading(false);
-        }
-
-        if (!input.lastName && !input.firstName) {
-            setAvatar({ ...avatar, imgSrc: null, autoImg: DefaultAvatar });
-        }
-    }, [input]);
-
-    useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            if (hasChanged) {
-                const message =
-                    "Bạn có chắc chắn muốn rời đi? Các thay đổi chưa được lưu.";
-                event.returnValue = message;
-                return message;
-            }
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, [hasChanged]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
     //         try {
-    //             setLoading(true);
-
-    //             const branchesPromise = usersApi.getAllBranches();
-    //             const rolesPromise = roleApi.getAllRole();
-    //             const sapIdPromise = usersApi.getAllSapId();
-
-    //             const [branchesRes, rolesRes, sapIdRes] = await Promise.all([
-    //                 branchesPromise,
-    //                 rolesPromise,
-    //                 sapIdPromise,
-    //             ]);
-
-    //             const branchesOptions = branchesRes.map((item) => ({
-    //                 value: item.BPLId,
-    //                 label: item.BPLName,
-    //             }));
-    //             setBranches(branchesOptions);
-
-    //             const rolesOptions = rolesRes.map((item) => ({
-    //                 value: item.id,
-    //                 label:
-    //                     item.name.charAt(0).toUpperCase() + item.name.slice(1),
-    //             }));
-    //             setRoles(rolesOptions);
-
-    //             const sapIdOptions = sapIdRes.map((item) => ({
-    //                 value: item.USER_CODE,
-    //                 label: item.NAME + " - " + item.USER_CODE,
-    //             }));
-    //             setSapId(sapIdOptions);
-
-    //             await getCurrentUser();
-
+    //             const res = await usersApi.updateUser(userId, updatedValues);
+    //             // console.log("Thành công: ", res);
+    //             if (user.id != userId) {
+    //                 toast.success("Điều chỉnh thông tin thành công.");
+    //             }
+    //             if (user.id == userId && newPassword) {
+    //                 // if (newPassword) {
+    //                 handleSignOut();
+    //                 setLoading(false);
+    //                 return;
+    //                 // }
+    //             }
+    //             toast.success("Điều chỉnh thông tin thành công.");
+    //             getCurrentUser();
     //             setLoading(false);
     //         } catch (error) {
     //             console.error(error);
+    //             toast.error("Có lỗi xảy ra, vui lòng thử lại.");
     //             setLoading(false);
+    //         }
+    //         // console.log("Giá trị updated values: ", updatedValues);
+    //     } else {
+    //         toast("Bạn chưa điều chỉnh thông tin.", {
+    //             icon: ` ℹ️`,
+    //         });
+    //         return;
+    //     }
+    // };
+
+    // const getAutoAvatar = async (name) => {
+    //     try {
+    //         const res = await generateAvatar(name);
+    //         const base64 = await blobToBase64(res);
+    //         const imgSrc = `data:image/png;base64,${base64}`;
+    //         // setAvatar({ ...avatar, imgSrc: null, autoImg: imgSrc });
+    //         return imgSrc;
+    //     } catch (error) {
+    //         console.error(error);
+    //         return null;
+    //     }
+    // };
+
+    // const getCurrentUser = useCallback(async () => {
+    //     try {
+    //         if (!userId) {
+    //             navigate("/notfound");
+    //             return;
+    //         }
+    //         const data = await usersApi.getUserDetails(userId);
+    //         const {
+    //             first_name: firstName,
+    //             last_name: lastName,
+    //             email,
+    //             username: username,
+    //             gender,
+    //             sap_id: sapId,
+    //             integration_id: integrationId,
+    //             plant,
+    //             branch,
+    //             avatar,
+    //             roles,
+    //         } = data.user;
+
+    //         const role = data.UserRole;
+
+    //         const userData = {
+    //             firstName: firstName || "",
+    //             lastName: lastName || "",
+    //             email: email || "",
+    //             username: username || "",
+    //             gender,
+    //             password: "",
+    //             authorization: role,
+    //             sapId: sapId || "",
+    //             integrationId: integrationId || "1",
+    //             factory: plant || "",
+    //             branch: branch || "",
+    //         };
+
+    //         // console.log("User: ", userData);
+
+    //         if (branch) {
+    //             const res = await usersApi.getFactoriesByBranchId(branch);
+
+    //             const options = res.map((item) => ({
+    //                 value: item.Code,
+    //                 label: item.Name,
+    //             }));
+
+    //             setFactories(options);
+    //             setIsFirstLoading(false);
+    //         }
+
+    //         // const userData = await res;
+    //         setInput(userData);
+    //         setOriginalInfo(userData);
+
+    //         if (avatar) {
+    //             setOriginalAvatar(avatar);
+    //             setAvatar({
+    //                 autoImg: null,
+    //                 file: data.user.avatar,
+    //                 imgSrc: data.user.avatar,
+    //             });
+    //         }
+    //         setFormKey((prevKey) => prevKey + 1);
+    //     } catch (error) {
+    //         // console.error(error);
+    //         toast.error("Không tìm thấy user");
+    //         if (error.response && error.response.status === 404) {
+    //             navigate("/notfound", { replace: true });
+    //         }
+    //     }
+    // }, [userId]);
+
+    // useEffect(() => {
+    //     if (input.lastName && input.firstName && !avatar.file) {
+    //         const tempName =
+    //             input.lastName.trim().charAt(0) +
+    //             input.firstName.trim().charAt(0);
+    //         const res = (async () => {
+    //             const base64 = await getAutoAvatar(tempName);
+    //             // console.log("Auto ava: ", base64);
+    //             setAvatar({ ...avatar, autoImg: base64 });
+    //         })();
+    //         setAvatarLoading(false);
+    //     }
+
+    //     if (!input.lastName && !input.firstName) {
+    //         setAvatar({ ...avatar, imgSrc: null, autoImg: DefaultAvatar });
+    //     }
+    // }, [input]);
+
+    // useEffect(() => {
+    //     const handleBeforeUnload = (event) => {
+    //         if (hasChanged) {
+    //             const message =
+    //                 "Bạn có chắc chắn muốn rời đi? Các thay đổi chưa được lưu.";
+    //             event.returnValue = message;
+    //             return message;
     //         }
     //     };
 
-    //     fetchData();
-
-    //     document.title = "Woodsland - Chi tiết người dùng";
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
 
     //     return () => {
-    //         document.title = "Woodsland";
-    //         document.body.classList.remove("body-no-scroll");
+    //         window.removeEventListener("beforeunload", handleBeforeUnload);
     //     };
-    // }, []);
+    // }, [hasChanged]);
+
+    // useEffect(() => {
+    //     // if (isFirstLoading) {
+    //     const selectedBranch = input.branch;
+
+    //     const getFactoriesByBranchId = async () => {
+    //         setFactoryLoading(true);
+    //         try {
+    //             if (selectedBranch) {
+    //                 factorySelectRef.current.clearValue();
+    //                 setFactories([]);
+    //                 const res = await usersApi.getFactoriesByBranchId(
+    //                     selectedBranch
+    //                 );
+
+    //                 const options = res.map((item) => ({
+    //                     value: item.Code,
+    //                     label: item.Name,
+    //                 }));
+
+    //                 setFactories(options);
+    //                 setInput((prev) => ({ ...prev, factory: "" }));
+    //             } else {
+    //                 setFactories([]);
+    //                 // factorySelectRef.current?.selectOption([]);
+    //             }
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //         setFactoryLoading(false);
+    //     };
+
+    //     // console.log("Chỗ này call api nè: ", factorySelectRef.current);
+    //     getFactoriesByBranchId();
+    //     // }
+    // }, [input.branch]);
+
+    // useEffect(() => {
+    //     if (loading) {
+    //         document.body.classList.add("body-no-scroll");
+    //     } else {
+    //         document.body.classList.remove("body-no-scroll");
+    //     }
+    // }, [loading]);
 
     useEffect(() => {
-        console.log("Hello");
-        // if (isFirstLoading) {
-        const selectedBranch = input.branch;
-
-        const getFactoriesByBranchId = async () => {
-            setFactoryLoading(true);
-            try {
-                if (selectedBranch) {
-                    factorySelectRef.current.clearValue();
-                    setFactories([]);
-                    const res = await usersApi.getFactoriesByBranchId(
-                        selectedBranch
-                    );
-
-                    const options = res.map((item) => ({
-                        value: item.Code,
-                        label: item.Name,
-                    }));
-
-                    setFactories(options);
-                    setInput((prev) => ({ ...prev, factory: "" }));
-                } else {
-                    setFactories([]);
-                    // factorySelectRef.current?.selectOption([]);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-            setFactoryLoading(false);
+        document.title = mode == "view" ? newTitle_view : newTitle_edit;
+        return () => {
+            document.title = oldTitle;
         };
-
-        // console.log("Chỗ này call api nè: ", factorySelectRef.current);
-        getFactoriesByBranchId();
-        // }
-    }, [input.branch]);
-
-    useEffect(() => {
-        if (loading) {
-            document.body.classList.add("body-no-scroll");
-        } else {
-            document.body.classList.remove("body-no-scroll");
-        }
-    }, [loading]);
+    }, []);
 
     return (
         <>
             <div className="p-6 page m-7 my-7 border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.13)] bg-white rounded-xl">
                 <div className="flex justify-between">
                     <div className="text-[27px] font-bold">
-                        User Information
+                        {mode == "view"
+                            ? "User Information"
+                            : "Edit Information"}
                     </div>
-                    <button
-                        className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
-                        // onClick={handleSave}
-                    >
-                        <LuSave className="w-5 h-5" />
-                        <div className="text-[15px]">Save</div>
-                    </button>
+                    <div className="flex gap-3">
+                        <button className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all">
+                            <MdDisabledVisible className="w-5 h-5" />
+                            <div className="text-[15px]">Deactive User</div>
+                        </button>
+                        <button className="flex items-center space-x-2 p-2 rounded-lg bg-red-500 px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all">
+                            <MdDeleteOutline className="w-5 h-5" />
+                            <div className="text-[15px]">Delete User</div>
+                        </button>
+                        <button className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all">
+                            <LuSave className="w-5 h-5" />
+                            <div className="text-[15px]">Save</div>
+                        </button>
+                    </div>
                 </div>
-                {/* General Infomation */}
+                {/* General Information */}
                 <div className="my-6">
-                    {/* Header */}
                     <div className="uppercase my-1 text-[17px] font-bold">
                         General Information
                     </div>
 
                     <div className="h-[2px] rounded-full bg-[#3a6f41] w-full"></div>
 
-                    <div className="flex">
+                    <div className="flex mt-4">
+                        {/* Avatar Section */}
                         <div className="w-2/5 flex items-center justify-center">
-                            <Avatar className="w-[12rem] h-[12rem]" />
+                            <label
+                                htmlFor="avatar-file"
+                                className="relative p-3 rounded-full border-dashed border-2 border-green-400 cursor-pointer group"
+                            >
+                                <Avatar
+                                    icon={<UserOutlined />}
+                                    size={280}
+                                    className="aspect-square p-2 ease duration-300 group-hover:opacity-40"
+                                />
+                                <FaCamera
+                                    size={54}
+                                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-80 group-hover:duration-250"
+                                />
+                            </label>
+                            <input
+                                id="avatar-file"
+                                type="file"
+                                className="hidden"
+                            />
                         </div>
+                        {/* General Information */}
                         <div className="flex-1">
-                            <div className="mt-4 grid grid-cols-2 gap-4">
+                            <div className="mt-4 grid grid-cols-3 gap-4">
                                 <div className="col-span-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                         First Name
                                     </label>
                                     <Input
                                         type="text"
-                                        id="approval_type"
                                         placeholder="Enter First Name"
-                                        className="font-semibold"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-span-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
                                         Last Name
                                     </label>
                                     <Input
                                         type="text"
-                                        id="approval_type"
-                                        placeholder="Enter PIC Information"
-                                        className="font-semibold"
+                                        placeholder="Enter Last Name"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                    />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Title
+                                    </label>
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter Title"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
                                     />
                                 </div>
                             </div>
@@ -535,105 +528,35 @@ function UserProfile() {
                                     </label>
                                     <Input
                                         type="text"
-                                        id="approval_type"
-                                        placeholder="Enter First Name"
-                                        className="font-semibold"
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
-                                        Gender
-                                    </label>
-                                    <Select
-                                        showSearch
-                                        allowClear
-                                        className="w-full text-[15px]"
-                                        placeholder="Select Approval Category"
-                                        filterOption={(input, option) =>
-                                            (option?.label ?? "").includes(
-                                                input
-                                            )
-                                        }
-                                        options={[
-                                            {
-                                                value: "1",
-                                                label: "Male",
-                                            },
-                                            {
-                                                value: "2",
-                                                label: "Female",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="mt-4 grid grid-cols-3 gap-4">
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
-                                        Approval Category
-                                    </label>
-                                    <Select
-                                        showSearch
-                                        allowClear
-                                        style={{
-                                            width: "100%",
-                                            fontSize: "15px",
-                                        }}
-                                        placeholder="Select Approval Category"
-                                        filterOption={(input, option) =>
-                                            (option?.label ?? "").includes(
-                                                input
-                                            )
-                                        }
-                                        options={[
-                                            {
-                                                value: "1",
-                                                label: "Category 1",
-                                            },
-                                            {
-                                                value: "2",
-                                                label: "Category 2",
-                                            },
-                                            {
-                                                value: "3",
-                                                label: "Category 3",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
-                                        Approval Category (VI)
-                                    </label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Default Approval Category (VI)"
-                                        className="font-semibold"
+                                        placeholder="Enter Email"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
                                         disabled={true}
                                     />
                                 </div>
                                 <div className="col-span-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
-                                        Win Rate
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Phone
+                                    </label>
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter Phone"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mt-4 grid grid-cols-2 gap-4">
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Branch
                                     </label>
                                     <Select
                                         showSearch
                                         allowClear
-                                        style={{
-                                            width: "100%",
-                                            fontSize: "15px",
-                                        }}
-                                        placeholder="Select Win Rate"
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Branch"
                                         filterOption={(input, option) =>
                                             (option?.label ?? "").includes(
                                                 input
@@ -642,50 +565,266 @@ function UserProfile() {
                                         options={[
                                             {
                                                 value: "1",
-                                                label: "50%",
+                                                label: "Branch 1",
                                             },
                                             {
                                                 value: "2",
-                                                label: "80%",
+                                                label: "Branch 2",
                                             },
                                             {
                                                 value: "3",
-                                                label: "100%",
+                                                label: "Branch 3",
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Division
+                                    </label>
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Division"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "Division 1",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "Division 2",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Division 3",
                                             },
                                         ]}
                                     />
                                 </div>
                             </div>
 
-                            <div className="mt-4 grid grid-cols-3 gap-4">
-                                <div className="col-span-2">
-                                    <label
-                                        htmlFor="email"
-                                        className="block mb-2 text-[15px] font-semibold text-gray-900"
-                                    >
-                                        Subject
+                            <div className="mt-4 grid grid-cols-2 gap-4">
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Department
                                     </label>
-                                    <TextArea
-                                        rows={4}
-                                        placeholder="Enter Subject Content"
-                                        maxLength={5}
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Department"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "Department 1",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "Department 2",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Department 3",
+                                            },
+                                        ]}
                                     />
                                 </div>
-                                <div className="col-span-1 flex flex-col">
-                                    <div className="p-1.5 px-3 bg-gray-50 border border-[#D9D9D9] rounded-md text-[15px] mt-8 font-semibold">
-                                        <Checkbox
-                                            className="w-full"
-                                            onChange={(e) => {
-                                                console.log(
-                                                    `Is this approval new trading? = ${e.target.checked}`
-                                                );
-                                            }}
-                                        >
-                                            New Trading Approval
-                                        </Checkbox>
-                                    </div>
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Section
+                                    </label>
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Section"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "Section 1",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "Section 2",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Section 3",
+                                            },
+                                        ]}
+                                    />
                                 </div>
                             </div>
+
+                            <div className="mt-4 grid grid-cols-2 gap-4">
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Team
+                                    </label>
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Team"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "Team 1",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "Team 2",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Team 3",
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                        Location
+                                    </label>
+                                    <Select
+                                        showSearch
+                                        allowClear
+                                        className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                        disabled={true}
+                                        placeholder="Select Location"
+                                        filterOption={(input, option) =>
+                                            (option?.label ?? "").includes(
+                                                input
+                                            )
+                                        }
+                                        options={[
+                                            {
+                                                value: "1",
+                                                label: "Location 1",
+                                            },
+                                            {
+                                                value: "2",
+                                                label: "Location 2",
+                                            },
+                                            {
+                                                value: "3",
+                                                label: "Location 3",
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Header */}
+                <div className="uppercase my-1 text-[17px] font-bold">
+                    Role and Permission
+                </div>
+
+                <div className="h-[2px] rounded-full bg-[#3a6f41] w-full"></div>
+                <div className="flex flex-col mt-4">
+                    <div className="mt-4 grid grid-cols-5 gap-4">
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Is Active
+                            </label>
+                            <Checkbox
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={true}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Is Administrator
+                            </label>
+                            <Checkbox
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={true}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Is Permitter
+                            </label>
+                            <Checkbox
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={true}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Is Negotiator
+                            </label>
+                            <Checkbox
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={true}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Is Final Approver
+                            </label>
+                            <Checkbox
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                                value={true}
+                            />
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <div className="col-span-1">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Password
+                            </label>
+                            <Input
+                                type="password"
+                                placeholder="Enter Password"
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                            />
+                        </div>
+                        <div className="col-span-1 mt-3">
+                            <label className="block mb-2 text-[15px] font-semibold text-gray-900">
+                                Confirm Password
+                            </label>
+                            <Input
+                                type="password"
+                                placeholder="Enter Confirm Password"
+                                className="w-full text-[15px] !font-normal !text-gray-900 !cursor-default"
+                                disabled={true}
+                            />
                         </div>
                     </div>
                 </div>

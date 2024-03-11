@@ -49,6 +49,7 @@ function CustomerList() {
             filter: "agTextColumnFilter",
             sort: "asc",
             maxWidth: 110,
+            
         },
         {
             headerName: "Customer Code",

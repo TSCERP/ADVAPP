@@ -21,6 +21,7 @@ export const authSlice = createSlice({
         error: null,
         accessToken: null,
         success: false,
+        department: null,
     },
     reducers: {
         saveUserInfo(state, action) {
@@ -34,6 +35,7 @@ export const authSlice = createSlice({
             state.userData = null;
             state.isAuthenticated = false;
             state.accessToken = null;
+            state.department = null;
         },
         fetchAuthFailure(state, action) {
             state.loading = false;

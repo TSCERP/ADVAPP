@@ -9,14 +9,14 @@ const ProtectedRoute = ({ permissionsRequired = [], children }) => {
     const hasPermission = () => {
         if (userData && userData.permissions) {
             console.log(userData.permissions);
-            console.log("hasPermission", permissionsRequired.every((permission) =>userData.permissions.includes(permission)));
             return permissionsRequired.every((permission) =>
                 userData.permissions.includes(permission)
             );
         }
         return false;
     };
-    hasPermission()
+
+    console.log("isAUth: ", isAuthenticated)
 
     return isAuthenticated ? (
         hasPermission() ? (

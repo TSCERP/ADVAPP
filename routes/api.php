@@ -29,8 +29,8 @@ Route::get('/handle-auth', function (Request $request) {
     ], 405);
 })->name('handleAuth');
 
-
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/find/{UserId}', [UserController::class, 'UserById']);
 Route::middleware(['auth:sanctum',])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'permissions'], function () {
@@ -50,7 +50,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/create', [UserController::class, 'create']);
-        Route::get('/find/{UserId}', [UserController::class, 'UserById']);
+        // Route::get('/find/{UserId}', [UserController::class, 'UserById']);
         Route::patch('/update/{UserId}', [UserController::class, 'update']);
         Route::patch('/update-profile/{UserId}', [UserController::class, 'updateProfile']);
         Route::patch('/change-password/{UserId}', [UserController::class, 'changePassword']);

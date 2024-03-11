@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Input, Modal, Select, message, Upload, Button, Avatar } from "antd";
-import { Checkbox, Tabs, DatePicker, Space, Divider } from "antd";
+import { Input, Modal, Select, message, Upload, Button, Avatar, Checkbox, Tabs, DatePicker, Space, Divider } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import {
@@ -2789,7 +2788,7 @@ const ApprovalBusinessYearlyView = () => {
                             maskClosable={false}
                             width={1200}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={1} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={handleCloseModal}
@@ -4683,7 +4682,7 @@ const ApprovalBusinessYearlyView = () => {
                             maskClosable={false}
                             width={680}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={2} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={handleCloseAllocateModal}
@@ -4848,7 +4847,7 @@ const ApprovalBusinessYearlyView = () => {
                             maskClosable={false}
                             width={680}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={3} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={() =>
@@ -4965,7 +4964,7 @@ const ApprovalBusinessYearlyView = () => {
                             maskClosable={false}
                             width={680}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={4} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={() =>

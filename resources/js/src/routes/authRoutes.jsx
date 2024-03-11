@@ -22,8 +22,6 @@ function AuthRoutes() {
         document.documentElement.scrollTo(0, 0);
     }, [location.pathname]);
 
-    // <ProtectedRoute></ProtectedRoute>
-
     return (
         <Routes>
             {/* General */}

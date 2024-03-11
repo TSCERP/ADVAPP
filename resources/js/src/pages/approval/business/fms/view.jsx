@@ -3028,7 +3028,7 @@ const ApprovalBusinessFMSView = () => {
                             maskClosable={false}
                             width={680}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={1} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={() =>
@@ -3143,7 +3143,7 @@ const ApprovalBusinessFMSView = () => {
                             maskClosable={false}
                             width={680}
                             footer={[
-                                <div className="flex items-center justify-end">
+                                <div key={1} className="flex items-center justify-end">
                                     <button
                                         className="p-2 px-4 font-medium text-[15px] bg-gray-100 hover:bg-gray-200 rounded-lg active:scale-[.87] active:duration-75 transition-all "
                                         onClick={() =>

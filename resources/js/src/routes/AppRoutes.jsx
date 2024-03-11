@@ -8,7 +8,6 @@ import {
 import { useLocation } from "react-router-dom";
 import { Layout } from "antd";
 
-
 // General
 import Home from "../pages/home";
 import Login from "../pages/(auth)/login";
@@ -96,41 +95,30 @@ import PaymentRequestEdit from "../pages/payment-request/edit";
 import PaymentRequestView from "../pages/payment-request/view";
 
 // Master Data
-import Employees from "../pages/employees";
-import Vendors from "../pages/vendors";
-import Customers from "../pages/customers";
-import MasterDataItems from "../pages/items";
+import EmployeeList from "../pages/employees/index";
+import VendorList from "../pages/vendors/index";
+import CustomerList from "../pages/customers/index";
+import ItemList from "../pages/items/index";
 
 // Administration
-import UsersList from "../pages/users";
-import UserProfile from "../pages/users/[id]";
+import UsersList from "../pages/users/index";
+import UserProfile from "../pages/users/user";
+import CreateUser from "../pages/users/create";
 import Roles from "../pages/roles";
 import Integration from "../pages/integration";
 import Settings from "../pages/settings";
 
 function AppRoutes() {
-    // const { user, isAuthenticated } = useAppContext();
-    // const Wrapper = ({ children }) => {
-    //     const location = useLocation();
-    //     useLayoutEffect(() => {
-    //         document.documentElement.scrollTo(0, 0);
-    //     }, [location.pathname]);
-    //     return children;
-    // };
-
     const location = useLocation();
 
     useLayoutEffect(() => {
         document.documentElement.scrollTo(0, 0);
     }, [location.pathname]);
 
-    // <ProtectedRoute></ProtectedRoute>
-
     return (
         <Routes>
             {/* General */}
             <Route path="/login" element={<Login />} />
-
             <Route path="/" element={<Home />} />
 
             {/* Approval */}
@@ -151,6 +139,7 @@ function AppRoutes() {
                 path="/approval/business/spot/view/:id"
                 element={<ApprovalBusinessSpotView />}
             />
+
             {/* Approval Business - FMS */}
             <Route
                 path="/approval/business/fms"
@@ -172,6 +161,7 @@ function AppRoutes() {
                 path="/approval/business/fms/confirm"
                 element={<ApprovalBusinessFMSConfirm />}
             />
+
             {/* Approval Business - Yearly */}
             <Route
                 path="/approval/business/yearly"
@@ -203,14 +193,22 @@ function AppRoutes() {
                 path="/approval/budget/view/:id"
                 element={<ApprovalBudgetView />}
             />
+
             {/* Approval SG&A Cost */}
             <Route path="/approval/sg&a" element={<ApprovalSGAList />} />
             <Route
                 path="/approval/sg&a/create"
                 element={<ApprovalSGACreate />}
             />
-            <Route path="/approval/sg&a/edit/:id" element={<ApprovalSGAEdit />} />
-            <Route path="/approval/sg&a/view/:id" element={<ApprovalSGAView />} />
+            <Route
+                path="/approval/sg&a/edit/:id"
+                element={<ApprovalSGAEdit />}
+            />
+            <Route
+                path="/approval/sg&a/view/:id"
+                element={<ApprovalSGAView />}
+            />
+
             {/* Approval Other */}
             <Route path="/approval/other" element={<ApprovalOtherList />} />
             <Route
@@ -244,6 +242,7 @@ function AppRoutes() {
                 path="/contract-management/contracts/view"
                 element={<ContractView />}
             />
+
             {/* Contract Management - Contract Apendix */}
             <Route
                 path="/contract-management/contract-appendix"
@@ -261,6 +260,7 @@ function AppRoutes() {
                 path="/contract-management/contract-appendix/view"
                 element={<ContractApendixView />}
             />
+
             {/* Contract Management - Liquidation */}
             <Route
                 path="/contract-management/liquidation"
@@ -278,6 +278,7 @@ function AppRoutes() {
                 path="/contract-management/liquidation/view"
                 element={<ContractLiquidationView />}
             />
+
             {/* Contract Management - Revised Apendix */}
             <Route
                 path="/contract-management/revised-appendix"
@@ -375,18 +376,25 @@ function AppRoutes() {
             />
 
             {/* Master Data */}
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/vendors" element={<Vendors />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/items" element={<MasterDataItems />} />
+            <Route path="/employees" element={<EmployeeList />} />
+            <Route path="/vendors" element={<VendorList />} />
+            <Route path="/customers" element={<CustomerList />} />
+            <Route path="/items" element={<ItemList />} />
 
             {/* Administration */}
             <Route path="/users" element={<UsersList />} />
-            <Route path="/users/details" element={<UserProfile />} />
+            <Route
+                path="/users/view/:id"
+                element={<UserProfile mode="view" />}
+            />
+            <Route
+                path="/users/edit/:id"
+                element={<UserProfile mode="edit" />}
+            />
+            <Route path="/users/create" element={<CreateUser />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/integration" element={<Integration />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/users/details" element={<UserProfile />} />
 
             <Route path="*" element={<NotFound />} />
         </Routes>

@@ -6,6 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Approvals;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Appr1;
+use App\Models\Appr2;
+use App\Models\SALES;
+use App\Models\COST;
+use App\Models\SALE1;
+use App\Models\COST1;
+use App\Models\SALE2;
+use App\Models\COST2;
 
 class ApprovalController extends Controller
 {
@@ -90,37 +99,67 @@ class ApprovalController extends Controller
     }
     function storeSpot($data)
     {
+
         try {
+            DB::beginTransaction();
+            //$data->sales
+            // $data->cost
+            // $data->approvals
             $header = $data->only(
-                "DocType",
-                "StartDate",
-                "EndDate",
-                "NewTrading",
-                "CategoryCode",
-                "CategoryName",
-                "CategoryVI",
-                "DocDate",
-                "Subject",
-                "WinRate",
-                "Revised",
-                "Related"
+                'DocNum',
+                'DocType',
+                'NewTrading',
+                'CategoryCode',
+                'CategoryName',
+                'CategoryVI',
+                'DocDate',
+                'Subject',
+                'WinRate',
+                'PIC',
+                'Division',
+                'Department',
+                'Section',
+                'DocStatus',
+                'Revised',
+                'RevisedBy',
+                'RevisedDate',
+                'Cancelled',
+                'CancelledBy',
+                'CancelledDate',
+                'Deleted',
+                'DeletedBy',
+                'DeletedDate',
+                'CreateBy',
+                'UpdateBy',
+                'UpdateDate',
+                'IsClose',
+                'BaseRef',
+                'Related'
             );
             $header['PIC'] = Auth::user()->id;
-            $header['Department'] = Auth::user()->id;
-            $header['Section'] = date('Y-m-d H:i:s');
+            $header['Department'] = Auth::user()->Department ?? 1;
+            $header['Section'] = Auth::user()->Section ?? 1;
             if ($data->Revised == true) {
                 $header['RevisedBy'] = Auth::user()->id;
-                $header['RevisedDate'] = now();
+                //  $header['RevisedDate'] = now();
             }
-            $header['PIC'] = Auth::user()->id;
-
-            dd($header);
-            //todo something
+            $header['CreateBy'] = Auth::user()->id;
             //header
+            Approvals::create($header);
+
             // detail
             //summary data 
             // save to db
+            DB::commit();
+            return response()->json(
+                [
+                    'message' => 'add success',
+                    'data' => $data
+                ],
+                200
+            );
         } catch (\Exception $e) {
+            DB::rollBack();
             return $e;
         }
     }

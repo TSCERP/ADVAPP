@@ -6,7 +6,6 @@ import { UserOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import Avatar from "react-avatar";
 import { Dropdown, Space, Button, Modal, Popover } from "antd";
-
 import { LuPenSquare, LuPlus, LuChevronDown } from "react-icons/lu";
 import { BiSolidPlusCircle } from "react-icons/bi";
 import PeSQ from "../utils/icons/PeSQ";
@@ -28,6 +27,7 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 
 import { removeUserInfo } from "../redux/auth/auth.slice";
 import authApi from "../api/authApi";
+import ModalSelection from "../components/department/modalSelection";
 
 const { confirm } = Modal;
 
@@ -42,6 +42,7 @@ function HeadMenu() {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
+    const [isModalSelectionOpen, setIsModalSelectionOpen] = useState(false);
 
     const handleSignOut = async (e) => {
         e.preventDefault();
@@ -58,7 +59,7 @@ function HeadMenu() {
             setOpen(false);
             navigate("/login");
         } catch (error) {
-            console.error("Lỗi đăng xuất:", error);
+            console.error("Error when logging out:", error);
             toast.error("Couldn't sign out. Let's try again.");
         } finally {
             setIsLoading(false);
@@ -79,6 +80,10 @@ function HeadMenu() {
 
     const handleOpenChange = (newOpen) => {
         setPopoverOpen(newOpen);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalSelectionOpen(false);
     };
 
     const items = [
@@ -305,21 +310,75 @@ function HeadMenu() {
     );
 
     return (
-        <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[55px] min-h-[55px] px-6 border-b-2 border-gray-200 shadow-[0_5px_20px_rgb(0,0,0,0.08)] top-0 z-40 bg-white">
-            {/* Left Controller */}
-            <Popover
-                placement="bottomLeft"
-                content={create}
-                open={popoverOpen}
-                onOpenChange={handleOpenChange}
-                title=""
-                trigger="click"
-            >
-                <button className="flex items-center text-[15px] ml-4 p-1.5 text-white bg-[#1C1C1C] hover:bg-[#272727] rounded-full px-3 font-medium gap-x-2">
-                    <LuPlus className="flex items-center w-4 h-4 text-white" />
-                    <div className="font-semibold ">New Document</div>
-                </button>
-            </Popover>
+        <>
+            <div className="flex-no-wrap sticky flex justify-between items-center w-full max-h-[55px] min-h-[55px] px-6 border-b-2 border-gray-200 shadow-[0_5px_20px_rgb(0,0,0,0.08)] top-0 z-40 bg-white">
+                {/* Left Controller */}
+                <Popover
+                    placement="bottomLeft"
+                    content={create}
+                    open={popoverOpen}
+                    onOpenChange={handleOpenChange}
+                    title=""
+                    trigger="click"
+                >
+                    <button className="flex items-center text-[15px] ml-4 p-1.5 text-white bg-[#1C1C1C] hover:bg-[#272727] rounded-full px-3 font-medium gap-x-2">
+                        <LuPlus className="flex items-center w-4 h-4 text-white" />
+                        <div className="font-semibold ">New Document</div>
+                    </button>
+                </Popover>
+
+                <div className="flex gap-4 items-center">
+                    <a onClick={() => setIsModalSelectionOpen(true)} className="text-sm">
+                        Change Department
+                    </a>
+
+                    {/* User Info*/}
+                    <Dropdown
+                        menu={{ items }}
+                        trigger={["click"]}
+                        arrow
+                        paddingBlock={5}
+                    >
+                        <button
+                            className="p-1  bg-gray-100 rounded-full flex items-center space-x-2 text-[15px]"
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            <Space>
+                                {userData &&
+                                (userData.avatar === null ||
+                                    userData.avatar === "") ? (
+                                    <Avatar
+                                        name={
+                                            userData ? userData.firstName : ""
+                                        }
+                                        size="28"
+                                        round={true}
+                                        textSizeRatio={2}
+                                    />
+                                ) : (
+                                    <Avatar
+                                        src={userData ? userData.avatar : ""}
+                                        size="28"
+                                        round={true}
+                                        textSizeRatio={2}
+                                    />
+                                )}
+                                <div className="flex items-center mx-1 font-medium text-[15px]">
+                                    <p>
+                                        {(userData?.firstName
+                                            ? userData?.firstName + " "
+                                            : "") +
+                                            (userData?.LastName
+                                                ? userData?.LastName
+                                                : "")}
+                                    </p>
+                                    <LuChevronDown className="flex ml-1 w-4 h-4 text-gray-500" />
+                                </div>
+                            </Space>
+                        </button>
+                    </Dropdown>
+                </div>
+            </div>
 
             <Modal
                 open={open}
@@ -367,47 +426,8 @@ function HeadMenu() {
                 </p>
             </Modal>
 
-            {/* User Info*/}
-            <Dropdown
-                menu={{ items }}
-                trigger={["click"]}
-                arrow
-                paddingBlock={5}
-            >
-                <button
-                    className="p-1  bg-gray-100 rounded-full flex items-center space-x-2 text-[15px]"
-                    onClick={(e) => e.preventDefault()}
-                >
-                    <Space>
-                        {userData &&
-                        (userData.avatar === null || userData.avatar === "") ? (
-                            <Avatar
-                                name={userData ? userData.firstName : ""}
-                                size="28"
-                                round={true}
-                                textSizeRatio={2}
-                            />
-                        ) : (
-                            <Avatar
-                                src={userData ? userData.avatar : ""}
-                                size="28"
-                                round={true}
-                                textSizeRatio={2}
-                            />
-                        )}
-                        <div className="flex  items-center mx-1 font-medium text-[15px]">
-                            <p>
-                                {(userData?.firstName
-                                    ? userData?.firstName + " "
-                                    : "") +
-                                    (userData?.LastName ? userData?.LastName : "")}
-                            </p>
-                            <LuChevronDown className="flex ml-1 w-4 h-4 text-gray-500" />
-                        </div>
-                    </Space>
-                </button>
-            </Dropdown>
-        </div>
+            {isModalSelectionOpen && <ModalSelection handleCloseModal={handleCloseModal} />}
+        </>
     );
 }
 

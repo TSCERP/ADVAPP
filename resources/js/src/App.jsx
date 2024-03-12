@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import HeadMenu from "./layouts/headmenu.jsx";
+import HeadMenu from "./layouts/HeadMenu.jsx";
 import SideMenu from "./layouts/SideMenu.jsx";
 import { BrowserRouter as Router, Navigate } from "react-router-dom";
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Layout } from "antd";
-import AppRoutes from "./routes/AppRoutes.jsx";
-import AuthRoutes from "./routes/AuthRoutes.jsx";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
 import Cookies from "js-cookie";
 
+import AppRoutes from "./routes/AppRoutes.jsx";
+import AuthRoutes from "./routes/AuthRoutes.jsx";
+import ModalSelection from "./components/department/modalSelection.jsx";
+
 const { Sider, Content, Header } = Layout;
 
 function App() {
-    const { isAuthenticated, accessToken } = useSelector((state) => state.auth);
+    const { isAuthenticated, accessToken, department } = useSelector(
+        (state) => state.auth
+    );
 
     const [collapsed, setCollapsed] = useState(false);
 
@@ -55,7 +59,7 @@ function App() {
                         }}
                     >
                         <HeadMenu />
-                        <AppRoutes />
+                        {department ? <AppRoutes /> : <ModalSelection />}
                     </Content>
                 </Layout>
             )}

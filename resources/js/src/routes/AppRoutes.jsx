@@ -89,8 +89,11 @@ import VendorHandoverEdit from "../pages/vendor-handover/edit";
 import VendorHandoverView from "../pages/vendor-handover/view";
 
 // Payment Request
-import PaymentRequestList from "../pages/payment-request/list";
-import PaymentRequestCreate from "../pages/payment-request/create";
+import DemoApproval from "../pages/demo-approval/list";
+import DemoPaymentRequest from "../pages/demo-payment-request/list";
+import CreateDemoPaymentRequest from "../pages/demo-payment-request/create";
+// import PaymentRequestList from "../pages/payment-request/list";
+// import PaymentRequestCreate from "../pages/payment-request/create";
 import PaymentRequestEdit from "../pages/payment-request/edit";
 import PaymentRequestView from "../pages/payment-request/view";
 
@@ -361,11 +364,17 @@ function AppRoutes() {
             />
 
             {/* Payment Request */}
-            <Route path="/payment-request" element={<PaymentRequestList />} />
+            <Route path="/approval-request" element={<DemoApproval />} />
+            <Route path="/payment-request" element={<DemoPaymentRequest />} />
+            <Route
+                path="/payment-request/create"
+                element={<CreateDemoPaymentRequest />}
+            />
+            {/* <Route path="/payment-request" element={<PaymentRequestList />} />
             <Route
                 path="/payment-request/create"
                 element={<PaymentRequestCreate />}
-            />
+            /> */}
             <Route
                 path="/payment-request/edit"
                 element={<PaymentRequestEdit />}

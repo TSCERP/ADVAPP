@@ -269,7 +269,7 @@ function UsersList() {
                             <LuRefreshCcw className="flex items-center w-4 h-4 " />
                             Reload
                         </div>
-                        <Link to={"/approval/budget/create"}>
+                        <Link to={"/users/create"}>
                             <div className="flex items-center gap-x-2 text-[15px] bg-[#3a6f41] hover:bg-[#216721] text-white px-4 py-[7px] rounded-full font-medium  active:scale-[.94] active:duration-75 transition-all ">
                                 <LuPlus className="flex items-center w-4 h-4 text-white" />
                                 Create New

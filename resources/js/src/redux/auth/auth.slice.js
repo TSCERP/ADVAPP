@@ -41,10 +41,14 @@ export const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        changeUserDepartment(state, payload) {
+            console.log("Dô: ", payload.payload);
+            state.department = payload.payload;
+        }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { saveUserInfo, removeUserInfo } = authSlice.actions;
+export const { saveUserInfo, removeUserInfo, changeUserDepartment } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
+import { useDropzone } from "react-dropzone";
 import {
     Input,
     Modal,
@@ -36,6 +37,87 @@ const ApprovalBudgetEdit = () => {
      *  All constants defined here
      */
     const currentTime = moment().format("DD/MM/YYYY");
+
+    /**
+     *  All hooks defined here
+     */
+    const { getRootProps, getInputProps, open, isDragActive, acceptedFiles } =
+        useDropzone({
+            noClick: true,
+            noKeyboard: true,
+            accept: {
+                "application/msword": [".doc"],
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                    [".docx"],
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xls", ".xlsx"],
+                "text/plain": [".txt"],
+                "application/vnd.ms-excel": [".xls"],
+                "application/pdf": [".pdf"],
+                "image/jpeg": [".jpg", ".jpeg"],
+                "image/png": [".png"],
+                "image/gif": [".gif"],
+            },
+            maxFiles: 7,
+            maxSize: 5 * 1024 * 1024,
+            onDropRejected: (rejectedFiles) => {
+                const allowedFileTypes = [
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "text/plain",
+                    "application/vnd.ms-excel",
+                    "application/pdf",
+                    "image/jpeg",
+                    "image/png",
+                    "image/gif",
+                ];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                console.log("File(s) rejected:", rejectedFiles);
+
+                for (let i = 0; i < rejectedFiles.length; i++) {
+                    const file = rejectedFiles[i];
+
+                    // Kiểm tra loại file
+                    if (!allowedFileTypes.includes(file.type)) {
+                        toast.error(
+                            "Accepted doc, docx, txt, excel, pdf, image only"
+                        );
+                        fileInput.value = "";
+                        return;
+                    }
+
+                    // Kiểm tra kích thước file
+                    if (file.size > maxSize) {
+                        alert(`File ${file.name} is larger than 5MB.`);
+                        fileInput.value = "";
+                        return;
+                    }
+                }
+            },
+            onDrop: (acceptedFiles) => {
+                if (fileAttachment.length + acceptedFiles.length > 7) {
+                    toast("Only accept 7 files upload.");
+                    return;
+                } else {
+                    // Tạo mảng mới với các đối tượng mới
+                    const newFileAttachments = Array.from(acceptedFiles).map(
+                        (file) => ({
+                            id: nanoid(8),
+                            description: "",
+                            file: file,
+                        })
+                    );
+
+                    // Cập nhật state
+                    setFileAttachment([
+                        ...fileAttachment,
+                        ...newFileAttachments,
+                    ]);
+                }
+            },
+        });
 
     /**
      *  All states defined here
@@ -679,7 +761,14 @@ const ApprovalBudgetEdit = () => {
                                                     <div>Attachment</div>
                                                 </div>
                                                 <div className="px-4 py-2 ">
-                                                    <div className="p-8 rounded-xl border-2 border-dashed bg-[#bdffe43a]">
+                                                    <div {...getRootProps({
+                                                            className:
+                                                                "dropzone",
+                                                        })}
+                                                        className={`p-8 rounded-xl border-2 border-dashed bg-[#bdffe43a] ${
+                                                            isDragActive &&
+                                                            "border-green-600"
+                                                        }`}>
                                                         <div className="flex flex-col items-center justify-center">
                                                             <IoCloudUpload className="w-12 h-12 text-[#c1c1c1]" />
                                                             <h2 className="font-semibold text-xl md:text-2xl">
@@ -699,12 +788,13 @@ const ApprovalBudgetEdit = () => {
                                                                 type="file"
                                                                 className="hidden"
                                                                 accept=".doc, .docx, .txt, .xls, .xlsx, .pdf, .jpg, .jpeg, .png, .gif"
-                                                                onChange={(e) =>
-                                                                    handleAttachmentFileChange(
-                                                                        e
-                                                                    )
-                                                                }
+                                                                // onChange={(e) =>
+                                                                //     handleAttachmentFileChange(
+                                                                //         e
+                                                                //     )
+                                                                // }
                                                                 multiple
+                                                                {...getInputProps()}
                                                             ></input>
                                                             <label
                                                                 htmlFor="upload-budget-attachment"

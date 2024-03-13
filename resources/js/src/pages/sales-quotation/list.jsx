@@ -362,7 +362,7 @@ function SalesQuotationList() {
             field: "action",
             pinned: "right",
             maxWidth: 120,
-            cellRenderer: ControllerBtnRenderer,
+            cellRenderer: (data) => ((<ControllerBtnRenderer data={data} readOnly={false} />)) ,
         },
     ]);
 

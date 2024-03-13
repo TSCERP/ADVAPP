@@ -66,8 +66,8 @@ import ContractReviseApendixView from "../pages/contract-management/revise-apend
 
 // Sale Quotation
 import SalesQuotationList from "../pages/sales-quotation/list";
-import SalesQuotationCreate from "../pages/sales-quotation/create";
 import SalesQuotationEdit from "../pages/sales-quotation/edit";
+import SalesQuotationCreate from "../pages/sales-quotation/create";
 import SalesQuotationView from "../pages/sales-quotation/view";
 
 // Customer Handover
@@ -322,11 +322,11 @@ function AppRoutes() {
                 element={<SalesQuotationCreate />}
             />
             <Route
-                path="/sales-quotation/edit"
+                path="/sales-quotation/edit/:id"
                 element={<SalesQuotationEdit />}
             />
             <Route
-                path="/sales-quotation/view"
+                path="/sales-quotation/view/:id"
                 element={<SalesQuotationView />}
             />
 

@@ -232,14 +232,14 @@ const CostModal = (props) => {
     // Change tax in according to selected vendor
     useEffect(() => {
         if (selectedVendor) {
-            console.log("Đổi tax nè: ", selectedVendor);
+            console.log("Đổi thông tin trường tax ", selectedVendor);
         }
     }, [selectedVendor]);
 
     // Change payment & condition in according to selected payment term
     useEffect(() => {
         if (selectedPaymentTerm) {
-            console.log("Đổi payment term nè: ", selectedPaymentTerm);
+            console.log("Đổi thông tin payment term : ", selectedPaymentTerm);
         }
     }, [selectedPaymentTerm]);
 

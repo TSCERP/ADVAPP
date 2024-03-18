@@ -69,7 +69,7 @@ const currency = [
     }
 ];
 
-function CreateDemoPaymentRequest() {
+function CreateDemoAdvanceClearance() {
     const currentTime = moment().format("DD/MM/YYYY");
 
     // States
@@ -524,7 +524,7 @@ function CreateDemoPaymentRequest() {
                     {/* Header */}
                     <div className="flex justify-between">
                         <div className="text-[27px] font-bold">
-                            Create Payment Request
+                            Create Advance Clearance
                         </div>
                         <button
                             className="flex items-center space-x-2 p-2 rounded-lg bg-[#3a6f41] px-4 text-white font-medium active:scale-[.87] active:duration-75 transition-all"
@@ -783,4 +783,4 @@ function CreateDemoPaymentRequest() {
     );
 }
 
-export default CreateDemoPaymentRequest;
+export default CreateDemoAdvanceClearance;

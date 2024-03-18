@@ -92,6 +92,7 @@ import VendorHandoverView from "../pages/vendor-handover/view";
 import DemoApproval from "../pages/demo-approval/list";
 import DemoPaymentRequest from "../pages/demo-payment-request/list";
 import CreateDemoPaymentRequest from "../pages/demo-payment-request/create";
+import CreateDemoAdvanceClearance from "../pages/demo-payment-request/advclearance";
 // import PaymentRequestList from "../pages/payment-request/list";
 // import PaymentRequestCreate from "../pages/payment-request/create";
 import PaymentRequestEdit from "../pages/payment-request/edit";
@@ -369,6 +370,10 @@ function AppRoutes() {
             <Route
                 path="/payment-request/create"
                 element={<CreateDemoPaymentRequest />}
+            />
+            <Route
+                path="/payment-request/create-advance-clearance"
+                element={<CreateDemoAdvanceClearance />}
             />
             {/* <Route path="/payment-request" element={<PaymentRequestList />} />
             <Route
